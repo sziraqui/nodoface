@@ -1,8 +1,9 @@
 # auto-generated files
 **/node_modules/**
 .vscode
-.idea/*.iml
-.idea/.name
+.idea
+!.idea/misc.xml
+!.idea/vcs.xml
 **/package-lock.json
 
 # Build directories
