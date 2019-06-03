@@ -1,3 +1,15 @@
+# auto-generated files
+**/node_modules/**
+.vscode
+.idea/*.iml
+.idea/.name
+**/package-lock.json
+
+# Build directories
+build
+cmake-*build
+
+
 # Prerequisites
 *.d
 
