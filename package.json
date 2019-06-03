@@ -1,0 +1,29 @@
+{
+  "name": "nodoface",
+  "version": "0.0.1",
+  "description": "Nodejs bindings for Tadas OpenFae C++ library",
+  "main": "index.js",
+  "gypfile": true,
+  "scripts": {
+    "build": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sziraqui/nodoface.git"
+  },
+  "keywords": [
+    "face-detection",
+    "opencv",
+    "openface",
+    "napi"
+  ],
+  "author": "sziraqui",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sziraqui/nodoface/issues"
+  },
+  "homepage": "https://github.com/sziraqui/nodoface#readme",
+  "dependencies": {
+    "node-addon-api": "^1.6.3"
+  }
+}

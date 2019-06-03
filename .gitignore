@@ -7,7 +7,7 @@
 
 # Build directories
 build
-cmake-*build
+cmake-build-*
 
 
 # Prerequisites
