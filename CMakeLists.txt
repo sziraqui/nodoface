@@ -1,10 +1,10 @@
 # dummy cmakelists to make intellisense work in CLion
-cmake_minimum_required(VERSION 3.12)
-project(dummy)
+cmake_minimum_required(VERSION 3.0)
+project(nodoface)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(SOURCE_FILES src/main.cpp)
+file(GLOB SOURCE_FILES "${CMAKE_SOURCE_DIR}/src/*/*.cpp")
 include_directories(
         node_modules/node-addon-api
         node_modules/node-addon-api/src
 )
-add_executable(dummy ${SOURCE_FILES})
+add_library(${PROJECT_NAME} ${SOURCE_FILES})
