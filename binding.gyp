@@ -9,6 +9,9 @@
         'target_name': '<(module_name)',
         'sources': [
             'src/main.cpp',
+            'src/io/ImageCapture.cpp',
+            'src/jserrors/JSErrors.cpp',
+            'src/extratypes/napiextratypes.cpp',
         ],
         'clfags!': [
             '-fnoexceptions',
