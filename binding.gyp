@@ -10,6 +10,7 @@
         'sources': [
             'src/main.cpp',
             'src/io/ImageCapture.cpp',
+            'src/io/SequenceCapture.cpp',
             'src/jserrors/JSErrors.cpp',
             'src/extras/napiextratypes.cpp',
         ],
