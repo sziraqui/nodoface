@@ -11,8 +11,9 @@ namespace JSErrors {
     const std::string NUMBER = "Number";
     const std::string BOOLEAN = "Boolean";
     const std::string UINT8ARRAY = "Uint8Array";
+    const std::string NONE = "NULL";
 
-    Napi::TypeError SetterError(Napi::Env env, std::string jsTypeName);
-
+    void SetterError(Napi::Env env, std::string jsTypeName);
+    void TooManyArguments(Napi::Env env, uint expectedArgLen, uint receivedArgLen);
 }
 #endif //NODOFACE_JSERRORS_H

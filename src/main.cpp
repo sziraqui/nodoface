@@ -1,6 +1,8 @@
 #include <napi.h>
+#include "io/ImageCapture.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
+    Nodoface::ImageCapture::Init(env, exports);
     return exports;
 }
 

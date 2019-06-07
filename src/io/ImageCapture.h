@@ -19,51 +19,51 @@ private:
     static Napi::FunctionReference constructor;
     // Opening based on command line arguments
     // bool Open(std::vector<std::string>& arguments);
-    Napi::Boolean Open(const Napi::CallbackInfo& info);
+    Napi::Value Open(const Napi::CallbackInfo& info);
     // Direct opening
 
     // Image sequence in the directory
     // bool OpenDirectory(std::string directory, std::string bbox_directory="", float fx = -1, float fy = -1, float cx = -1, float cy = -1);
-    Napi::Boolean OpenDirectory(const Napi::CallbackInfo& info);
+    Napi::Value OpenDirectory(const Napi::CallbackInfo& info);
 
     // Video file
     // bool OpenImageFiles(const std::vector<std::string>& image_files, float fx = -1, float fy = -1, float cx = -1, float cy = -1);
-    Napi::Boolean OpenImageFiles(const Napi::CallbackInfo& info);
+    Napi::Value OpenImageFiles(const Napi::CallbackInfo& info);
 
     // Getting the next frame
     // cv::Mat GetNextImage();
-    Napi::Uint8Array GetNextImage(const Napi::CallbackInfo& info);
+    Napi::Value GetNextImage(const Napi::CallbackInfo& info);
 
     // Getting the most recent grayscale frame (need to call GetNextImage first)
     // cv::Mat_<uchar> GetGrayFrame();
-    Napi::Uint8Array GetGrayFrame(const Napi::CallbackInfo& info);
+    Napi::Value GetGrayFrame(const Napi::CallbackInfo& info);
 
     // Return bounding boxes associated with the image (if defined)
     // std::vector<cv::Rect_<float> > GetBoundingBoxes();
-    Napi::TypedArray GetBoundingBoxes(const Napi::CallbackInfo& info);
+    Napi::Value GetBoundingBoxes(const Napi::CallbackInfo& info);
 
     // Parameters describing the sequence and it's progress (what's the proportion of images opened)
     // double GetProgress();
-    Napi::Number GetProgress(const Napi::CallbackInfo& info);
+    Napi::Value GetProgress(const Napi::CallbackInfo& info);
 
     // GetSet for public variables
     // int image_width;
-    Napi::Number GetImageWidth(const Napi::CallbackInfo& info);
-    Napi::Boolean SetImageWidth(const Napi::CallbackInfo& info);
+    Napi::Value GetImageWidth(const Napi::CallbackInfo& info);
+    Napi::Value SetImageWidth(const Napi::CallbackInfo& info);
 
     // int image_height
-    Napi::Number GetImageHeight(const Napi::CallbackInfo& info);
-    Napi::Boolean SetImageHeight(const Napi::CallbackInfo& info);
+    Napi::Value GetImageHeight(const Napi::CallbackInfo& info);
+    Napi::Value SetImageHeight(const Napi::CallbackInfo& info);
 
     // float fx, fy, cx, cy;
-    Napi::Number GetFx(const Napi::CallbackInfo& info);
-    Napi::Boolean SetFx(const Napi::CallbackInfo& info);
-    Napi::Number GetFy(const Napi::CallbackInfo& info);
-    Napi::Boolean SetFy(const Napi::CallbackInfo& info);
-    Napi::Number GetCx(const Napi::CallbackInfo& info);
-    Napi::Boolean SetCx(const Napi::CallbackInfo& info);
-    Napi::Number GetCy(const Napi::CallbackInfo& info);
-    Napi::Boolean SetCy(const Napi::CallbackInfo& info);
+    Napi::Value GetFx(const Napi::CallbackInfo& info);
+    Napi::Value SetFx(const Napi::CallbackInfo& info);
+    Napi::Value GetFy(const Napi::CallbackInfo& info);
+    Napi::Value SetFy(const Napi::CallbackInfo& info);
+    Napi::Value GetCx(const Napi::CallbackInfo& info);
+    Napi::Value SetCx(const Napi::CallbackInfo& info);
+    Napi::Value GetCy(const Napi::CallbackInfo& info);
+    Napi::Value SetCy(const Napi::CallbackInfo& info);
     // Reference to actual class
     Utilities::ImageCapture *imageCapture;
 

@@ -10,6 +10,8 @@
 build
 cmake-build-*
 
+# python env
+venv
 
 # Prerequisites
 *.d
