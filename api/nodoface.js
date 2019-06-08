@@ -1,8 +1,10 @@
+const path = require('path');
 let nodoface = null;
 if(process.env.NODOFACE_BUILD_TYPE_DEBUG) {
-    nodoface = require('../build/Debug/nodoface.node');
+    nodoface = require(path.resolve(path.join(__dirname, '..', 'build', 'Debug', 'nodoface.node')));
 } else {
-    nodoface = require('../build/Release/nodoface.node');
+    console.log(path.resolve(path.join(__dirname ,'..', 'build', 'Release', 'nodoface.node')));
+    nodoface = require(path.resolve(path.join(__dirname ,'..', 'build', 'Release', 'nodoface.node')));
 }
 console.log(`nodoface: ${nodoface}`);
 

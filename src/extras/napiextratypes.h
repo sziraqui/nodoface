@@ -5,8 +5,7 @@
 #ifndef NODOFACE_NAPIEXTRATYPES_H
 #define NODOFACE_NAPIEXTRATYPES_H
 #include <napi.h>
-#include <iostream>
-#include <array>
+#include <string>
 
 namespace NapiExtra {
 

@@ -11,8 +11,8 @@
             'src/main.cpp',
             'src/io/ImageCapture.cpp',
             #'src/io/SequenceCapture.cpp',
-            'src/jserrors/JSErrors.cpp',
             'src/extras/napiextratypes.cpp',
+            'src/jserrors/JSErrors.cpp',
         ],
         'clfags!': [
             '-fnoexceptions',
