@@ -5,12 +5,24 @@
 #ifndef NODOFACE_NAPIEXTRATYPES_H
 #define NODOFACE_NAPIEXTRATYPES_H
 #include <napi.h>
-#include <vector>
-#include <string>
+#include <iostream>
+#include <array>
+
 namespace NapiExtra {
 
-    class StringArray : public Napi::TypedArrayOf<Napi::String> {
-        std::vector<std::string> ToVector();
+    class NdArray : public Napi::Array {
+    public:
+        NdArray();
+        NdArray(Napi::Array);
+        Napi::Number GetNumberAt(int dims[], int dimCount);
+        Napi::String GetStringAt(int dims[], int dimCount);
+        Napi::Value GetValueAt(int dims[], int dimCount);
+        void SetNumberAt(int dims[], int dimCount, int val);
+        void SetStringAt(int dims[], int dimCount, std::string str);
+        void SetValueAt(int dims[], int dimCount, Napi::Value nval);
+
     };
+
+
 }
 #endif //NODOFACE_NAPIEXTRATYPES_H
