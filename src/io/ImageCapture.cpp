@@ -6,6 +6,7 @@
 #include <string>
 
 #include "ImageCapture.h"
+#include "../extras/napiextratypes.h"
 #include "../jserrors/JSErrors.h"
 
 Napi::FunctionReference Nodoface::ImageCapture::constructor;
@@ -40,25 +41,34 @@ Nodoface::ImageCapture::ImageCapture(const Napi::CallbackInfo &info) : Napi::Obj
     this->imageCapture = new Utilities::ImageCapture();
 }
 
-// js-args: String[] imageFileList, number fx?, number fy?, number cx?, number cy?
+// js-args: String[] imageFileList, number fx?, number fy?, number cx?, number cy? // ensure defaults exist
 Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     size_t argLen = info.Length();
     if (argLen == 0) {
-        // throw insufficient arguments error
+        JSErrors::InsufficientArguments(env, 1, argLen);
     } else if (argLen >= 1 && !info[0].IsArray()) {
-        // throw String array expected at argument 0
-    } else if(argLen) {
-        for (int i = 1; i < argLen; ++i) {
-            if (!info[i].IsNumber()) {
-                // throw Number Expected at argument i
-            }
-        }
+        JSErrors::IncorrectDatatype(env, JSErrors::ARRAY, 0);
     }
-    const Napi::Array imageFileList = info[0].As<Napi::Array>();
-    // TODO: Convert to vector and call native method
+    // Converting js values to c++ types
+    float fx, fy, cx, cy;
+    fx = info[1].As<Napi::Number>().FloatValue();
+    fy = info[2].As<Napi::Number>().FloatValue();
+    cx = info[3].As<Napi::Number>().FloatValue();
+    cy = info[4].As<Napi::Number>().FloatValue();
 
+    NapiExtra::NdArray imageFileList(info[0].As<Napi::Array>());
+    std::vector<std::string> vecList(0);
+    for(int i = 0; i < imageFileList.Length(); ++i) {
+        int index[1];
+        index[0] = i;
+        std::string s = imageFileList.GetStringAt(index, 1).Utf8Value();
+        vecList.push_back(s);
+    }
+    // call native method
+    bool result = this->imageCapture->OpenImageFiles(vecList, fx, fy, cx, cy);
+    return Napi::Boolean::New(env, result);
 }
 
 Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info) {
