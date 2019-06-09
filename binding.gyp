@@ -15,10 +15,11 @@
             'src/jserrors/JSErrors.cpp',
         ],
         'clfags!': [
-            '-fnoexceptions',
+            '-fno-exceptions',
         ],
         'cflags_cc!': [
-            '-fnoexceptions',
+            "-fno-rtti",
+            '-fno-exceptions',
         ],
         'include_dirs': [
             '<!@(node -p "require(\'node-addon-api\').include")',

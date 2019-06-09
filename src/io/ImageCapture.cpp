@@ -1,10 +1,12 @@
 //
 // Created by sziraqui on 3/6/19.
 //
-#include <opencv/cv.h>
+// System includes
 #include <vector>
 #include <string>
-
+// OpenCV includes
+#include<opencv2/opencv.hpp>
+// local includes
 #include "ImageCapture.h"
 #include "../extras/napiextratypes.h"
 #include "../jserrors/JSErrors.h"
