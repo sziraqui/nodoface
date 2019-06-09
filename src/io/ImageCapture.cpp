@@ -14,6 +14,8 @@ Napi::FunctionReference Nodoface::ImageCapture::constructor;
 Napi::Object Nodoface::ImageCapture::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "ImageCapture", {
+        InstanceMethod("open", &Nodoface::ImageCapture::Open),
+        InstanceMethod("openDirectory", &Nodoface::ImageCapture::OpenDirectory),
         InstanceMethod("openImageFiles", &Nodoface::ImageCapture::OpenImageFiles),
         InstanceMethod("getNextImage", &Nodoface::ImageCapture::GetNextImage),
         InstanceMethod("getGrayFrame", &Nodoface::ImageCapture::GetGrayFrame),
@@ -42,6 +44,53 @@ Nodoface::ImageCapture::ImageCapture(const Napi::CallbackInfo &info) : Napi::Obj
         JSErrors::TooManyArguments(info.Env(), 0, info.Length());
     }
     this->imageCapture = new Utilities::ImageCapture();
+}
+
+Napi::Value Nodoface::ImageCapture::Open(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    size_t argLen = info.Length();
+    if (argLen == 0) {
+        JSErrors::InsufficientArguments(env, 1, argLen);
+    } else if (argLen >= 1 && !info[0].IsArray()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::ARRAY, 0);
+    }
+
+    NapiExtra::NdArray arguments(info[0].As<Napi::Array>());
+    std::vector<std::string> vecList(0);
+    for(int i = 0; i < arguments.Length(); ++i) {
+        int index[1];
+        index[0] = i;
+        std::string s = arguments.GetStringAt(index, 1).Utf8Value();
+        vecList.push_back(s);
+    }
+    bool result = this->imageCapture->Open(vecList);
+    return Napi::Boolean::New(env, result);
+}
+
+Napi::Value Nodoface::ImageCapture::OpenDirectory(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    size_t argLen = info.Length();
+
+    std::string imgDir;
+    std::string bboxDir = "";
+    if (argLen < 1u) {
+        JSErrors::InsufficientArguments(env, 2u, argLen);
+    } else if(!info[0].IsString()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::STRING, 0);
+    } else if(argLen < 2u || !info[1].IsString()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::STRING, 1);
+    } else {
+        bboxDir = info[1].As<Napi::String>().Utf8Value();
+    }
+    imgDir = info[0].As<Napi::String>().Utf8Value();
+    uint8_t i = 2;
+    float fx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float fy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float cx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float cy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1;
+
+    bool result = this->imageCapture->OpenDirectory(imgDir, bboxDir, fx, fy, cx, cy);
+    return Napi::Boolean::New(env, result);
 }
 
 // js-args: String[] imageFileList, number fx?, number fy?, number cx?, number cy? // ensure defaults exist
