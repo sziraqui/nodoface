@@ -14,11 +14,14 @@ Napi::FunctionReference Nodoface::ImageCapture::constructor;
 Napi::Object Nodoface::ImageCapture::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "ImageCapture", {
+        InstanceMethod("openImageFiles", &Nodoface::ImageCapture::OpenImageFiles),
+        InstanceMethod("getNextImage", &Nodoface::ImageCapture::GetNextImage),
+        InstanceMethod("getGrayFrame", &Nodoface::ImageCapture::GetGrayFrame),
         InstanceMethod("getProgress", &Nodoface::ImageCapture::GetProgress),
         InstanceMethod("getImageWidth", &Nodoface::ImageCapture::GetImageHeight),
         InstanceMethod("setImageHeight", &Nodoface::ImageCapture::SetImageHeight),
         InstanceMethod("getImageWidth", &Nodoface::ImageCapture::GetImageWidth),
-        InstanceMethod("setImageHeight", &Nodoface::ImageCapture::SetImageHeight),
+        InstanceMethod("setImageHeight", &Nodoface::ImageCapture::SetImageWidth),
         InstanceMethod("getFx", &Nodoface::ImageCapture::GetFx),
         InstanceMethod("setFx", &Nodoface::ImageCapture::SetFx),
         InstanceMethod("getFy", &Nodoface::ImageCapture::GetFy),
@@ -74,16 +77,19 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
 Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info) {
     cv::Mat img = this->imageCapture->GetNextImage();
     // TODO: handle cv Mat of multi channels
+    return Napi::Boolean::New(info.Env(), true);
 }
 
 Napi::Value Nodoface::ImageCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
     cv::Mat_<uchar> frame = this->imageCapture->GetGrayFrame();
     // TODO: handle cv Mat of single channel
+    return Napi::Boolean::New(info.Env(), true);
 }
 
 Napi::Value Nodoface::ImageCapture::GetBoundingBoxes(const Napi::CallbackInfo &info) {
     std::vector<cv::Rect_<float> > bboxes = this->imageCapture->GetBoundingBoxes();
     // TODO: handle cv Rect
+    return Napi::Boolean::New(info.Env(), true);
 }
 
 Napi::Value Nodoface::ImageCapture::GetProgress(const Napi::CallbackInfo &info) {
