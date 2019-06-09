@@ -43,6 +43,7 @@ void NapiExtra::NdArray::SetNumberAt(int *dims, int dimCount, int val) {
 
 void NapiExtra::NdArray::SetStringAt(int *dims, int dimCount, std::string str) {
     Napi::Value nval = Napi::Value::From(this->Env(), str);
+    this->SetValueAt(dims, dimCount, nval);
 }
 
 void NapiExtra::NdArray::SetValueAt(int *dims, int dimCount, Napi::Value val) {
