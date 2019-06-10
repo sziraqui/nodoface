@@ -23,10 +23,15 @@
         ],
         'include_dirs': [
             '<!@(node -p "require(\'node-addon-api\').include")',
-            '<!@(pkg-config "opencv >= <(cv_version)" --cflags)',
+            '/usr/local/include',
+            '/usr/local/include/OpenFace',
+            '/usr/local/include/opencv',
+            '/usr/local/include/opencv2'
         ],
         'libraries': [
-            '<!@(pkg-config "opencv >= <(cv_version)" --libs)',
+            '-L/usr/local/lib',
+            '-Wl,-rpath, /usr/local/lib/libUtilities.a',
+            '<!@(pkg-config opencv --libs)'
         ],
         'dependencies': [
             '<!@(node -p "require(\'node-addon-api\').gyp")',
@@ -35,13 +40,20 @@
             'NAPI_DISABLE_CPP_EXCEPTIONS',
             'NODE_ADDON_API_DISABLE_DEPRECATED',
         ],
+        'cflags': [
+            '-std=c++11',
+            '-fPIC'
+        ],
         'conditions': [
             [
                 'OS=="linux" or OS=="freebsd" or OS=="openbsd" or OS=="solaris" or OS=="aix"',
                 {
-                    'cflags': [
-                        '<!@(pkg-config "opencv >= <(cv_version)" --cflags)',
-                        '-Wall'
+                    'cflags+': [
+                        '-I/usr/local/include',
+                        '-I/usr/local/include/OpenFace',
+                        '-I/usr/local/include/opencv',
+                        '-I/usr/local/include/opencv2'
+                        '-Wall',
                     ]
                 }
             ],
