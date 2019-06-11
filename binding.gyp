@@ -4,6 +4,7 @@
         'module_name': 'nodoface',
         'cv_version': '3.4.0',
         'dlib_version': '19.13',
+        'openface_version': '2.1.0'
     },
     'targets': [{
         'target_name': '<(module_name)',
@@ -18,20 +19,14 @@
             '-fno-exceptions',
         ],
         'cflags_cc!': [
-            "-fno-rtti",
+            '-fno-rtti',
             '-fno-exceptions',
         ],
         'include_dirs': [
             '<!@(node -p "require(\'node-addon-api\').include")',
-            '/usr/local/include',
-            '/usr/local/include/OpenFace',
-            '/usr/local/include/opencv',
-            '/usr/local/include/opencv2'
         ],
         'libraries': [
-            '-L/usr/local/lib',
-            '-Wl,-rpath, /usr/local/lib/libUtilities.a',
-            '<!@(pkg-config opencv --libs)'
+            '<!@(pkg-config "opencv >= <(cv_version)" --libs)',
         ],
         'dependencies': [
             '<!@(node -p "require(\'node-addon-api\').gyp")',
@@ -42,7 +37,8 @@
         ],
         'cflags': [
             '-std=c++11',
-            '-fPIC'
+            '<!@(pkg-config "opencv >= <(cv_version)" --cflags)',
+            '-Wall',
         ],
         'conditions': [
             [
@@ -51,9 +47,15 @@
                     'cflags+': [
                         '-I/usr/local/include',
                         '-I/usr/local/include/OpenFace',
-                        '-I/usr/local/include/opencv',
-                        '-I/usr/local/include/opencv2'
-                        '-Wall',
+                    ],
+                    'include_dirs+': [
+                        '/usr/local/include',
+                        '/usr/local/include/OpenFace',
+                        '/usr/local/include/opencv',
+                    ],
+                    'libraries+': [
+                        '-L/usr/local/lib',
+                        '-lUtilities',
                     ]
                 }
             ],
