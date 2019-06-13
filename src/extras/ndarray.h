@@ -39,11 +39,11 @@ namespace NapiExtra {
         // matType must be as returned by original mat.type()
         cv::Mat ToMat(int matType);
         // Convert C++ array to Napi::ArrayBuffer
-        Napi::ArrayBuffer ToArrayBuffer(Napi::Env env); // calculate byteLength and call next overload
+        Napi::ArrayBuffer ToArrayBuffer(Napi::Env& env); // calculate byteLength and call next overload
         // Convert C++ array to Napi::TypedArrayOf
-        Napi::TypedArrayOf<numericType> ToTypedArray(Napi::Env env);
+        Napi::TypedArrayOf<numericType> ToTypedArray(Napi::Env& env);
         // Get array whose elements do are clamped to 255 when value exceeds its range
-        Napi::Uint8Array ToUint8ClampedArray(Napi::Env env);
+        Napi::Uint8Array ToUint8ClampedArray(Napi::Env& env);
         size_t ElementCount();
     private:
         // pointer to actual array backing cv::Mat or ArrayBuffer
@@ -56,7 +56,7 @@ namespace NapiExtra {
         // Private constructor
         NdArray(){}
         //
-        Napi::ArrayBuffer ToArrayBuffer(Napi::Env env, size_t byteLength); // actual buffer creation
+        Napi::ArrayBuffer ToArrayBuffer(Napi::Env& env, size_t byteLength); // actual buffer creation
     };
 
     template <class  numericType>
@@ -152,29 +152,29 @@ namespace NapiExtra {
     }
 
     template <class numericType>
-    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env env) {
+    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env& env) {
         size_t byteLength = sizeof(numericType)/sizeof(uint8_t);
         return this->ToArrayBuffer(env, byteLength);
     }
 
     template <class numericType>
-    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env env, size_t byteLength) {
+    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env& env, size_t byteLength) {
         if(this->data.size() > 0) { // data was copied, use it
             // create from this->data
-            return Napi::ArrayBuffer(env, this->data.data(), byteLength);
+            return Napi::ArrayBuffer::New(env, this->data.data(), byteLength);
         }
         // create from this->ptr
         return Napi::ArrayBuffer::New(env, this->ptr, byteLength);
     }
 
     template <class numericType>
-    Napi::TypedArrayOf<numericType> NdArray<numericType>::ToTypedArray(Napi::Env env) {
+    Napi::TypedArrayOf<numericType> NdArray<numericType>::ToTypedArray(Napi::Env& env) {
         Napi::ArrayBuffer ab = this->ToArrayBuffer(env);
         return Napi::TypedArrayOf<numericType>::New(env, this->ElementCount(), ab, 0 /**bufferOffset*/);
     }
 
     template <class numericType>
-    Napi::Uint8Array NdArray<numericType>::ToUint8ClampedArray(Napi::Env env) {
+    Napi::Uint8Array NdArray<numericType>::ToUint8ClampedArray(Napi::Env& env) {
         Napi::ArrayBuffer ab = this->ToArrayBuffer(env);
         return Napi::Uint8Array::New(env, this->ElementCount(), ab, 0 /**bufferOffset*/, napi_uint8_clamped_array);
     }
