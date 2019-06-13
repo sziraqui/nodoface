@@ -28,7 +28,8 @@ namespace NapiExtras {
         static NdArray<numericType> From(Napi::TypedArrayOf<numericType> arr, Napi::Int32Array dims, bool copy = false);
         static NdArray<numericType> From(cv::Mat mat, bool copy = false);
 
-        NdArray(std::vector<int>& shape, numericType* ptr, bool copy = false);
+        NdArray(std::vector<int>& shape, numericType* ptr);
+        NdArray(std::vector<int>& shape, numericType* ptr, std::vector<numericType>& dataCopy);
         // Get underlying data
         // instance.Get({0,1,2}) to get element at (0,1,2) index of input cv::Mat or Array
 //        numericType Get(std::initializer_list<int> index);
@@ -37,6 +38,13 @@ namespace NapiExtras {
 
         // matType must be as returned by original mat.type()
         cv::Mat ToMat(int matType);
+        // Convert C++ array to Napi::ArrayBuffer
+        Napi::ArrayBuffer ToArrayBuffer(Napi::Env env); // calculate byteLength and call next overload
+        // Convert C++ array to Napi::TypedArrayOf
+        Napi::TypedArrayOf<numericType> ToTypedArray(Napi::Env env);
+        // Get array whose elements do are clamped to 255 when value exceeds its range
+        Napi::Uint8Array ToUint8ClampedArray(Napi::Env env):
+        size_t ElementCount();
     private:
         // pointer to actual array backing cv::Mat or ArrayBuffer
         numericType* ptr;
@@ -47,6 +55,8 @@ namespace NapiExtras {
 
         // Private constructor
         NdArray(){}
+        //
+        Napi::ArrayBuffer ToArrayBuffer(Napi::Env env, size_t byteLength); // actual buffer creation
     };
 
     template <class  numericType>
@@ -63,12 +73,14 @@ namespace NapiExtras {
             // Copy buffer data into a vector
             uint32_t bufLen = buf.ByteLength()/sizeof(numericType);
             std::vector<numericType> dataCopy(raw, bufLen);
+            return NdArray<numericType>(shape, raw, dataCopy);
+        } else {
+            return NdArray<numericType>(shape, raw);
         }
-        return NdArray<numericType>(raw, shape);
     }
 
     template <class numericType>
-    NdArray<numericType> NdArray<numericType>::From(cv::Mat mat, bool copy) {
+    NdArray<uchar> NdArray<numericType>::From(cv::Mat mat, bool copy) {
         // Copy shape information
         std::vector<int> shape;
         for(int i = 0; i < mat.size.dims(); ++i) {
@@ -80,24 +92,27 @@ namespace NapiExtras {
         cv::Mat matCopy;
         std::vector<numericType> data;
         std::cout<<"FromMat:mat.isContinuous()"<<mat.isContinuous()<<std::endl;
-        if(!mat.isContinuous()){
+        if(!mat.isContinuous() || copy){
             matCopy = mat.clone();
-            raw = matCopy.data;
+            raw = matCopy.data; // definitely continuous because of clone()
+            data.assign(raw, raw + matCopy.total());
             std::cout<<"FromMat:cloned"<<data.size()<<std::endl;
+            return NdArray<numericType>(shape, raw, data);
         }
-        return NdArray<numericType>(shape, raw, copy);
+        return NdArray<numericType>(shape, raw);
     }
 
     template <class numericType>
-    NdArray<numericType>::NdArray(std::vector<int>& shape, numericType* ptr, bool copy) {
+    NdArray<numericType>::NdArray(std::vector<int>& shape, numericType* ptr) {
         this->ptr = ptr;
         this->shape = shape;
-        if(copy) {
-            uint total = 0;
-            for(auto d: shape) total*=d;
-            std::vector<numericType> dataCopy(ptr, ptr + total);
-            this->data = dataCopy;
-        }
+    }
+
+    template <class numericType>
+    NdArray<numericType>::NdArray(std::vector<int>& shape, numericType* ptr, std::vector<numericType>& data) {
+        this->ptr = ptr;
+        this->shape = shape;
+        this->data = data;
     }
 
     template <class numericType>
@@ -107,6 +122,38 @@ namespace NapiExtras {
         return mat;
     }
 
+    template <class numericType>
+    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env env) {
+        size_t byteLength = sizeof(numericType)/sizeof(uint8_t);
+        return this->ToArrayBuffer(env, byteLength);
+    }
+
+    template <class numericType>
+    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env, size_t byteLength) {
+        if(this->data.size() > 0) { // data was copied, use it
+            // create from this->data
+            return Napi::ArrayBuffer(env, this->data.data(), byteLength);
+        }
+        // create from this->ptr
+        return Napi::ArrayBuffer::New(env, this->ptr, byteLength);
+    }
+
+    template <class numericType>
+    Napi::TypedArrayOf<numericType> NdArray<numericType>::ToTypedArray(Napi::Env env) {
+        Napi::ArrayBuffer ab = this->ToArrayBuffer(env);
+        return Napi::TypedArrayOf<numericType>::New(env, this->ElementCount(), ab, 0 /**bufferOffset*/);
+    }
+
+    template <class numericType>
+    Napi::Uint8Array NdArray<numericType>::ToUint8ClampedArray(Napi::Env env) {
+        Napi::ArrayBuffer ab = this->ToArrayBuffer(env);
+        return Napi::Uint8Array::New(env, this->ElementCount(), ab, 0 /**bufferOffset*/, napi_uint8_clamped_array);
+    }
+
+    template <class numericType>
+    size_t NdArray<numericType>::ElementCount() {
+        return sizeof(this->ptr)/sizeof(numericType);
+    }
 }
 
 #endif //NODOFACE_NDARRAY_H
