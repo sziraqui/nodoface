@@ -124,15 +124,17 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
 }
 
 Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
     cv::Mat img = this->imageCapture->GetNextImage();
-    // TODO: handle cv Mat of multi channels
-    return Napi::Boolean::New(info.Env(), true);
+    auto ndarray = NapiExtra::NdArray<uchar>::From(img);
+    return ndarray.ToTypedArray(env);
 }
 
 Napi::Value Nodoface::ImageCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
-    cv::Mat_<uchar> frame = this->imageCapture->GetGrayFrame();
-    // TODO: handle cv Mat of single channel
-    return Napi::Boolean::New(info.Env(), true);
+    Napi::Env env = info.Env();
+    cv::Mat frame = this->imageCapture->GetGrayFrame();
+    auto ndarray = NapiExtra::NdArray<uchar>::From(frame);
+    return ndarray.ToTypedArray(env);
 }
 
 Napi::Value Nodoface::ImageCapture::GetBoundingBoxes(const Napi::CallbackInfo &info) {
