@@ -10,79 +10,102 @@
 #include <initializer_list>
 
 // opencv includes
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/mat.hpp>
+#include <opencv2/core/utility.hpp>
 
-// local includes
-#include "../jserrors/JSErrors.h"
+// napi
+#include <napi.h>
+
 
 namespace NapiExtras {
 
-    // Recursively find length of each sub-array and collect it in a vector
-    static void CalculateShape(Napi::Value value, vector<uint32_t>& shape);
-
-    // Recurse an array to collect its elements in a flat vector
-    // dest is assumed to be pre-allocated to fit the array
-    template<class numericType = uint8_t>
-    static void FlattenArray(Napi::Value value, std::vector<numericType>& dest, uint32_t index = 0u) {
-        if(!value.IsArray()) {
-            return;
-        }
-        Napi::Array arr = value.As<Napi::Array>();
-        // test each value inside array
-        // If its a number, append it, if its an Array, recurse, else throw error
-        for(uint32_t i = 0u; i < arr.Length(); ++i) {
-            Napi::Value nextVal = arr.Get(i);
-            if(nextVal.IsNumber()) {
-                numericType num = nextVal.As<Napi::Number>().DoubleValue();
-                dest.push_back(num);
-            } else if(nextVal.IsArray()) {
-                return FlattenArray(value, dest, index + 1);
-            } else {
-                stderr
-                        << "E/FlattenArray: Invalid argument. Expected Napi::Array or Napi::Number type. Got "
-                        << typeid(value).name() << std::endl;
-                return;
-            }
-        }
-    }
-
-    // NdArray handle all numeric datatypes like cv::Mat, vector of ints,floats, etc, and Napi::Array
+    // NdArray handle conversions to/from Napi::ArrayBuffer and cv::Mat
     // By default this stores cv::Mat<uchar> or Array of Numbers
-    template <class numericType = uint8_t >
+    template <class numericType = uchar>
     class NdArray {
     public:
         // Creating an instance
-        static NdArray From(Napi::Array nparr);
-        static NdArray From(cv::Mat<numericType> mat);
+        static NdArray<numericType> From(Napi::TypedArrayOf<numericType> arr, Napi::Int32Array dims, bool copy = false);
+        static NdArray<numericType> From(cv::Mat mat, bool copy = false);
 
+        NdArray(std::vector<int>& shape, numericType* ptr, bool copy = false);
         // Get underlying data
         // instance.Get({0,1,2}) to get element at (0,1,2) index of input cv::Mat or Array
-        numericType Get(std::initializer_list index)
-        // instance.Set(8, {0,1,2}) to set value of element at (0,1,2) index of cv::Mat or Array
-        bool Set(numericType value, std::initializer_list index);
+//        numericType Get(std::initializer_list<int> index);
+//        // instance.Set(8, {0,1,2}) to set value of element at (0,1,2) index of cv::Mat or Array
+//        bool Set(numericType value, std::initializer_list<int> index);
+
+        // matType must be as returned by original mat.type()
+        cv::Mat ToMat(int matType);
     private:
+        // pointer to actual array backing cv::Mat or ArrayBuffer
+        numericType* ptr;
+        // Values of buffer will be copied to this vector if needed
         std::vector<numericType> data;
-        std::vector<uint32_t > shape;
+        // actual dimensions of cv::Mat or multi-dimension array passed as array buffer
+        std::vector<int> shape;
+
+        // Private constructor
+        NdArray(){}
     };
 
-    static void CalculateShape(Napi::Value value, vector <uint32_t>& shape) {
-        if(!value.IsArray()) {
-            return;
+    template <class  numericType>
+    NdArray<numericType> NdArray<numericType>::From(Napi::TypedArrayOf<numericType> arr, Napi::Int32Array dims, bool copy) {
+        // Copy shape information
+        std::vector<int> shape(dims.ElementLength());
+        for(uint32_t i = 0u; i < shape.size(); ++i){
+            shape[i] = dims[i];
         }
-        Napi::Array arr = value.As<Napi::Array>();
-
-        shape.push_back(arr.Length());
-        Napi::Value nextVal = arr.Get(0u);
-        return CalculateShape(nextVal, shape);
+        // Get data buffer of typed array
+        Napi::ArrayBuffer buf = arr.ArrayBuffer();
+        numericType* raw = reinterpret_cast<numericType*>(buf.Data());
+        if(copy) {
+            // Copy buffer data into a vector
+            uint32_t bufLen = buf.ByteLength()/sizeof(numericType);
+            std::vector<numericType> dataCopy(raw, bufLen);
+        }
+        return NdArray<numericType>(raw, shape);
     }
 
-    static NdArray::From(Napi::Array nparr) {
-        // Find dimensions of array
-        std::vector<uint32_t> shape;
-        CalculateShape(nparr.As<Napi::Value>(), shape);
-
+    template <class numericType>
+    NdArray<numericType> NdArray<numericType>::From(cv::Mat mat, bool copy) {
+        // Copy shape information
+        std::vector<int> shape;
+        for(int i = 0; i < mat.size.dims(); ++i) {
+            shape.push_back(mat.size[i]);
+            std::cout<<"FromMat:shape["<<i<<"]="<<shape[i]<<std::endl;
+        }
+        // Get reference to underlying array ptr
+        numericType* raw = mat.data;
+        cv::Mat matCopy;
+        std::vector<numericType> data;
+        std::cout<<"FromMat:mat.isContinuous()"<<mat.isContinuous()<<std::endl;
+        if(!mat.isContinuous()){
+            matCopy = mat.clone();
+            raw = matCopy.data;
+            std::cout<<"FromMat:cloned"<<data.size()<<std::endl;
+        }
+        return NdArray<numericType>(shape, raw, copy);
     }
 
+    template <class numericType>
+    NdArray<numericType>::NdArray(std::vector<int>& shape, numericType* ptr, bool copy) {
+        this->ptr = ptr;
+        this->shape = shape;
+        if(copy) {
+            uint total = 0;
+            for(auto d: shape) total*=d;
+            std::vector<numericType> dataCopy(ptr, ptr + total);
+            this->data = dataCopy;
+        }
+    }
+
+    template <class numericType>
+    cv::Mat NdArray<numericType>::ToMat(int matType) {
+        const int * sizes = const_cast<int *>(this->shape.data()); // reference to internal array
+        cv::Mat mat(this->shape.size(), sizes, matType, this->ptr);
+        return mat;
+    }
 
 }
 
