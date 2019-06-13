@@ -26,10 +26,10 @@ namespace NapiExtra {
     public:
         // Creating an instance
         static NdArray<numericType> From(Napi::TypedArrayOf<numericType> arr, Napi::Int32Array dims, bool copy = false);
-        static NdArray<uchar> From(cv::Mat mat, bool copy = false);
+        static NdArray<numericType> From(cv::Mat& mat); // must be uchar
 
-        NdArray(std::vector<int>& shape, size_t n_elements, numericType* ptr);
-        NdArray(std::vector<int>& shape, size_t n_elements, numericType* ptr, std::vector<numericType>& dataCopy);
+        NdArray(std::vector<int>& shape, numericType* ptr);
+        NdArray(std::vector<int>& shape, std::vector<numericType>& dataCopy);
         // Get underlying data
         // instance.Get({0,1,2}) to get element at (0,1,2) index of input cv::Mat or Array
         numericType Get(std::initializer_list<int> index);
@@ -49,16 +49,21 @@ namespace NapiExtra {
         // pointer to actual array backing cv::Mat or ArrayBuffer
         numericType* ptr;
         // Number of elements pointed by ptr
+        // = product of values in this->shape
         size_t n_elements;
         // Values of buffer will be copied to this vector if needed
         std::vector<numericType> data;
         // actual dimensions of cv::Mat or multi-dimension array passed as array buffer
+        // Eg, For cv::Mat image, shape = {rows, cols, channels}
         std::vector<int> shape;
 
         // Private constructor
         NdArray(){}
         //
         Napi::ArrayBuffer ToArrayBuffer(Napi::Env& env, size_t byteLength); // actual buffer creation
+        static std::vector<int> GetShape(cv::Mat &mat);
+
+        void CalculatePixels(const std::vector<int> &shape);
     };
 
     template <class  numericType>
@@ -76,47 +81,58 @@ namespace NapiExtra {
             // Copy buffer data into a vector
             uint32_t bufLen = arr.ElementLength();
             std::vector<numericType> dataCopy(raw, raw + bufLen);
-            return NdArray<numericType>(shape, raw, arr.ElementLength(), dataCopy);
+            return NdArray<numericType>(shape, arr.ElementLength(), dataCopy);
         } else {
-            return NdArray<numericType>(shape, arr.ElementLength(), raw);
+            return NdArray<numericType>(shape, raw);
         }
     }
 
     template <class numericType>
-    NdArray<uchar> NdArray<numericType>::From(cv::Mat mat, bool copy) {
-        // Copy shape information
-        std::vector<int> shape;
-        for(int i = 0; i < mat.size.dims(); ++i) {
-            shape.push_back(mat.size[i]);
-            std::cout<<"FromMat:shape["<<i<<"]="<<shape[i]<<std::endl;
-        }
+    NdArray<numericType> NdArray<numericType>::From(cv::Mat& mat) {
+        std::vector<int> shape = GetShape(mat);
         // Get reference to underlying array ptr
-        numericType* raw = mat.data;
-        cv::Mat matCopy;
+        size_t npixels = mat.rows*mat.cols*mat.channels();
+        cv::Mat flatView = mat.reshape(1, npixels);
         std::vector<numericType> data;
-        std::cout<<"FromMat:mat.isContinuous()"<<mat.isContinuous()<<std::endl;
-        if(!mat.isContinuous() || copy){
-            matCopy = mat.clone();
-            raw = matCopy.data; // definitely continuous because of clone()
-            data.assign(raw, raw + matCopy.total());
-            std::cout<<"FromMat:cloned"<<data.size()<<std::endl;
-            return NdArray<numericType>(shape, mat.total(), raw, data);
-        }
-        return NdArray<numericType>(shape, mat.total(), raw);
+        // Clone to make contiguous mat and copy it to vector
+        flatView.clone().copyTo(data);
+        return NdArray<numericType>(shape, data);
     }
 
     template <class numericType>
-    NdArray<numericType>::NdArray(std::vector<int>& shape, size_t n_elements, numericType* ptr) {
+    std::vector<int> NdArray<numericType>::GetShape(cv::Mat& mat) {// Copy shape information
+        std::vector<int> shape(mat.size.dims() + 1); // +1 for channel
+        for (int i = 0; i < mat.size.dims(); ++i) {
+            shape[i] = mat.size[i];
+            std::cout << "FromMat:shape[" << i << "]=" << shape[i] << std::endl;
+        }
+        shape[mat.size.dims()] = mat.channels();
+        std::cout << "FromMat:shape[" << mat.size.dims() << "]=" << shape[mat.size.dims()] << std::endl;
+        return shape;
+    }
+
+    template <class numericType>
+    NdArray<numericType>::NdArray(std::vector<int>& shape, numericType* ptr) {
         this->ptr = ptr;
         this->shape = shape;
-        this->n_elements = n_elements;
+        this->CalculatePixels(shape);
     }
 
     template <class numericType>
-    NdArray<numericType>::NdArray(std::vector<int>& shape, size_t  n_elements, numericType* ptr, std::vector<numericType>& data) {
-        this->ptr = ptr;
+    NdArray<numericType>::NdArray(std::vector<int>& shape, std::vector<numericType>& data) {
+        this->ptr = data.data();
         this->shape = shape;
         this->data = data;
+        this->CalculatePixels(shape);
+    }
+
+    template <class numericType>
+    void NdArray<numericType>::CalculatePixels(const std::vector<int> &shape) {
+        int total = 1;
+        for (uint i = 0; i < shape.size(); ++i) {
+            total = total * shape[i];
+        }
+        this->n_elements = total;
     }
 
     template <class numericType>
@@ -158,6 +174,7 @@ namespace NapiExtra {
     template <class numericType>
     Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env& env) {
         size_t byteLength = sizeof(numericType) * this->n_elements;
+        std::cout<<"bytelen:"<<byteLength<<std::endl;
         return this->ToArrayBuffer(env, byteLength);
     }
 
@@ -185,6 +202,7 @@ namespace NapiExtra {
 
     template <class numericType>
     size_t NdArray<numericType>::ElementCount() {
+        std::cout<<"elementLen:"<<this->n_elements<<std::endl;
         return this->n_elements;
     }
 }
