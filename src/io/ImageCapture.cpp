@@ -8,7 +8,7 @@
 #include<opencv2/opencv.hpp>
 // local includes
 #include "ImageCapture.h"
-#include "../extras/napiextratypes.h"
+#include "../extras/ndarray.h"
 #include "../jserrors/JSErrors.h"
 
 Napi::FunctionReference Nodoface::ImageCapture::constructor;
@@ -57,13 +57,12 @@ Napi::Value Nodoface::ImageCapture::Open(const Napi::CallbackInfo &info) {
         JSErrors::IncorrectDatatype(env, JSErrors::ARRAY, 0);
     }
 
-    NapiExtra::NdArray arguments(info[0].As<Napi::Array>());
-    std::vector<std::string> vecList(0);
-    for(int i = 0; i < arguments.Length(); ++i) {
-        int index[1];
-        index[0] = i;
-        std::string s = arguments.GetStringAt(index, 1).Utf8Value();
-        vecList.push_back(s);
+    const Napi::Array arguments = info[0].As<Napi::Array>();
+    std::vector<std::string> vecList(arguments.Length());
+    for(uint i = 0; i < arguments.Length(); ++i) {
+
+        std::string s = arguments[i].As<Napi::String>().Utf8Value();
+        vecList[i] = s;
     }
     bool result = this->imageCapture->Open(vecList);
     return Napi::Boolean::New(env, result);
@@ -112,13 +111,12 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
     cx = info[3].As<Napi::Number>().FloatValue();
     cy = info[4].As<Napi::Number>().FloatValue();
 
-    NapiExtra::NdArray imageFileList(info[0].As<Napi::Array>());
-    std::vector<std::string> vecList(0);
-    for(int i = 0; i < imageFileList.Length(); ++i) {
-        int index[1];
-        index[0] = i;
-        std::string s = imageFileList.GetStringAt(index, 1).Utf8Value();
-        vecList.push_back(s);
+    const Napi::Array arguments = info[0].As<Napi::Array>();
+    std::vector<std::string> vecList(arguments.Length());
+    for(uint i = 0; i < arguments.Length(); ++i) {
+
+        std::string s = arguments[i].As<Napi::String>().Utf8Value();
+        vecList[i] = s;
     }
     // call native method
     bool result = this->imageCapture->OpenImageFiles(vecList, fx, fy, cx, cy);

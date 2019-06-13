@@ -17,7 +17,7 @@
 #include <napi.h>
 
 
-namespace NapiExtras {
+namespace NapiExtra {
 
     // NdArray handle conversions to/from Napi::ArrayBuffer and cv::Mat
     // By default this stores cv::Mat<uchar> or Array of Numbers
@@ -26,15 +26,15 @@ namespace NapiExtras {
     public:
         // Creating an instance
         static NdArray<numericType> From(Napi::TypedArrayOf<numericType> arr, Napi::Int32Array dims, bool copy = false);
-        static NdArray<numericType> From(cv::Mat mat, bool copy = false);
+        static NdArray<uchar> From(cv::Mat mat, bool copy = false);
 
         NdArray(std::vector<int>& shape, numericType* ptr);
         NdArray(std::vector<int>& shape, numericType* ptr, std::vector<numericType>& dataCopy);
         // Get underlying data
         // instance.Get({0,1,2}) to get element at (0,1,2) index of input cv::Mat or Array
-//        numericType Get(std::initializer_list<int> index);
-//        // instance.Set(8, {0,1,2}) to set value of element at (0,1,2) index of cv::Mat or Array
-//        bool Set(numericType value, std::initializer_list<int> index);
+        numericType Get(std::initializer_list<int> index);
+        // instance.Set(8, {0,1,2}) to set value of element at (0,1,2) index of cv::Mat or Array
+        bool Set(numericType value, std::initializer_list<int> indices);
 
         // matType must be as returned by original mat.type()
         cv::Mat ToMat(int matType);
@@ -43,7 +43,7 @@ namespace NapiExtras {
         // Convert C++ array to Napi::TypedArrayOf
         Napi::TypedArrayOf<numericType> ToTypedArray(Napi::Env env);
         // Get array whose elements do are clamped to 255 when value exceeds its range
-        Napi::Uint8Array ToUint8ClampedArray(Napi::Env env):
+        Napi::Uint8Array ToUint8ClampedArray(Napi::Env env);
         size_t ElementCount();
     private:
         // pointer to actual array backing cv::Mat or ArrayBuffer
@@ -116,6 +116,35 @@ namespace NapiExtras {
     }
 
     template <class numericType>
+    numericType NdArray<numericType>::Get(std::initializer_list<int> indices) {
+        uint32_t offset = 0;
+        for(auto index: indices) {
+            offset+=index;
+        }
+        if(this->data.size() > 0) { // prefer getting value from vector
+            return this->data[offset];
+        } else {
+            return this->ptr[offset];
+        }
+    }
+
+    template <class numericType>
+    bool NdArray<numericType>::Set(numericType value, std::initializer_list<int> indices) {
+        uint32_t offset = 0;
+        for(auto index: indices) {
+            offset+=index;
+        }
+        if(this->data.size() > 0) { // prefer manipulating vector
+            this->data[offset] = value;
+            return true;
+        } else if (this->ptr != nullptr){
+            this->ptr[offset] = value;
+            return true;
+        }
+        return false;
+    }
+
+    template <class numericType>
     cv::Mat NdArray<numericType>::ToMat(int matType) {
         const int * sizes = const_cast<int *>(this->shape.data()); // reference to internal array
         cv::Mat mat(this->shape.size(), sizes, matType, this->ptr);
@@ -129,7 +158,7 @@ namespace NapiExtras {
     }
 
     template <class numericType>
-    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env, size_t byteLength) {
+    Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env env, size_t byteLength) {
         if(this->data.size() > 0) { // data was copied, use it
             // create from this->data
             return Napi::ArrayBuffer(env, this->data.data(), byteLength);
