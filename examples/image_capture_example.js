@@ -1,9 +1,10 @@
 const nodoface = require("../api/nodoface");
 let imageCapture = new nodoface.ImageCapture();
-console.log(imageCapture);
+
 const argv = process.argv.slice(1);
-console.log(argv);
+
 imageCapture.open(argv);
+
 console.log('Actual properties',
     '\nprogress', imageCapture.getProgress(),
     '\nImage Ht', imageCapture.getImageHeight(),
@@ -12,15 +13,13 @@ console.log('Actual properties',
     '\nFy', imageCapture.getFy(),
     '\nCx', imageCapture.getCx(),
     '\nCy', imageCapture.getCy(),
-    '\nNext Image', imageCapture.getNextImage(),
-    '\nGray frame', imageCapture.getGrayFrame()
 );
-imageCapture.setImageWidth(imageCapture.getImageWidth() - 1);
-imageCapture.setImageHeight(imageCapture.getImageHeight() - 1);
-imageCapture.setFx(imageCapture.getFx() + 1);
-imageCapture.setFy(imageCapture.getFy() + 1);
-imageCapture.setCx(imageCapture.getCx() + 1);
-imageCapture.setCy(imageCapture.getCy() + 1);
+let img = imageCapture.getNextImage();
+console.log(`nextImage is Uint8Array: ${img instanceof Uint8Array} | size: ${img.length}`);
+
+let grayImg = imageCapture.getGrayFrame();
+console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
+
 console.log('New properties',
     '\nprogress', imageCapture.getProgress(),
     '\nImage Ht', imageCapture.getImageHeight(),
@@ -29,6 +28,11 @@ console.log('New properties',
     '\nFy', imageCapture.getFy(),
     '\nCx', imageCapture.getCx(),
     '\nCy', imageCapture.getCy(),
-    '\nNext Image', imageCapture.getNextImage(),
-    '\nGray frame', imageCapture.getGrayFrame()
 );
+imageCapture.getNextImage();
+
+let bboxes = imageCapture.getBoundingBoxes();
+console.log(`bboxes is Array: ${Array.isArray(bboxes)}| size: ${bboxes.length}`);
+for(let rect of bboxes) {
+    console.log(`x:${rect.x}, y:${rect.y}, w:${rect.width}, h:${rect.height}`);
+}

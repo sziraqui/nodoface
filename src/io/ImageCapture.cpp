@@ -9,6 +9,7 @@
 // local includes
 #include "ImageCapture.h"
 #include "../extras/ndarray.h"
+#include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
 
 Napi::FunctionReference Nodoface::ImageCapture::constructor;
@@ -22,6 +23,7 @@ Napi::Object Nodoface::ImageCapture::Init(Napi::Env env, Napi::Object exports) {
         InstanceMethod("getNextImage", &Nodoface::ImageCapture::GetNextImage),
         InstanceMethod("getGrayFrame", &Nodoface::ImageCapture::GetGrayFrame),
         InstanceMethod("getProgress", &Nodoface::ImageCapture::GetProgress),
+        InstanceMethod("getBoundingBoxes", &Nodoface::ImageCapture::GetBoundingBoxes),
         InstanceMethod("getImageHeight", &Nodoface::ImageCapture::GetImageHeight),
         InstanceMethod("setImageHeight", &Nodoface::ImageCapture::SetImageHeight),
         InstanceMethod("getImageWidth", &Nodoface::ImageCapture::GetImageWidth),
@@ -91,7 +93,7 @@ Napi::Value Nodoface::ImageCapture::OpenDirectory(const Napi::CallbackInfo &info
     float cy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1;
 
     bool result = this->imageCapture->OpenDirectory(imgDir, bboxDir, fx, fy, cx, cy);
-    return Napi::Boolean::New(env, result);
+    return NapiExtra::toNapi(env, result);
 }
 
 // js-args: String[] imageFileList, number fx?, number fy?, number cx?, number cy? // ensure defaults exist
@@ -120,7 +122,7 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
     }
     // call native method
     bool result = this->imageCapture->OpenImageFiles(vecList, fx, fy, cx, cy);
-    return Napi::Boolean::New(env, result);
+    return NapiExtra::toNapi(env, result);
 }
 
 Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info) {
@@ -138,14 +140,16 @@ Napi::Value Nodoface::ImageCapture::GetGrayFrame(const Napi::CallbackInfo &info)
 }
 
 Napi::Value Nodoface::ImageCapture::GetBoundingBoxes(const Napi::CallbackInfo &info) {
-    std::vector<cv::Rect_<float> > bboxes = this->imageCapture->GetBoundingBoxes();
-    // TODO: handle cv Rect
-    return Napi::Boolean::New(info.Env(), true);
+    Napi::Env env = info.Env();
+    std::vector<cv::Rect_<float>> bboxes = this->imageCapture->GetBoundingBoxes();
+    Napi::Array array = NapiExtra::cv2NapiArray<cv::Rect_<float>>(env, bboxes);
+    return array;
 }
 
 Napi::Value Nodoface::ImageCapture::GetProgress(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
     double progress = this->imageCapture->GetProgress();
-    return Napi::Number::New(info.Env(), progress);
+    return NapiExtra::toNapi(env, progress);
 }
 
 // GetSet for public variables
@@ -161,12 +165,13 @@ Napi::Value Nodoface::ImageCapture::SetImageWidth(const Napi::CallbackInfo& info
     }
     Napi::Number num = info[0].As<Napi::Number>();
     this->imageCapture->image_width = num.DoubleValue();
-    return Napi::Boolean::New(env, true);
+    return NapiExtra::toNapi(env, true);
 }
 
 // int image_height
 Napi::Value Nodoface::ImageCapture::GetImageHeight(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->imageCapture->image_height);
+    Napi::Env env = info.Env();
+    return NapiExtra::toNapi(env, this->imageCapture->image_height);
 }
 
 Napi::Value Nodoface::ImageCapture::SetImageHeight(const Napi::CallbackInfo& info) {
@@ -176,24 +181,28 @@ Napi::Value Nodoface::ImageCapture::SetImageHeight(const Napi::CallbackInfo& inf
     }
     Napi::Number num = info[0].As<Napi::Number>();
     this->imageCapture->image_height = num.DoubleValue();
-    return Napi::Boolean::New(env, true);
+    return NapiExtra::toNapi(env, true);
 }
 
 // float fx, fy, cx, cy;
 Napi::Value Nodoface::ImageCapture::GetFx(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->imageCapture->fx);
+    Napi::Env env = info.Env();
+    return NapiExtra::toNapi(env, this->imageCapture->fx);
 }
 
 Napi::Value Nodoface::ImageCapture::GetFy(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->imageCapture->fy);
+    Napi::Env env = info.Env();
+    return NapiExtra::toNapi(env, this->imageCapture->fy);
 }
 
 Napi::Value Nodoface::ImageCapture::GetCx(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->imageCapture->cx);
+    Napi::Env env = info.Env();
+    return NapiExtra::toNapi(env, this->imageCapture->cx);
 }
 
 Napi::Value Nodoface::ImageCapture::GetCy(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->imageCapture->cy);
+    Napi::Env env = info.Env();
+    return NapiExtra::toNapi(env, this->imageCapture->cy);
 }
 
 Napi::Value Nodoface::ImageCapture::SetFx(const Napi::CallbackInfo& info) {
@@ -203,7 +212,7 @@ Napi::Value Nodoface::ImageCapture::SetFx(const Napi::CallbackInfo& info) {
     }
     Napi::Number num = info[0].As<Napi::Number>();
     this->imageCapture->fx = num.DoubleValue();
-    return Napi::Boolean::New(env, true);
+    return NapiExtra::toNapi(env, true);
 }
 
 Napi::Value Nodoface::ImageCapture::SetFy(const Napi::CallbackInfo& info) {
@@ -213,7 +222,7 @@ Napi::Value Nodoface::ImageCapture::SetFy(const Napi::CallbackInfo& info) {
     }
     Napi::Number num = info[0].As<Napi::Number>();
     this->imageCapture->fy = num.DoubleValue();
-    return Napi::Boolean::New(env, true);
+    return NapiExtra::toNapi(env, true);
 }
 
 Napi::Value Nodoface::ImageCapture::SetCx(const Napi::CallbackInfo& info) {
@@ -223,7 +232,7 @@ Napi::Value Nodoface::ImageCapture::SetCx(const Napi::CallbackInfo& info) {
     }
     Napi::Number num = info[0].As<Napi::Number>();
     this->imageCapture->cx = num.DoubleValue();
-    return Napi::Boolean::New(env, true);
+    return NapiExtra::toNapi(env, true);
 }
 
 Napi::Value Nodoface::ImageCapture::SetCy(const Napi::CallbackInfo& info) {
@@ -233,5 +242,5 @@ Napi::Value Nodoface::ImageCapture::SetCy(const Napi::CallbackInfo& info) {
     }
     Napi::Number num = info[0].As<Napi::Number>();
     this->imageCapture->cy = num.DoubleValue();
-    return Napi::Boolean::New(env, true);
+    return NapiExtra::toNapi(env, true);
 }
