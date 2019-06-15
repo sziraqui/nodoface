@@ -1,38 +1,38 @@
 const nodoface = require("../api/nodoface");
-let imageCapture = new nodoface.ImageCapture();
+let sequenceCapture = new nodoface.SequenceCapture();
 
 const argv = process.argv.slice(1);
 
-imageCapture.open(argv);
+sequenceCapture.openWebCam(0);
 
 console.log('Actual properties',
-    '\nprogress', imageCapture.getProgress(),
-    '\nImage Ht', imageCapture.getImageHeight(),
-    '\nImage Wd', imageCapture.getImageWidth(),
-    '\nFx', imageCapture.getFx(),
-    '\nFy', imageCapture.getFy(),
-    '\nCx', imageCapture.getCx(),
-    '\nCy', imageCapture.getCy(),
+    '\nprogress', sequenceCapture.getProgress(),
+    '\nframe Ht', sequenceCapture.getFrameHeight(),
+    '\nframe Wd', sequenceCapture.getFrameWidth(),
+    '\nFx', sequenceCapture.getFx(),
+    '\nFy', sequenceCapture.getFy(),
+    '\nCx', sequenceCapture.getCx(),
+    '\nCy', sequenceCapture.getCy(),
 );
-let img = imageCapture.getNextImage();
-console.log(`nextImage is Uint8Array: ${img instanceof Uint8Array} | size: ${img.length}`);
-
-let grayImg = imageCapture.getGrayFrame();
-console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
-
-console.log('New properties',
-    '\nprogress', imageCapture.getProgress(),
-    '\nImage Ht', imageCapture.getImageHeight(),
-    '\nImage Wd', imageCapture.getImageWidth(),
-    '\nFx', imageCapture.getFx(),
-    '\nFy', imageCapture.getFy(),
-    '\nCx', imageCapture.getCx(),
-    '\nCy', imageCapture.getCy(),
-);
-imageCapture.getNextImage();
-
-let bboxes = imageCapture.getBoundingBoxes();
-console.log(`bboxes is Array: ${Array.isArray(bboxes)}| size: ${bboxes.length}`);
-for(let rect of bboxes) {
-    console.log(`x:${rect.x}, y:${rect.y}, w:${rect.width}, h:${rect.height}`);
-}
+// let img = sequenceCapture.getNextFrame();
+// console.log(`nextSequence is Uint8Array: ${img instanceof Uint8Array} | size: ${img.length}`);
+//
+// let grayImg = sequenceCapture.getGrayFrame();
+// console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
+//
+// console.log('New properties',
+//     '\nprogress', sequenceCapture.getProgress(),
+//     '\nSequence Ht', sequenceCapture.getFrameHeight(),
+//     '\nSequence Wd', sequenceCapture.getFrameWidth(),
+//     '\nFx', sequenceCapture.getFx(),
+//     '\nFy', sequenceCapture.getFy(),
+//     '\nCx', sequenceCapture.getCx(),
+//     '\nCy', sequenceCapture.getCy(),
+// );
+// sequenceCapture.getNextFrame();
+//
+// let bboxes = sequenceCapture.getBoundingBoxes();
+// console.log(`bboxes is Array: ${Array.isArray(bboxes)}| size: ${bboxes.length}`);
+// for(let rect of bboxes) {
+//     console.log(`x:${rect.x}, y:${rect.y}, w:${rect.width}, h:${rect.height}`);
+// }
