@@ -1,13 +1,14 @@
 //
 // Created by sziraqui on 7/6/19.
 //
-
-#include "SequenceCapture.h"
+#include <iostream>
 #include <opencv/cv.h>
 #include <vector>
 #include <string>
 
 #include "SequenceCapture.h"
+#include "../extras/ndarray.h"
+#include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
 
 Napi::FunctionReference Nodoface::SequenceCapture::constructor;
@@ -15,11 +16,20 @@ Napi::FunctionReference Nodoface::SequenceCapture::constructor;
 Napi::Object Nodoface::SequenceCapture::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "SequenceCapture", {
+            InstanceMethod("open", &Nodoface::SequenceCapture::Open),
+            InstanceMethod("openWebCam", &Nodoface::SequenceCapture::OpenWebcam),
+            InstanceMethod("openVideoFile", &Nodoface::SequenceCapture::OpenVideoFile),
+            InstanceMethod("isWebcam", &Nodoface::SequenceCapture::IsWebcam),
+            InstanceMethod("isOpened", &Nodoface::SequenceCapture::IsOpened),
+            InstanceMethod("close", &Nodoface::SequenceCapture::Close),
+            InstanceMethod("getFrameNumber", &Nodoface::SequenceCapture::GetFrameNumber),
+            InstanceMethod("getNextImage", &Nodoface::SequenceCapture::GetNextFrame),
+            InstanceMethod("getGrayFrame", &Nodoface::SequenceCapture::GetGrayFrame),
             InstanceMethod("getProgress", &Nodoface::SequenceCapture::GetProgress),
-            InstanceMethod("getImageWidth", &Nodoface::SequenceCapture::GetFrameHeight),
-            InstanceMethod("setImageHeight", &Nodoface::SequenceCapture::SetFrameHeight),
-            InstanceMethod("getImageWidth", &Nodoface::SequenceCapture::GetFrameWidth),
-            InstanceMethod("setImageHeight", &Nodoface::SequenceCapture::SetFrameHeight),
+            InstanceMethod("getFrameHeight", &Nodoface::SequenceCapture::GetFrameHeight),
+            InstanceMethod("setFrameHeight", &Nodoface::SequenceCapture::SetFrameHeight),
+            InstanceMethod("getFrameWidth", &Nodoface::SequenceCapture::GetFrameWidth),
+            InstanceMethod("setFrameWidth", &Nodoface::SequenceCapture::SetFrameWidth),
             InstanceMethod("getFx", &Nodoface::SequenceCapture::GetFx),
             InstanceMethod("setFx", &Nodoface::SequenceCapture::SetFx),
             InstanceMethod("getFy", &Nodoface::SequenceCapture::GetFy),
@@ -27,7 +37,16 @@ Napi::Object Nodoface::SequenceCapture::Init(Napi::Env env, Napi::Object exports
             InstanceMethod("getCx", &Nodoface::SequenceCapture::GetCx),
             InstanceMethod("setCx", &Nodoface::SequenceCapture::SetCx),
             InstanceMethod("getCy", &Nodoface::SequenceCapture::GetCy),
-            InstanceMethod("setCy", &Nodoface::SequenceCapture::SetCy)
+            InstanceMethod("setCy", &Nodoface::SequenceCapture::SetCy),
+            InstanceMethod("getFPS", &Nodoface::SequenceCapture::GetFPS),
+            InstanceMethod("setFPS", &Nodoface::SequenceCapture::SetFPS),
+            InstanceMethod("getTimeStamp", &Nodoface::SequenceCapture::GetTimeStamp),
+            InstanceMethod("setTimeStamp", &Nodoface::SequenceCapture::SetTimeStamp),
+            InstanceMethod("getName", &Nodoface::SequenceCapture::GetName),
+            InstanceMethod("setName", &Nodoface::SequenceCapture::SetName),
+            InstanceMethod("getNoInputSpecified", &Nodoface::SequenceCapture::GetNoInputSpecified),
+            InstanceMethod("setNoInputSpecified", &Nodoface::SequenceCapture::SetNoInputSpecified),
+            StaticMethod("getCaptureCapacity", &Nodoface::SequenceCapture::GetCaptureCapacity)
     });
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
@@ -42,25 +61,61 @@ Nodoface::SequenceCapture::SequenceCapture(const Napi::CallbackInfo &info) : Nap
     this->sequenceCapture = new Utilities::SequenceCapture();
 }
 
-// js-args: String[] imageFileList, number fx?, number fy?, number cx?, number cy?
-Napi::Value Nodoface::SequenceCapture::OpenImageSequence(const Napi::CallbackInfo &info) {
+Napi::Value Nodoface::SequenceCapture::Open(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-
     size_t argLen = info.Length();
     if (argLen == 0) {
-        // throw insufficient arguments error
+        JSErrors::InsufficientArguments(env, 1, argLen);
     } else if (argLen >= 1 && !info[0].IsArray()) {
-        // throw String array expected at argument 0
-    } else if(argLen) {
-        for (int i = 1; i < argLen; ++i) {
-            if (!info[i].IsNumber()) {
-                // throw Number Expected at argument i
-            }
-        }
+        JSErrors::IncorrectDatatype(env, JSErrors::ARRAY, 0);
     }
-    const Napi::Array imageFileList = info[0].As<Napi::Array>();
-    // TODO: Convert to vector and call native method
 
+    const Napi::Array arguments = info[0].As<Napi::Array>();
+    std::vector<std::string> vecList(arguments.Length());
+    for(uint i = 0; i < arguments.Length(); ++i) {
+
+        std::string s = arguments[i].As<Napi::String>().Utf8Value();
+        vecList[i] = s;
+    }
+    bool result = this->sequenceCapture->Open(vecList);
+    return Napi::Boolean::New(env, result);
+}
+// bool OpenWebcam(int device_id, int image_width = 640, int image_height = 480, float fx = -1, float fy = -1, float cx = -1, float cy = -1);
+Napi::Value Nodoface::SequenceCapture::OpenWebcam(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    size_t argLen = info.Length();
+    if (argLen == 0) {
+        JSErrors::InsufficientArguments(env, 1, argLen);
+    } else if (argLen >= 1 && !info[0].IsNumber()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, 0);
+    } else if (argLen > 7) {
+        JSErrors::TooManyArguments(env, 7, argLen);
+    }
+
+    uint8_t i = 0;
+    int device_id = info[i].As<Napi::Number>().Int32Value(); i++;
+    int image_wd = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().Int32Value() : 640; i++;
+    int image_ht = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().Int32Value(): 480; i++;
+    float fx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float fy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float cx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float cy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1;
+
+    bool result = this->sequenceCapture->OpenWebcam(device_id, image_wd, image_ht, fx, fy, cx, cy);
+    return NapiExtra::toNapi(env, result);
+}
+
+// bool OpenVideoFile(std::string video_file, float fx = -1, float fy = -1, float cx = -1, float cy = -1);
+Napi::Value Nodoface::SequenceCapture::OpenVideoFile(const Napi::CallbackInfo& info) {
+    return Napi::Boolean::New(info.Env(), false);
+}
+
+Napi::Value Nodoface::SequenceCapture::IsWebcam(const Napi::CallbackInfo& info) {
+    return Napi::Boolean::New(info.Env(), this->sequenceCapture->IsWebcam());
+}
+
+Napi::Value Nodoface::SequenceCapture::IsOpened(const Napi::CallbackInfo& info) {
+    return Napi::Boolean::New(info.Env(), this->sequenceCapture->IsOpened());
 }
 
 Napi::Value Nodoface::SequenceCapture::GetNextFrame(const Napi::CallbackInfo &info) {
@@ -77,6 +132,10 @@ Napi::Value Nodoface::SequenceCapture::GetGrayFrame(const Napi::CallbackInfo &in
 Napi::Value Nodoface::SequenceCapture::GetProgress(const Napi::CallbackInfo &info) {
     double progress = this->sequenceCapture->GetProgress();
     return Napi::Number::New(info.Env(), progress);
+}
+
+Napi::Value Nodoface::SequenceCapture::GetFrameNumber(const Napi::CallbackInfo &info) {
+    return Napi::Number::New(info.Env(), this->sequenceCapture->GetFrameNumber());
 }
 
 // GetSet for public variables
@@ -166,3 +225,76 @@ Napi::Value Nodoface::SequenceCapture::SetCy(const Napi::CallbackInfo& info) {
     this->sequenceCapture->cy = num.DoubleValue();
     return Napi::Boolean::New(env, true);
 }
+
+// double fps;
+Napi::Value Nodoface::SequenceCapture::GetFPS(const Napi::CallbackInfo& info) {
+    return Napi::Number::New(info.Env(), this->sequenceCapture->fps);
+}
+
+Napi::Value Nodoface::SequenceCapture::SetFPS(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if(info.Length() != 1 || !info[0].IsNumber()) {
+        JSErrors::SetterError(env, JSErrors::NUMBER);
+    }
+    Napi::Number num = info[0].As<Napi::Number>();
+    this->sequenceCapture->fps = num.DoubleValue();
+    return Napi::Boolean::New(env, true);
+}
+
+// double time_stamp;
+Napi::Value Nodoface::SequenceCapture::GetTimeStamp(const Napi::CallbackInfo& info) {
+    return Napi::Number::New(info.Env(), this->sequenceCapture->time_stamp);
+}
+
+Napi::Value Nodoface::SequenceCapture::SetTimeStamp(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if(info.Length() != 1 || !info[0].IsNumber()) {
+        JSErrors::SetterError(env, JSErrors::NUMBER);
+    }
+    Napi::Number num = info[0].As<Napi::Number>();
+    this->sequenceCapture->time_stamp = num.DoubleValue();
+    return Napi::Boolean::New(env, true);
+}
+
+// Name of the video file, image directory, or the webcam
+// std::string name;
+Napi::Value Nodoface::SequenceCapture::GetName(const Napi::CallbackInfo& info) {
+    return Napi::String::New(info.Env(), this->sequenceCapture->name);
+}
+Napi::Value Nodoface::SequenceCapture::SetName(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if(info.Length() != 1 || !info[0].IsNumber()) {
+        JSErrors::SetterError(env, JSErrors::STRING);
+    }
+    Napi::String str = info[0].As<Napi::String>();
+    this->sequenceCapture->name = str.Utf8Value();
+    return Napi::Boolean::New(env, true);
+}
+
+// Allows to differentiate if failed because no input specified or if failed to open a specified input
+// bool no_input_specified;
+Napi::Value Nodoface::SequenceCapture::GetNoInputSpecified(const Napi::CallbackInfo& info) {
+    return Napi::Boolean::New(info.Env(), this-sequenceCapture->no_input_specified);
+}
+
+Napi::Value Nodoface::SequenceCapture::SetNoInputSpecified(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    if(info.Length() != 1 || !info[0].IsNumber()) {
+        JSErrors::SetterError(env, JSErrors::BOOLEAN);
+    }
+    Napi::Boolean val = info[0].As<Napi::Boolean>();
+    this->sequenceCapture->no_input_specified = val.Value();
+    return Napi::Boolean::New(env, true);
+}
+
+// Storing the captured data queue
+// static const int CAPTURE_CAPACITY = 200; // 200 MB
+Napi::Value Nodoface::SequenceCapture::GetCaptureCapacity(const Napi::CallbackInfo& info) {
+    return Napi::Number::New(info.Env(), Utilities::SequenceCapture::CAPTURE_CAPACITY);
+}
+
+Napi::Value Nodoface::SequenceCapture::Close(const Napi::CallbackInfo& info) {
+    this->sequenceCapture->Close();
+    return info.Env().Null();
+}
+

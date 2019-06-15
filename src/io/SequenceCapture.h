@@ -7,7 +7,7 @@
 
 
 #include <napi.h>
-#include<OpenFace/SequenceCapture.h>
+#include <OpenFace/SequenceCapture.h>
 
 namespace Nodoface {
 
@@ -84,12 +84,12 @@ class SequenceCapture : public Napi::ObjectWrap<Nodoface::SequenceCapture>{
         Utilities::SequenceCapture *sequenceCapture;
 
         // double fps;
-        Napi::Value getFPS(const Napi::CallbackInfo& info);
-        Napi::Value setFPS(const Napi::CallbackInfo& info);
+        Napi::Value GetFPS(const Napi::CallbackInfo& info);
+        Napi::Value SetFPS(const Napi::CallbackInfo& info);
 
         // double time_stamp;
-        Napi::Value getTimeStamp(const Napi::CallbackInfo& info);
-        Napi::Value setTimeStamp(const Napi::CallbackInfo& info);
+        Napi::Value GetTimeStamp(const Napi::CallbackInfo& info);
+        Napi::Value SetTimeStamp(const Napi::CallbackInfo& info);
 
         // Name of the video file, image directory, or the webcam
         // std::string name;
@@ -104,7 +104,6 @@ class SequenceCapture : public Napi::ObjectWrap<Nodoface::SequenceCapture>{
         // Storing the captured data queue
         // static const int CAPTURE_CAPACITY = 200; // 200 MB
         static Napi::Value GetCaptureCapacity(const Napi::CallbackInfo& info);
-        static Napi::Value SetCaptureCapacity(const Napi::CallbackInfo& info);
 
     };
 }
