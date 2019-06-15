@@ -91,11 +91,9 @@ namespace NapiExtra {
     NdArray<numericType> NdArray<numericType>::From(cv::Mat& mat) {
         std::vector<int> shape = GetShape(mat);
         // Get reference to underlying array ptr
-        size_t npixels = mat.rows*mat.cols*mat.channels();
-        cv::Mat flatView = mat.reshape(1, npixels);
-        std::vector<numericType> data;
-        // Clone to make contiguous mat and copy it to vector
-        flatView.clone().copyTo(data);
+        size_t npixels = mat.total()*mat.channels(); // total() gives rows*cols for any flat image
+        cv::Mat flatView = mat.reshape(1, npixels); // O(1)
+        std::vector<numericType> data = mat.isContinuous()? flatView: flatView.clone(); // always a copy, O(npixels) time
         return NdArray<numericType>(shape, data);
     }
 
