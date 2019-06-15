@@ -23,7 +23,7 @@ Napi::Object Nodoface::SequenceCapture::Init(Napi::Env env, Napi::Object exports
             InstanceMethod("isOpened", &Nodoface::SequenceCapture::IsOpened),
             InstanceMethod("close", &Nodoface::SequenceCapture::Close),
             InstanceMethod("getFrameNumber", &Nodoface::SequenceCapture::GetFrameNumber),
-            InstanceMethod("getNextImage", &Nodoface::SequenceCapture::GetNextFrame),
+            InstanceMethod("getNextFrame", &Nodoface::SequenceCapture::GetNextFrame),
             InstanceMethod("getGrayFrame", &Nodoface::SequenceCapture::GetGrayFrame),
             InstanceMethod("getProgress", &Nodoface::SequenceCapture::GetProgress),
             InstanceMethod("getFrameHeight", &Nodoface::SequenceCapture::GetFrameHeight),
@@ -107,7 +107,25 @@ Napi::Value Nodoface::SequenceCapture::OpenWebcam(const Napi::CallbackInfo &info
 
 // bool OpenVideoFile(std::string video_file, float fx = -1, float fy = -1, float cx = -1, float cy = -1);
 Napi::Value Nodoface::SequenceCapture::OpenVideoFile(const Napi::CallbackInfo& info) {
-    return Napi::Boolean::New(info.Env(), false);
+    Napi::Env env = info.Env();
+    size_t argLen = info.Length();
+    if (argLen == 0) {
+        JSErrors::InsufficientArguments(env, 1, argLen);
+    } else if (argLen >= 1 && !info[0].IsString()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, 0);
+    } else if (argLen > 5) {
+        JSErrors::TooManyArguments(env, 5, argLen);
+    }
+
+    uint8_t i = 0;
+    std::string videoFile = info[i].As<Napi::String>().Utf8Value(); i++;
+    float fx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float fy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float cx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
+    float cy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1;
+
+    bool result = this->sequenceCapture->OpenVideoFile(videoFile, fx, fy, cx, cy);
+    return NapiExtra::toNapi(env, result);
 }
 
 Napi::Value Nodoface::SequenceCapture::IsWebcam(const Napi::CallbackInfo& info) {
@@ -119,13 +137,17 @@ Napi::Value Nodoface::SequenceCapture::IsOpened(const Napi::CallbackInfo& info) 
 }
 
 Napi::Value Nodoface::SequenceCapture::GetNextFrame(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
     cv::Mat img = this->sequenceCapture->GetNextFrame();
-    // TODO: handle cv Mat of multi channels
+    auto ndarray = NapiExtra::NdArray<uchar>::From(img);
+    return ndarray.ToTypedArray(env);
 }
 
 Napi::Value Nodoface::SequenceCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
-    cv::Mat_<uchar> frame = this->sequenceCapture->GetGrayFrame();
-    // TODO: handle cv Mat of single channel
+    Napi::Env env = info.Env();
+    cv::Mat img = this->sequenceCapture->GetGrayFrame();
+    auto ndarray = NapiExtra::NdArray<uchar>::From(img);
+    return ndarray.ToTypedArray(env);
 }
 
 
