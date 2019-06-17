@@ -15,8 +15,8 @@ console.log('Actual properties',
     '\nCy', imageCapture.getCy(),
 );
 let img = imageCapture.getNextImage();
-console.log(`nextImage is Uint8Array: ${img instanceof Uint8Array} | size: ${img.length}`);
-
+console.log(`nextImage shape: ${img.shape()} | type: ${img.type()}`);
+nodoface.showImage(img, 'output', 0);
 let grayImg = imageCapture.getGrayFrame();
 console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
 
@@ -29,8 +29,10 @@ console.log('New properties',
     '\nCx', imageCapture.getCx(),
     '\nCy', imageCapture.getCy(),
 );
-imageCapture.getNextImage();
-
+img = imageCapture.getNextImage();
+console.log(`nextImage shape: ${img.shape()} | type: ${img.type()}`);
+nodoface.showImage(img, 'output', 0);
+nodoface.showImage(img, 'output', 0);
 let bboxes = imageCapture.getBoundingBoxes();
 console.log(`bboxes is Array: ${Array.isArray(bboxes)}| size: ${bboxes.length}`);
 for(let rect of bboxes) {

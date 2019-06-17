@@ -11,6 +11,7 @@
 #include "../extras/ndarray.h"
 #include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
+#include "../cvtypes/Mat.h"
 
 Napi::FunctionReference Nodoface::ImageCapture::constructor;
 
@@ -127,16 +128,17 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
 
 Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    cv::Mat img = this->imageCapture->GetNextImage();
-    auto ndarray = NapiExtra::NdArray<uchar>::From(img);
-    return ndarray.ToTypedArray(env);
+    cv::Mat mat = this->imageCapture->GetNextImage();
+    Nodoface::Image img = Nodoface::Image::New(info, mat);
+    std::cout<<"getNextImage pass\n";
+    return img.Value();
 }
 
 Napi::Value Nodoface::ImageCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     cv::Mat frame = this->imageCapture->GetGrayFrame();
-    auto ndarray = NapiExtra::NdArray<uchar>::From(frame);
-    return ndarray.ToTypedArray(env);
+    auto img = Nodoface::Image::New(info, frame);
+    return img.Value();
 }
 
 Napi::Value Nodoface::ImageCapture::GetBoundingBoxes(const Napi::CallbackInfo &info) {
