@@ -14,6 +14,7 @@
             'src/io/SequenceCapture.cpp',
             'src/jserrors/JSErrors.cpp',
             'src/io/OutputUtils.cpp',
+            'src/cvtypes/Mat.cpp'
         ],
         'clfags!': [
             '-fno-exceptions',
