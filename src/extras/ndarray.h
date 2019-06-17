@@ -5,6 +5,7 @@
 #ifndef NODOFACE_NDARRAY_H
 #define NODOFACE_NDARRAY_H
 // system includes
+#include <iostream>
 #include <vector>
 #include <string>
 #include <initializer_list>
@@ -81,7 +82,7 @@ namespace NapiExtra {
             // Copy buffer data into a vector
             uint32_t bufLen = arr.ElementLength();
             std::vector<numericType> dataCopy(raw, raw + bufLen);
-            return NdArray<numericType>(shape, arr.ElementLength(), dataCopy);
+            return NdArray<numericType>(shape, dataCopy);
         } else {
             return NdArray<numericType>(shape, raw);
         }

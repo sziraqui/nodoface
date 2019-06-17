@@ -30,4 +30,10 @@ console.log('New properties',
     '\nCx', sequenceCapture.getCx(),
     '\nCy', sequenceCapture.getCy(),
 );
+img = sequenceCapture.getNextFrame();
+nodoface.showImage(img, new Int32Array([640,480]));
 sequenceCapture.getNextFrame();
+for(let i = 0; i < 60; i++) {
+    img = sequenceCapture.getNextFrame();
+    nodoface.showImage(img, new Int32Array([640,480]));
+}

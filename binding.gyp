@@ -13,6 +13,7 @@
             'src/io/ImageCapture.cpp',
             'src/io/SequenceCapture.cpp',
             'src/jserrors/JSErrors.cpp',
+            'src/io/OutputUtils.cpp',
         ],
         'clfags!': [
             '-fno-exceptions',
