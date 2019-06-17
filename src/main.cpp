@@ -8,7 +8,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::ImageCapture::Init(env, exports);
     Nodoface::SequenceCapture::Init(env, exports);
     Nodoface::Image::Init(env, exports);
-    exports.Set("showImage", Napi::Function::New(env ,Nodoface::showImage));
+    Nodoface::Init(env, exports);
     return exports;
 }
 

@@ -20,20 +20,18 @@ namespace Nodoface {
             static Image New(const Napi::CallbackInfo& info, cv::Mat& mat);
 
             Image(const Napi::CallbackInfo& info);
-
+        static Napi::FunctionReference constructor;
             cv::Mat GetMat();
+    private:
 
-            static Napi::FunctionReference constructor;
 
-            cv::Mat mat;
-            Napi::Int32Array shape;
+            cv::Mat* mat;
 
-            static Napi::Int32Array GetShape(Napi::Env env, cv::Mat& mat);
             // To create a local instance for sending to nodejs
-            Image(const Napi::CallbackInfo& info, cv::Mat& mat);
+//            Image(const Napi::CallbackInfo& info, cv::Mat& mat);
             // Return Uint32Array [rows, columns, channels]
             Napi::Value Shape(const Napi::CallbackInfo& info);
-
+//
             Napi::Value Type(const Napi::CallbackInfo& info);
 
 

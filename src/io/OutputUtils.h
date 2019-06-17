@@ -19,6 +19,8 @@ namespace Nodoface {
 
     Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-    Napi::Value showImage(const Napi::CallbackInfo &info);
+    Napi::Value showImage(const Napi::CallbackInfo& info);
+
+    Napi::Value readImage(const Napi::CallbackInfo& info);
 }
 #endif //NODOFACE_OUTPUTUTILS_H
