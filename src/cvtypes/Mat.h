@@ -9,10 +9,7 @@
 
 #include <napi.h>
 #include <opencv2/core/mat.hpp>
-#include "opencv2/core/utility.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
+
 namespace Nodoface {
     // Wraps OpenCV Mat partially for sending and receiving Mat objects to/from node
     class Image : public Napi::ObjectWrap<Image> {
