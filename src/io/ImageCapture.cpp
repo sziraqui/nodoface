@@ -129,16 +129,17 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
 Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     cv::Mat mat = this->imageCapture->GetNextImage();
-    Nodoface::Image img = Nodoface::Image::New(info, mat);
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, mat);
     std::cout<<"getNextImage pass\n";
-    return img.Value();
+    return imgObj;
 }
 
 Napi::Value Nodoface::ImageCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     cv::Mat frame = this->imageCapture->GetGrayFrame();
-    auto img = Nodoface::Image::New(info, frame);
-    return img.Value();
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, frame);
+    std::cout<<"getGrayFrame pass\n";
+    return imgObj;
 }
 
 Napi::Value Nodoface::ImageCapture::GetBoundingBoxes(const Napi::CallbackInfo &info) {

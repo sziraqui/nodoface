@@ -17,21 +17,22 @@ namespace Nodoface {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-            static Image New(const Napi::CallbackInfo& info, cv::Mat& mat);
+            static Napi::Object NewObject(Napi::Env env, cv::Mat& mat);
+
+            static cv::Mat NewMat(Napi::TypedArrayOf<uchar>& arr, Napi::Int32Array& size, Napi::Number& type);
 
             Image(const Napi::CallbackInfo& info);
-        static Napi::FunctionReference constructor;
+
+            static Napi::FunctionReference constructor;
+
             cv::Mat GetMat();
     private:
 
-
             cv::Mat* mat;
 
-            // To create a local instance for sending to nodejs
-//            Image(const Napi::CallbackInfo& info, cv::Mat& mat);
             // Return Uint32Array [rows, columns, channels]
             Napi::Value Shape(const Napi::CallbackInfo& info);
-//
+
             Napi::Value Type(const Napi::CallbackInfo& info);
 
 

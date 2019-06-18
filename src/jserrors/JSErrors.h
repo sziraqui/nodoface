@@ -14,6 +14,7 @@ namespace JSErrors {
     const std::string ARRAY = "Array";
     const std::string BOOLEAN = "Boolean";
     const std::string UINT8ARRAY = "Uint8Array";
+    const std::string TYPEDARRAY = "TypedArray";
     const std::string NONE = "NULL";
 
     void SetterError(Napi::Env env, std::string jsTypeName);
