@@ -6,7 +6,6 @@
 #include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
 
-
 Napi::FunctionReference Nodoface::Image::constructor;
 
 // static methods
@@ -23,17 +22,13 @@ Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
     return exports;
 }
 
-Napi::Object Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
+Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
+    Napi::EscapableHandleScope scope(env);
     // Get continuous mat data
     uchar* data;
     size_t length = mat.total() * mat.channels();
-    if (mat.isContinuous()) {
-        data = mat.data;
-    } else {
-        cv::Mat flatView = mat.reshape(1, length);
-        std::vector<uchar> vec = flatView.clone(); // Is clone redundant?
-        data = vec.data();
-    }
+    mat = mat.clone(); // ensures mat is continuous and also prevents segfault
+    data = mat.data;
     // Create ArrayBuffer from data
     Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, data, sizeof(uchar)*length);
     Napi::TypedArrayOf<uchar> arr = Napi::TypedArrayOf<uchar>::New(env, length, ab, 0); // arg0
@@ -47,7 +42,13 @@ Napi::Object Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
     // Create mat type Number
     Napi::Number type = Napi::Number::New(env, mat.type());  // arg2
     Napi::Object imageObj = Image::constructor.New({ arr, size, type });
-    return imageObj;
+#ifdef DEBUG_MATWRAPPER
+    Image* image = Napi::ObjectWrap<Image>::Unwrap(imageObj);
+    cv::namedWindow("NewObject", cv::WINDOW_AUTOSIZE);
+    cv::imshow("NewObject", image->GetMat());
+    cv::waitKey(0);
+#endif
+    return scope.Escape(imageObj);
 }
 // cpp only
 cv::Mat Nodoface::Image::NewMat(Napi::TypedArrayOf<uchar> &arr, Napi::TypedArrayOf<int> &size, Napi::Number &type) {
@@ -61,6 +62,11 @@ cv::Mat Nodoface::Image::NewMat(Napi::TypedArrayOf<uchar> &arr, Napi::TypedArray
     int matType = type.Int32Value();
     // Create mat
     cv::Mat mat(matSize[0], matSize[1], matType, data);
+#ifdef DEBUG_MATWRAPPER
+    cv::namedWindow("NewMat", cv::WINDOW_AUTOSIZE);
+    cv::imshow("NewMat", mat);
+    cv::waitKey(0);
+#endif
     return mat;
 }
 
@@ -89,6 +95,11 @@ Nodoface::Image::Image(const Napi::CallbackInfo& info) : ObjectWrap<Nodoface::Im
         auto size = info[1].As<Napi::Int32Array>();
         auto type = info[2].As<Napi::Number>();
         this->mat = Image::NewMat(arr, size, type);
+#ifdef DEBUG_MATWRAPPER
+        cv::namedWindow("Image()", cv::WINDOW_AUTOSIZE);
+        cv::imshow("Image()", this->mat);
+        cv::waitKey(0);
+#endif
     } else  {
         JSErrors::TooManyArguments(env, 3, len);
     }

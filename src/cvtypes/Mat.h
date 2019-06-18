@@ -9,6 +9,12 @@
 
 #include <napi.h>
 #include <opencv2/core/mat.hpp>
+#ifdef DEBUG_MATWRAPPER
+#include "opencv2/core/utility.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+#endif
 
 namespace Nodoface {
     // Wraps OpenCV Mat partially for sending and receiving Mat objects to/from node
@@ -17,7 +23,7 @@ namespace Nodoface {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-            static Napi::Object NewObject(Napi::Env env, cv::Mat& mat);
+            static Napi::Value NewObject(Napi::Env env, cv::Mat& mat);
 
             static cv::Mat NewMat(Napi::TypedArrayOf<uchar>& arr, Napi::Int32Array& size, Napi::Number& type);
 
