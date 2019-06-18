@@ -23,19 +23,19 @@ Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
     return exports;
 }
 
-Napi::Object Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
+Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
+    Napi::EscapableHandleScope scope(env);
     std::cout<<"NewObject called\n";
     // Get continuous mat data
     uchar* data;
     size_t length = mat.total() * mat.channels();
-    if (mat.isContinuous()) {
+    if (!mat.isContinuous()) {
         std::cout<<"NewObject mat is continuous\n";
         data = mat.data;
     } else {
         std::cout<<"NewObject mat not continuous\n";
-        cv::Mat flatView = mat.reshape(1, length);
-        std::vector<uchar> vec = flatView.clone(); // Is clone redundant?
-        data = vec.data();
+        mat = mat.clone(); // Is clone redundant?
+        data = mat.data;
     }
     std::cout<<"NewObject create mat array\n";
     // Create ArrayBuffer from data
@@ -60,7 +60,7 @@ Napi::Object Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
     cv::namedWindow("NewObject", cv::WINDOW_AUTOSIZE);
     cv::imshow("NewObject", image->GetMat());
     cv::waitKey(0);
-    return imageObj;
+    return scope.Escape(imageObj);
 }
 // cpp only
 cv::Mat Nodoface::Image::NewMat(Napi::TypedArrayOf<uchar> &arr, Napi::TypedArrayOf<int> &size, Napi::Number &type) {

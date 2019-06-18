@@ -36,6 +36,7 @@ Napi::Value Nodoface::showImage(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Nodoface::readImage(const Napi::CallbackInfo &info) {
+    Napi::EscapableHandleScope scope(info.Env());
     std::string path = info[0].As<Napi::String>().Utf8Value();
     std::cout<<"image path:" << path << std::endl;
     cv::Mat mat = cv::imread(path, cv::IMREAD_UNCHANGED);
@@ -43,11 +44,11 @@ Napi::Value Nodoface::readImage(const Napi::CallbackInfo &info) {
     cv::namedWindow("readImageOg", cv::WINDOW_AUTOSIZE);
     cv::imshow("readImageOg", mat);
     cv::waitKey(0);
-    auto imgObj = Nodoface::Image::NewObject(info.Env(), mat);
+    auto imgObj = Nodoface::Image::NewObject(info.Env(), mat).As<Napi::Object>();
     std::cout<<"readImage imgObj type " << typeid(imgObj).name()<<std::endl;
     Nodoface::Image* image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
     cv::namedWindow("readImageUnwrap", cv::WINDOW_AUTOSIZE);
     cv::imshow("readImageUnwrap", image->GetMat());
     cv::waitKey(0);
-    return imgObj;
+    return scope.Escape(imgObj);
 }
