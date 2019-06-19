@@ -16,9 +16,15 @@ console.log('Actual properties',
 );
 let img = imageCapture.getNextImage();
 console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
-nodoface.showImage(img, 'output', 0);
+nodoface.showImage(img, 'color');
+nodoface.waitKey(0);
+nodoface.destroyWindow('color');
+
 let grayImg = imageCapture.getGrayFrame();
-console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
+console.log(`Image: rows:${grayImg.height()}, cols:${grayImg.width()}, channels:${grayImg.channels()}`);
+nodoface.showImage(grayImg, 'gray');
+nodoface.waitKey(0);
+nodoface.destroyWindow('gray');
 
 console.log('New properties',
     '\nprogress', imageCapture.getProgress(),
@@ -31,8 +37,10 @@ console.log('New properties',
 );
 img = imageCapture.getNextImage();
 console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
-nodoface.showImage(img, 'output', 0);
-nodoface.showImage(img, 'output', 0);
+nodoface.showImage(img);
+nodoface.waitKey(0);
+nodoface.destroyAllWindows();
+
 let bboxes = imageCapture.getBoundingBoxes();
 console.log(`bboxes is Array: ${Array.isArray(bboxes)}| size: ${bboxes.length}`);
 for(let rect of bboxes) {

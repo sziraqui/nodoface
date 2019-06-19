@@ -1,7 +1,7 @@
 const nodoface = require("../api/nodoface");
 let sequenceCapture = new nodoface.SequenceCapture();
 
-const argv = process.argv.slice(1);
+const argv = process.argv.slice(2);
 
 sequenceCapture.openVideoFile(argv[0])
 
@@ -31,8 +31,10 @@ console.log('New properties',
     '\nCy', sequenceCapture.getCy(),
 );
 img = sequenceCapture.getNextFrame();
-for(let i = 2; i < 30; i++) {
-    nodoface.showImage(img);
+for(let i = 2; i < 60; i++) {
+    nodoface.showImage(img, 'output');
+    nodoface.waitKey(1000/25);
     img = sequenceCapture.getNextFrame();
     console.log(`Frame[${i}]: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 }
+nodoface.destroyAllWindows();
