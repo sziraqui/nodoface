@@ -15,10 +15,10 @@ console.log('Actual properties',
     '\nCy', sequenceCapture.getCy(),
 );
 let img = sequenceCapture.getNextFrame();
-console.log(`nextSequence is Uint8Array: ${img instanceof Uint8Array} | size: ${img.length}`);
+console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 
 let grayImg = sequenceCapture.getGrayFrame();
-console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
+console.log(`Image: rows:${grayImg.height()}, cols:${img.width()}, channels:${grayImg.channels()}`);
 
 console.log('New properties',
     '\nprogress', sequenceCapture.getProgress(),
@@ -31,9 +31,8 @@ console.log('New properties',
     '\nCy', sequenceCapture.getCy(),
 );
 img = sequenceCapture.getNextFrame();
-nodoface.showImage(img, new Int32Array([640,480]));
-sequenceCapture.getNextFrame();
-for(let i = 0; i < 60; i++) {
+for(let i = 2; i < 30; i++) {
+    nodoface.showImage(img);
     img = sequenceCapture.getNextFrame();
-    nodoface.showImage(img, new Int32Array([640,480]));
+    console.log(`Frame[${i}]: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 }

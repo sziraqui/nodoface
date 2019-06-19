@@ -15,7 +15,7 @@ console.log('Actual properties',
     '\nCy', imageCapture.getCy(),
 );
 let img = imageCapture.getNextImage();
-console.log(`nextImage shape: ${img.shape()} | type: ${img.type()}`);
+console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 nodoface.showImage(img, 'output', 0);
 let grayImg = imageCapture.getGrayFrame();
 console.log(`grayFrame is Uint8Array: ${grayImg instanceof Uint8Array}| size: ${grayImg.length}`);
@@ -30,7 +30,7 @@ console.log('New properties',
     '\nCy', imageCapture.getCy(),
 );
 img = imageCapture.getNextImage();
-console.log(`nextImage shape: ${img.shape()} | type: ${img.type()}`);
+console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 nodoface.showImage(img, 'output', 0);
 nodoface.showImage(img, 'output', 0);
 let bboxes = imageCapture.getBoundingBoxes();

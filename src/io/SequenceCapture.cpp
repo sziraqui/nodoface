@@ -10,6 +10,7 @@
 #include "../extras/ndarray.h"
 #include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
+#include "../cvtypes/Mat.h"
 
 Napi::FunctionReference Nodoface::SequenceCapture::constructor;
 
@@ -138,16 +139,18 @@ Napi::Value Nodoface::SequenceCapture::IsOpened(const Napi::CallbackInfo& info) 
 
 Napi::Value Nodoface::SequenceCapture::GetNextFrame(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
+    Napi::EscapableHandleScope scope(env);
     cv::Mat img = this->sequenceCapture->GetNextFrame();
-    auto ndarray = NapiExtra::NdArray<uchar>::From(img);
-    return ndarray.ToTypedArray(env);
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, img).As<Napi::Object>();
+    return scope.Escape(imgObj);
 }
 
 Napi::Value Nodoface::SequenceCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
+    Napi::EscapableHandleScope scope(env);
     cv::Mat img = this->sequenceCapture->GetGrayFrame();
-    auto ndarray = NapiExtra::NdArray<uchar>::From(img);
-    return ndarray.ToTypedArray(env);
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, img).As<Napi::Object>();
+    return scope.Escape(imgObj);
 }
 
 
