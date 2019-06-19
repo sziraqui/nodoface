@@ -3,7 +3,7 @@ let sequenceCapture = new nodoface.SequenceCapture();
 
 const argv = process.argv.slice(1);
 
-sequenceCapture.openWebCam(0);
+sequenceCapture.openVideoFile(argv[0])
 
 console.log('Actual properties',
     '\nprogress', sequenceCapture.getProgress(),
