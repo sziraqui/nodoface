@@ -36,7 +36,7 @@ Napi::Value Nodoface::readImage(const Napi::CallbackInfo &info) {
     cv::imshow("readImageOg", mat);
     cv::waitKey(100);
 #endif
-    auto imgObj = Nodoface::Image::NewObject(info.Env(), mat).As<Napi::Object>();
+    auto imgObj = Nodoface::Image::NewObject(info.Env(), &mat).As<Napi::Object>();
 #ifdef DEBUG_MATWRAPPER
     Nodoface::Image* image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
     cv::namedWindow("readImageUnwrap", cv::WINDOW_AUTOSIZE);

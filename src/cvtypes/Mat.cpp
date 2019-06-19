@@ -24,22 +24,24 @@ Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
     return exports;
 }
 
-Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
+Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat* mat) {
     Napi::EscapableHandleScope scope(env);
     // Get continuous mat data
     uchar* data;
-    size_t length = mat.total() * mat.channels();
-    mat = mat.clone(); // ensures mat is continuous and also prevents segfault
-    data = mat.data;
+    size_t length = mat->total() * mat->channels();
+    if(mat->isContinuous()) {
+        mat = new cv::Mat(*mat); // ensures mat is continuous and also prevents segfault
+    }
+    data = mat->data;
 
     // Create ArrayBuffer from data
     Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, data, sizeof(uchar)*length);
     Napi::TypedArrayOf<uchar> arr = Napi::TypedArrayOf<uchar>::New(env, length, ab, 0); // arg1
     // Mat dimensions
-    Napi::Number rows = Napi::Number::New(env, mat.rows !=-1? mat.rows : mat.size.p[0]); // arg2
-    Napi::Number cols = Napi::Number::New(env, mat.cols !=-1? mat.cols : mat.size.p[1]); // arg3
+    Napi::Number rows = Napi::Number::New(env, mat->rows); // arg2
+    Napi::Number cols = Napi::Number::New(env, mat->cols); // arg3
     // Create mat type Number
-    Napi::Number type = Napi::Number::New(env, mat.type());  // arg4
+    Napi::Number type = Napi::Number::New(env, mat->type());  // arg4
     // Call constructor
     Napi::Object imageObj = Image::constructor.New({ arr, rows, cols, type });
 #ifdef DEBUG_MATWRAPPER
@@ -51,7 +53,7 @@ Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
     return scope.Escape(imageObj);
 }
 // cpp only
-cv::Mat Nodoface::Image::NewMat(Napi::TypedArrayOf<uchar> &arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type) {
+cv::Mat* Nodoface::Image::NewMat(Napi::TypedArrayOf<uchar> &arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type) {
     // Get mat data
     auto buf = arr.ArrayBuffer();
     uchar* data = reinterpret_cast<uchar *>(buf.Data()); // reinterpret_cast for void* to uchar*
@@ -61,7 +63,7 @@ cv::Mat Nodoface::Image::NewMat(Napi::TypedArrayOf<uchar> &arr, Napi::Number& ro
     // Get Mat type
     int matType = type.Int32Value();
     // Create mat
-    cv::Mat mat(matRows, matCols, matType, data);
+    cv::Mat* mat = new cv::Mat(matRows, matCols, matType, data);
 #ifdef DEBUG_MATWRAPPER
     cv::namedWindow("NewMat", cv::WINDOW_AUTOSIZE);
     cv::imshow("NewMat", mat);
@@ -93,10 +95,7 @@ Nodoface::Image::Image(const Napi::CallbackInfo& info) : ObjectWrap<Nodoface::Im
         auto cols = info[2].As<Napi::Number>();
         auto type = info[3].As<Napi::Number>();
         this->mat = Image::NewMat(arr, rows, cols, type);
-        this->rows = this->mat.rows != -1? this->mat.rows : this->mat.size.p[0];
-        this->cols = this->mat.cols != -1? this->mat.cols : this->mat.size.p[1];
-        this->channels = this->mat.channels();
-        this->type = this->mat.type();
+
 #ifdef DEBUG_MATWRAPPER
         cv::namedWindow("Image()", cv::WINDOW_AUTOSIZE);
         cv::imshow("Image()", this->mat);
@@ -108,21 +107,21 @@ Nodoface::Image::Image(const Napi::CallbackInfo& info) : ObjectWrap<Nodoface::Im
 }
 // instance methods
 Napi::Value Nodoface::Image::Type(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->mat.type());
+    return Napi::Number::New(info.Env(), this->mat->type());
 }
 
 Napi::Value Nodoface::Image::Rows(const Napi::CallbackInfo &info) {
-    return Napi::Number::New(info.Env(), this->mat.rows);
+    return Napi::Number::New(info.Env(), this->mat->rows);
 }
 
 Napi::Value Nodoface::Image::Columns(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->mat.cols);
+    return Napi::Number::New(info.Env(), this->mat->cols);
 }
 
 Napi::Value Nodoface::Image::Channels(const Napi::CallbackInfo &info) {
-    return Napi::Number::New(info.Env(), this->mat.channels());
+    return Napi::Number::New(info.Env(), this->mat->channels());
 }
 // cpp only
 cv::Mat Nodoface::Image::GetMat() {
-    return this->mat;
+    return *this->mat;
 }

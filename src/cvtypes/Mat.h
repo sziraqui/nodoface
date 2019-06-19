@@ -23,18 +23,16 @@ namespace Nodoface {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-            static Napi::Value NewObject(Napi::Env env, cv::Mat& mat);
+            static Napi::Value NewObject(Napi::Env env, cv::Mat* mat);
 
-            static cv::Mat NewMat(Napi::TypedArrayOf<uchar>& arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type);
+            static cv::Mat* NewMat(Napi::TypedArrayOf<uchar>& arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type);
 
             Image(const Napi::CallbackInfo& info);
 
             cv::Mat GetMat();
     private:
 
-            cv::Mat mat;
-
-            size_t rows, cols, channels, type;
+            cv::Mat* mat;
 
             static Napi::FunctionReference constructor;
 
@@ -47,6 +45,5 @@ namespace Nodoface {
             Napi::Value Channels(const Napi::CallbackInfo& info);
     };
 }
-
 
 #endif //NODOFACE_MAT_H
