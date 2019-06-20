@@ -14,7 +14,8 @@
             'src/io/SequenceCapture.cpp',
             'src/jserrors/JSErrors.cpp',
             'src/io/OutputUtils.cpp',
-            'src/cvtypes/Mat.cpp'
+            'src/cvtypes/Mat.cpp',
+            'src/facedetection/FaceDetectorMTCNN.cpp'
         ],
         'clfags!': [
             '-fno-exceptions',
@@ -58,6 +59,7 @@
                     'libraries+': [
                         '-L/usr/local/lib',
                         '-lUtilities',
+                        '-lLandmarkDetector',
                     ]
                 }
             ],
