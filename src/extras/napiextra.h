@@ -80,9 +80,9 @@ namespace NapiExtra {
 
     static cv::Rect Napi2Rect(Napi::Object rectObj) {
         int x = rectObj.Get("x").As<Napi::Number>().Int32Value();
-        int y = rectObj.Get("x").As<Napi::Number>().Int32Value();
-        int w = rectObj.Get("x").As<Napi::Number>().Int32Value();
-        int h = rectObj.Get("x").As<Napi::Number>().Int32Value();
+        int y = rectObj.Get("y").As<Napi::Number>().Int32Value();
+        int w = rectObj.Get("width").As<Napi::Number>().Int32Value();
+        int h = rectObj.Get("height").As<Napi::Number>().Int32Value();
         return cv::Rect(x, y, w, h);
     }
 
@@ -95,14 +95,11 @@ namespace NapiExtra {
     }
 
     static cv::Scalar Napi2ScalarBgr(Napi::Object rgbColor) {
-    uchar r = 0;
-    uchar g = 0;
-    uchar b = 0;
-    r = rgbColor.Has(0u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
-    g = rgbColor.Has(1u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
-    b = rgbColor.Has(2u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
-    const cv::Scalar bgrColor(b, g, r);
-    return bgrColor;
+        uchar r = rgbColor.Has(0u)? rgbColor.Get(0u).As<Napi::Number>().Uint32Value() : 0;
+        uchar g = rgbColor.Has(1u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
+        uchar b = rgbColor.Has(2u)? rgbColor.Get(2u).As<Napi::Number>().Uint32Value() : 0;
+        const cv::Scalar bgrColor(b, g, r);
+        return bgrColor;
 }
 
 }
