@@ -3,9 +3,6 @@
 //
 
 #include "FaceDetectorMTCNN.h"
-#include "../jserrors/JSErrors.h"
-#include "../cvtypes/Mat.h"
-#include "../extras/napiextra.h"
 
 Napi::FunctionReference Nodoface::FaceDetectorMTCNN::constructor;
 
@@ -66,7 +63,7 @@ Napi::Value Nodoface::FaceDetectorMTCNN::Read(const Napi::CallbackInfo &info) {
     this->model->Read(location);
     return env.Undefined();
 }
-// args: Image/Mat rgbImage, Number/int min_face, Nunber/float t1, Number/float t2, Number/float t3
+// args: Image/Mat rgbImage, Number/int min_face, Number/float t1, Number/float t2, Number/float t3
 // returns: Bounding boxes and confidence scores as Object of Arrays
 Napi::Value Nodoface::FaceDetectorMTCNN::DetectFaces(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
@@ -74,10 +71,10 @@ Napi::Value Nodoface::FaceDetectorMTCNN::DetectFaces(const Napi::CallbackInfo &i
     auto argLen = info.Length();
     if(argLen < 1) {
         JSErrors::InsufficientArguments(env, 1, 0);
-    } else if (argLen <= 1 && !info[0].IsObject()) {
+    } else if (argLen >= 1 && !info[0].IsObject()) {
         JSErrors::IncorrectDatatype(env, JSErrors::OBJECT + "(Image)", 0);
     } else if (argLen <= 5){
-        for(size_t i = 1; i < argLen; ++i) {
+        for(int i = 1; i < argLen; ++i) {
             if(!info[i].IsNumber()) {
                 JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, i);
             }
@@ -91,16 +88,16 @@ Napi::Value Nodoface::FaceDetectorMTCNN::DetectFaces(const Napi::CallbackInfo &i
     // Convert js args to c++
     Napi::Object imgObj = info[0].As<Napi::Object>();
     Nodoface::Image* img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
-    cv::Mat mat = img->GetMat();
+    const cv::Mat mat = img->GetMat();
 
     int i = 1;
-    int min_face = argLen >= i? info[i].As<Napi::Number>().Int32Value() : 60; i++;
-    float t1 = argLen >= i? info[i].As<Napi::Number>().FloatValue(): 0.6; i++;
-    float t2 = argLen >= i? info[i].As<Napi::Number>().FloatValue(): 0.7; i++;
-    float t3 = argLen >= i? info[i].As<Napi::Number>().FloatValue(): 0.7;
-    // actual detection
+    int min_face = argLen > i? info[i].As<Napi::Number>().Int32Value() : 60; i++;
+    float t1 = argLen > i? info[i].As<Napi::Number>().FloatValue(): 0.6; i++;
+    float t2 = argLen > i? info[i].As<Napi::Number>().FloatValue(): 0.7; i++;
+    float t3 = argLen > i? info[i].As<Napi::Number>().FloatValue(): 0.7;
+//     actual detection
     this->model->DetectFaces(out_bboxes, mat, out_confidences, min_face, t1, t2, t3);
-    // Convert c++ to js
+//     Convert c++ to js
     Napi::Array bboxes = NapiExtra::cv2NapiArray<cv::Rect_<float>>(env, out_bboxes);
     Napi::Array confidences = NapiExtra::toNapiArray<float>(env, out_confidences);
     Napi::Object output = Napi::Object::New(env);

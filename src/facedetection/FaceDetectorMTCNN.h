@@ -9,7 +9,12 @@
 #include <string>
 #include <map>
 #include <OpenFace/FaceDetectorMTCNN.h>
+#include <opencv2/opencv.hpp>
 #include <napi.h>
+
+#include "../jserrors/JSErrors.h"
+#include "../cvtypes/Mat.h"
+#include "../extras/napiextra.h"
 
 namespace Nodoface {
 class FaceDetectorMTCNN : public Napi::ObjectWrap<Nodoface::FaceDetectorMTCNN> {
