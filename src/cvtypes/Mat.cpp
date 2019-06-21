@@ -125,3 +125,8 @@ Napi::Value Nodoface::Image::Channels(const Napi::CallbackInfo &info) {
 cv::Mat Nodoface::Image::GetMat() {
     return *this->mat;
 }
+
+Nodoface::Image::~Image() {
+    delete[] this->mat->data;
+    delete this->mat;
+}

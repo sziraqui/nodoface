@@ -30,6 +30,8 @@ namespace Nodoface {
             Image(const Napi::CallbackInfo& info);
 
             cv::Mat GetMat();
+
+            ~Image();
     private:
 
             cv::Mat* mat;
