@@ -78,6 +78,33 @@ namespace NapiExtra {
         return array;
     }
 
+    static cv::Rect Napi2Rect(Napi::Object rectObj) {
+        int x = rectObj.Get("x").As<Napi::Number>().Int32Value();
+        int y = rectObj.Get("x").As<Napi::Number>().Int32Value();
+        int w = rectObj.Get("x").As<Napi::Number>().Int32Value();
+        int h = rectObj.Get("x").As<Napi::Number>().Int32Value();
+        return cv::Rect(x, y, w, h);
+    }
+
+    static std::vector<cv::Rect> Napi2RectVector(Napi::Array arr) {
+        std::vector<cv::Rect> vec(arr.Length());
+        for(uint i = 0; i < vec.size(); ++i) {
+            vec[i] = Napi2Rect(arr.Get(i).As<Napi::Object>());
+        }
+        return vec;
+    }
+
+    static cv::Scalar Napi2ScalarBgr(Napi::Object rgbColor) {
+    uchar r = 0;
+    uchar g = 0;
+    uchar b = 0;
+    r = rgbColor.Has(0u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
+    g = rgbColor.Has(1u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
+    b = rgbColor.Has(2u)? rgbColor.Get(1u).As<Napi::Number>().Uint32Value() : 0;
+    const cv::Scalar bgrColor(b, g, r);
+    return bgrColor;
+}
+
 }
 
 #endif //NODOFACE_NAPIEXTRA_H

@@ -4,6 +4,7 @@
 #include "io/OutputUtils.h"
 #include "cvtypes/Mat.h"
 #include "facedetection/FaceDetectorMTCNN.h"
+#include "draw/cvdraw.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::ImageCapture::Init(env, exports);
@@ -11,6 +12,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::Image::Init(env, exports);
     Nodoface::Init(env, exports);
     Nodoface::FaceDetectorMTCNN::Init(env, exports);
+    Nodoface::Draw::Init(env, exports);
     return exports;
 }
 

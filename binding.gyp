@@ -15,7 +15,8 @@
             'src/jserrors/JSErrors.cpp',
             'src/io/OutputUtils.cpp',
             'src/cvtypes/Mat.cpp',
-            'src/facedetection/FaceDetectorMTCNN.cpp'
+            'src/facedetection/FaceDetectorMTCNN.cpp',
+            'src/draw/cvdraw.cpp'
         ],
         'clfags!': [
             '-fno-exceptions',
