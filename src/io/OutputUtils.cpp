@@ -38,7 +38,7 @@ Napi::Value Nodoface::readImage(const Napi::CallbackInfo &info) {
     cv::imshow("readImageOg", mat);
     cv::waitKey(100);
 #endif
-    auto imgObj = Nodoface::Image::NewObject(info.Env(), &mat).As<Napi::Object>();
+    auto imgObj = Nodoface::Image::NewObject(info.Env(), mat).As<Napi::Object>();
 #ifdef DEBUG_MATWRAPPER
     Nodoface::Image* image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
     cv::namedWindow("readImageUnwrap", cv::WINDOW_AUTOSIZE);
@@ -52,7 +52,7 @@ Napi::Value Nodoface::destroyWindow(const Napi::CallbackInfo &info) {
     // TODO: input validation
     auto windowName = info[0].As<Napi::String>().Utf8Value();
     cv::destroyWindow(windowName);
-    info.Env().Undefined();
+    return info.Env().Undefined();
 }
 
 Napi::Value Nodoface::destroyAllWindows(const Napi::CallbackInfo &info) {

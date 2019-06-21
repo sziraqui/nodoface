@@ -23,7 +23,7 @@ namespace Nodoface {
         public:
             static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-            static Napi::Value NewObject(Napi::Env env, cv::Mat* mat);
+            static Napi::Value NewObject(Napi::Env env, cv::Mat& mat);
 
             static cv::Mat* NewMat(Napi::TypedArrayOf<uchar>& arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type);
 

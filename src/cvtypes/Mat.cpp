@@ -24,24 +24,23 @@ Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
     return exports;
 }
 
-Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat* mat) {
+Napi::Value Nodoface::Image::NewObject(Napi::Env env, cv::Mat& mat) {
     Napi::EscapableHandleScope scope(env);
     // Get continuous mat data
-    uchar* data;
-    size_t length = mat->total() * mat->channels();
-    if(mat->isContinuous()) {
-        mat = new cv::Mat(*mat); // ensures mat is continuous and also prevents segfault
+
+    size_t length = mat.total() * mat.channels();
+    if(mat.isContinuous()) {
+        mat =  cv::Mat(mat); // ensures mat is continuous and also prevents segfault
     }
-    data = mat->data;
 
     // Create ArrayBuffer from data
-    Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, data, sizeof(uchar)*length);
+    Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, mat.data, sizeof(uchar)*length);
     Napi::TypedArrayOf<uchar> arr = Napi::TypedArrayOf<uchar>::New(env, length, ab, 0); // arg1
     // Mat dimensions
-    Napi::Number rows = Napi::Number::New(env, mat->rows); // arg2
-    Napi::Number cols = Napi::Number::New(env, mat->cols); // arg3
+    Napi::Number rows = Napi::Number::New(env, mat.rows); // arg2
+    Napi::Number cols = Napi::Number::New(env, mat.cols); // arg3
     // Create mat type Number
-    Napi::Number type = Napi::Number::New(env, mat->type());  // arg4
+    Napi::Number type = Napi::Number::New(env, mat.type());  // arg4
     // Call constructor
     Napi::Object imageObj = Image::constructor.New({ arr, rows, cols, type });
 #ifdef DEBUG_MATWRAPPER
