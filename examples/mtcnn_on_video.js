@@ -4,17 +4,27 @@ let mtcnn = new nodoface.FaceDetectorMTCNN();
 
 const argv = process.argv.slice(2);
 
-sequenceCapture.openVideoFile(argv[0])
+sequenceCapture.openVideoFile(argv[0]);
 mtcnn.read(argv[1]);
 
 img = sequenceCapture.getNextFrame();
 console.log(`Frame: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 let res = mtcnn.detectFaces(img);
 
-for(let i = 2; i < 60; i++) {
-    console.log(`res frame[${i}]- bboxes: ${res.detections[0].x},${res.detections[0].y},${res.detections[0].width},${res.detections[0].height} | conf: ${res.confidences[0]}`);
+for(let i = 0; sequenceCapture.isOpened(); i++) {
+    console.log(`Frame ${i} detections [Progress ${(100*sequenceCapture.getProgress()).toFixed(2)}%]:`);
+    let bboxes = res.detections;
+    let conf = res.confidences;
+    for(let j = 0; j < bboxes.length; j++) {
+        let rect = bboxes[j];
+        console.log(`\tDetection ${j}: 
+            x:${rect.x.toFixed(0)}, y:${rect.y.toFixed(0)}, 
+            width:${rect.width.toFixed(0)}, height:${rect.height.toFixed(0)} | 
+            Confidence:${conf[j].toFixed(2)}`
+        );
+    }
     nodoface.showImage(img, 'output');
-    nodoface.waitKey(1000/25);
+    nodoface.waitKey(1000/sequenceCapture.getFPS());
     img = sequenceCapture.getNextFrame();
     res = mtcnn.detectFaces(img);
 }
