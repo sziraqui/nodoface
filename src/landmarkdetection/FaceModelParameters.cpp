@@ -58,12 +58,16 @@ Napi::Value Nodoface::LandmarkModelConfig::GetHaarLocation(const Napi::CallbackI
 
 Napi::Value Nodoface::LandmarkModelConfig::GetCurrentFdId(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    return NapiExtra::toNapi(env, this->instance->curr_face_detector);
+    return NapiExtra::toNapi(env, GetInternalInstance().curr_face_detector);
 }
 
 Napi::Value Nodoface::LandmarkModelConfig::GetCurrentLdId(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    return NapiExtra::toNapi(env, this->instance->curr_landmark_detector);
+    return NapiExtra::toNapi(env, GetInternalInstance().curr_landmark_detector);
+}
+
+LandmarkDetector::FaceModelParameters Nodoface::LandmarkModelConfig::GetInternalInstance() {
+    return *this->instance;
 }
 
 Nodoface::LandmarkModelConfig::~LandmarkModelConfig() {
