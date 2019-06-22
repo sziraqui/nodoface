@@ -58,28 +58,12 @@ Napi::Value Nodoface::LandmarkModelConfig::GetHaarLocation(const Napi::CallbackI
 
 Napi::Value Nodoface::LandmarkModelConfig::GetCurrentFdId(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    int currentFaceDetector;
-    if (this->instance->curr_face_detector == ::LandmarkDetector::FaceModelParameters::FaceDetector::HOG_SVM_DETECTOR) {
-        currentFaceDetector = FaceDetector::HOG_SVM_DETECTOR;
-    } else if (this->instance->curr_face_detector == ::LandmarkDetector::FaceModelParameters::FaceDetector::HAAR_DETECTOR) {
-        currentFaceDetector = FaceDetector::HAAR_DETECTOR;
-    } else { // this->instance->curr_face_detector == ::LandmarkDetector::FaceModelParameters::FaceDetector::MTCNN_DETECTOR
-        currentFaceDetector = FaceDetector::MTCNN_DETECTOR;
-    }
-    return NapiExtra::toNapi(env, currentFaceDetector);
+    return NapiExtra::toNapi(env, this->instance->curr_face_detector);
 }
 
 Napi::Value Nodoface::LandmarkModelConfig::GetCurrentLdId(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    int currentLandmarkDetector;
-    if (this->instance->curr_landmark_detector == ::LandmarkDetector::FaceModelParameters::LandmarkDetector::CLM_DETECTOR) {
-        currentLandmarkDetector = LandmarkDetector::CLM_DETECTOR;
-    } else if (this->instance->curr_landmark_detector == ::LandmarkDetector::FaceModelParameters::LandmarkDetector::CLNF_DETECTOR) {
-        currentLandmarkDetector = LandmarkDetector::CLNF_DETECTOR;
-    } else { //(this->instance->curr_landmark_detector == ::LandmarkDetector::FaceModelParameters::LandmarkDetector::CECLM_DETECTOR)
-        currentLandmarkDetector = LandmarkDetector::CECLM_DETECTOR;
-    }
-    return NapiExtra::toNapi(env, currentLandmarkDetector);
+    return NapiExtra::toNapi(env, this->instance->curr_landmark_detector);
 }
 
 Nodoface::LandmarkModelConfig::~LandmarkModelConfig() {

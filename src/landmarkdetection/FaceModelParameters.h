@@ -43,14 +43,14 @@ namespace Nodoface {
             Napi::Value GetModelLocation(const Napi::CallbackInfo& info);
 
             // Based on model location, this affects the parameter settings
-            enum LandmarkDetector { CLM_DETECTOR = 1, CLNF_DETECTOR = 2, CECLM_DETECTOR = 3}; // TODO: create equivalent enum in TypeScript interface
+//            enum LandmarkDetector { CLM_DETECTOR, CLNF_DETECTOR, CECLM_DETECTOR};
     //    LandmarkDetector curr_landmark_detector;
             Napi::Value GetCurrentLdId(const Napi::CallbackInfo& info);
 
             // Determining which face detector to use for (re)initialisation, HAAR is quicker but provides more false positives and is not goot for in-the-wild conditions
             // Also HAAR detector can detect smaller faces while HOG SVM is only capable of detecting faces at least 70px across
             // MTCNN detector is much more accurate that the other two, and is even suitable for profile faces, but it is somewhat slower
-            enum FaceDetector{HAAR_DETECTOR = 1, HOG_SVM_DETECTOR = 2, MTCNN_DETECTOR = 3}; // TODO: create equivalent enum in TypeScript interface
+//            enum FaceDetector{HAAR_DETECTOR, HOG_SVM_DETECTOR, MTCNN_DETECTOR};
     //    FaceDetector curr_face_detector;
             Napi::Value GetCurrentFdId(const Napi::CallbackInfo& info);
     //    string haar_face_detector_location;
