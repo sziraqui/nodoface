@@ -101,6 +101,13 @@ namespace NapiExtra {
         const cv::Scalar bgrColor(b, g, r);
         return bgrColor;
 }
+    static std::vector<std::string> Napi2StringVector(const Napi::Array arr) {
+        std::vector<std::string> vec(arr.Length());
+        for(int i = 0; i < vec.size(); ++i) {
+            vec[i] = arr[i].As<Napi::String>().Utf8Value();
+        }
+        return vec;
+    }
 
 }
 

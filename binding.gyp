@@ -16,7 +16,8 @@
             'src/io/OutputUtils.cpp',
             'src/cvtypes/Mat.cpp',
             'src/facedetection/FaceDetectorMTCNN.cpp',
-            'src/draw/cvdraw.cpp'
+            'src/draw/cvdraw.cpp',
+            'src/landmarkdetection/FaceModelParameters.cpp'
         ],
         'clfags!': [
             '-fno-exceptions',

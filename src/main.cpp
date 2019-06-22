@@ -5,6 +5,7 @@
 #include "cvtypes/Mat.h"
 #include "facedetection/FaceDetectorMTCNN.h"
 #include "draw/cvdraw.h"
+#include "landmarkdetection/FaceModelParameters.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::ImageCapture::Init(env, exports);
@@ -13,6 +14,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::Init(env, exports);
     Nodoface::FaceDetectorMTCNN::Init(env, exports);
     Nodoface::Draw::Init(env, exports);
+    Nodoface::LandmarkModelConfig::Init(env, exports);
     return exports;
 }
 
