@@ -142,3 +142,7 @@ Napi::Value Nodoface::CLNF::Read(const Napi::CallbackInfo& info) {
     }
     return env.Undefined();
 }
+
+LandmarkDetector::CLNF Nodoface::CLNF::GetInternalInstance() {
+    return *this->instance;
+}

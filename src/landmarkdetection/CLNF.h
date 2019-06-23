@@ -29,7 +29,7 @@ class CLNF : public Napi::ObjectWrap<CLNF> {
 
         CLNF(const Napi::CallbackInfo&);
 
-        CLNF GetInternalInstance();
+        ::LandmarkDetector::CLNF GetInternalInstance();
 
         ~CLNF();
 
