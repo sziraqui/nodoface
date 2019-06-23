@@ -9,6 +9,7 @@
 #include "cvtypes/MatFloat.h"
 #include "cvtypes/MatInt.h"
 #include "landmarkdetection/CLNF.h"
+#include "eyegaze/GazeAnalyser.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::ImageCapture::Init(env, exports);
@@ -21,6 +22,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::Draw::Init(env, exports);
     Nodoface::LandmarkModelConfig::Init(env, exports);
     Nodoface::CLNF::Init(env, exports);
+    Nodoface::GazeAnalyser::Init(env, exports);
     return exports;
 }
 

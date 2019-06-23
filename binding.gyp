@@ -21,6 +21,7 @@
             'src/draw/cvdraw.cpp',
             'src/landmarkdetection/FaceModelParameters.cpp',
             'src/landmarkdetection/CLNF.cpp',
+            'src/eyegaze/GazeAnalyser.cpp',
         ],
         'clfags!': [
             '-fno-exceptions',
@@ -65,6 +66,7 @@
                         '-L/usr/local/lib',
                         '-lUtilities',
                         '-lLandmarkDetector',
+                        '-lGazeAnalyser',
                     ]
                 }
             ],
