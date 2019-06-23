@@ -46,7 +46,7 @@ namespace NapiExtra {
     static Napi::Object cv2Napi(Napi::Env& env, cv::Point_<numericType>& point) {
         auto obj = Napi::Object::New(env);
         obj["x"] = Napi::Number::New(env, point.x);
-        obj["y"] = Napi::Number::New(point.y);
+        obj["y"] = Napi::Number::New(env, point.y);
         return obj;
     }
 
@@ -54,8 +54,8 @@ namespace NapiExtra {
     static Napi::Object cv2Napi(Napi::Env& env, cv::Point3_<numericType> point) {
         auto obj = Napi::Object::New(env);
         obj["x"] = Napi::Number::New(env, point.x);
-        obj["y"] = Napi::Number::New(point.y);
-        obj["y"] = Napi::Number::New(point.z);
+        obj["y"] = Napi::Number::New(env, point.y);
+        obj["y"] = Napi::Number::New(env, point.z);
         return obj;
     }
 
@@ -107,6 +107,21 @@ namespace NapiExtra {
             vec[i] = arr[i].As<Napi::String>().Utf8Value();
         }
         return vec;
+    }
+
+    template <class numericType>
+    static cv::Point_<numericType> Napi2Point(Napi::Object obj) {
+        numericType x = (numericType)obj.Get("x").As<Napi::Number>().DoubleValue();
+        numericType y = (numericType)obj.Get("y").As<Napi::Number>().DoubleValue();
+        return cv::Point_<numericType>(x, y);
+    }
+
+    template <class numericType>
+    static cv::Point3_<numericType> Napi2Point3(Napi::Object obj) {
+        numericType x = (numericType)obj.Get("x").As<Napi::Number>().DoubleValue();
+        numericType y = (numericType)obj.Get("y").As<Napi::Number>().DoubleValue();
+        numericType z = (numericType)obj.Get("z").As<Napi::Number>().DoubleValue();
+        return cv::Point3_<numericType>(x, y, z);
     }
 
 }
