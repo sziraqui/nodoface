@@ -8,6 +8,7 @@
 #include "landmarkdetection/FaceModelParameters.h"
 #include "cvtypes/MatFloat.h"
 #include "cvtypes/MatInt.h"
+#include "landmarkdetection/CLNF.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::ImageCapture::Init(env, exports);
@@ -19,6 +20,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::FaceDetectorMTCNN::Init(env, exports);
     Nodoface::Draw::Init(env, exports);
     Nodoface::LandmarkModelConfig::Init(env, exports);
+    Nodoface::CLNF::Init(env, exports);
     return exports;
 }
 

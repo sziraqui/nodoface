@@ -20,6 +20,7 @@
             'src/facedetection/FaceDetectorMTCNN.cpp',
             'src/draw/cvdraw.cpp',
             'src/landmarkdetection/FaceModelParameters.cpp',
+            'src/landmarkdetection/CLNF.cpp',
         ],
         'clfags!': [
             '-fno-exceptions',
