@@ -1,8 +1,8 @@
 {
   "name": "nodoface",
   "version": "0.0.1",
-  "description": "Nodejs bindings for Tadas OpenFae C++ library",
-  "main": "index.js",
+  "description": "C++ Addon for fast and efficient face analytics",
+  "main": "api/nodoface.js",
   "gypfile": true,
   "scripts": {
     "build": "node-gyp rebuild"
@@ -17,8 +17,11 @@
     "openface",
     "napi"
   ],
-  "author": "sziraqui",
-  "license": "MIT",
+  "author": {
+    "name": "Sarfaraz Iraqui",
+    "email": "sarfarazghlm@gmail.com"
+  },
+  "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/sziraqui/nodoface/issues"
   },
