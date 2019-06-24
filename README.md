@@ -44,7 +44,7 @@ OpenCV classes are partial bindings just sufficient for passing underlying Mat t
 ### Dependencies
 - OpenFace >= 2.1.0
 - OpenCV >= 3.4.0
-- dlib >= 19.13
+- dlib >= 19.13   
   All above libs must be compiled as a **shared library**
 - node-addon-api >= 1.6.3
 
@@ -84,7 +84,7 @@ Run some samples to test if everything is working.
 ```
 $ node examples/mtcnn_on_video.js path/to/a/video/file <OpenFace_REPO_DIR>/lib/local/LandmarkDetector/model/mtcnn_detector/MTCNN_detector.txt
 ```
-Here's sample run:
+### Here's sample run:
 [![IMAGE ALT Video Annotation](https://img.youtube.com/vi/7PUnz9dDZPQ/0.jpg)](https://www.youtube.com/watch?v=7PUnz9dDZPQ)
 
 # Mentors
@@ -92,4 +92,5 @@ Here's sample run:
 - [Johannes Lochter](https://scholar.google.com/citations?user=bOzlOZ8AAAAJ&hl=en)
   
 # License
-GNU General Public License 3.0 (GPL-v3.0)
+GNU General Public License 3.0 (GPL-v3.0)     
+Please carefully read OpenFace 2.0 license. You must also respect opencv and dlib license.
