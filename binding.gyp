@@ -2,23 +2,23 @@
 {
     'variables': {
         'module_name': 'nodoface',
-        'cv_version': '3.4.0',
-        'dlib_version': '19.13',
+        'cv_version': '3.4.6',
+        'dlib_version': '19.17.0',
         'openface_version': '2.1.0'
     },
     'targets': [{
         'target_name': '<(module_name)',
         'sources': [
             'src/main.cpp',
+            'src/jserrors/JSErrors.cpp',
+            'src/draw/cvdraw.cpp',
             'src/io/ImageCapture.cpp',
             'src/io/SequenceCapture.cpp',
-            'src/jserrors/JSErrors.cpp',
             'src/io/OutputUtils.cpp',
             'src/cvtypes/Mat.cpp',
             'src/cvtypes/MatFloat.cpp',
             'src/cvtypes/MatInt.cpp',
             'src/facedetection/FaceDetectorMTCNN.cpp',
-            'src/draw/cvdraw.cpp',
             'src/landmarkdetection/FaceModelParameters.cpp',
             'src/landmarkdetection/CLNF.cpp',
             'src/eyegaze/GazeAnalyser.cpp',
