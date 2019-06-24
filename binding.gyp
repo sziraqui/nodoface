@@ -42,7 +42,6 @@
         'defines': [
             'NAPI_DISABLE_CPP_EXCEPTIONS',
             'NODE_ADDON_API_DISABLE_DEPRECATED',
-            #'DEBUG_MATWRAPPER',
         ],
         'cflags': [
             '-std=c++11',

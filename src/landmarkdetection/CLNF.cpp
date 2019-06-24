@@ -120,10 +120,10 @@ Napi::Value Nodoface::CLNF::Reset(const Napi::CallbackInfo& info) {
         double x = info[0].As<Napi::Number>().DoubleValue();
         double y = info[1].As<Napi::Number>().DoubleValue();
         this->instance->Reset(x, y);
-        return env.Undefined();
     } else {
         JSErrors::TooManyArguments(env, 2, argLen);
     }
+    return env.Undefined();
 }
 
 Napi::Value Nodoface::CLNF::Read(const Napi::CallbackInfo& info) {

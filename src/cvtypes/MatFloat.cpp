@@ -42,12 +42,7 @@ Napi::Value Nodoface::FloatImage::NewObject(Napi::Env env, cv::Mat_<float>& mat)
     Napi::Number type = Napi::Number::New(env, mat.type());  // arg4
     // Call constructor
     Napi::Object imageObj = FloatImage::constructor.New({ arr, rows, cols, type });
-#ifdef DEBUG_MATWRAPPER
-    FloatImage* image = Napi::ObjectWrap<FloatImage>::Unwrap(imageObj);
-    cv::namedWindow("NewObject", cv::WINDOW_AUTOSIZE);
-    cv::imshow("NewObject", image->GetMat());
-    cv::waitKey(0);
-#endif
+
     return scope.Escape(imageObj);
 }
 // cpp only
@@ -62,11 +57,7 @@ cv::Mat_<float>* Nodoface::FloatImage::NewMat(Napi::TypedArrayOf<float> &arr, Na
     int matType = type.Int32Value();
     // Create mat
     cv::Mat_<float>* mat = new cv::Mat_<float>(matRows, matCols, data);
-#ifdef DEBUG_MATWRAPPER
-    cv::namedWindow("NewMat", cv::WINDOW_AUTOSIZE);
-    cv::imshow("NewMat", mat);
-    cv::waitKey(0);
-#endif
+
     return mat;
 }
 
@@ -94,11 +85,6 @@ Nodoface::FloatImage::FloatImage(const Napi::CallbackInfo& info) : ObjectWrap<No
         auto type = info[3].As<Napi::Number>();
         this->mat = FloatImage::NewMat(arr, rows, cols, type);
 
-#ifdef DEBUG_MATWRAPPER
-        cv::namedWindow("FloatImage()", cv::WINDOW_AUTOSIZE);
-        cv::imshow("FloatImage()", this->mat);
-        cv::waitKey(0);
-#endif
     } else  {
         JSErrors::TooManyArguments(env, 4, len);
     }

@@ -5,7 +5,6 @@
 #ifndef NODOFACE_NDARRAY_H
 #define NODOFACE_NDARRAY_H
 // system includes
-#include <iostream>
 #include <vector>
 #include <string>
 #include <initializer_list>
@@ -103,10 +102,9 @@ namespace NapiExtra {
         std::vector<int> shape(mat.size.dims() + 1); // +1 for channel
         for (int i = 0; i < mat.size.dims(); ++i) {
             shape[i] = mat.size[i];
-            std::cout << "FromMat:shape[" << i << "]=" << shape[i] << std::endl;
         }
         shape[mat.size.dims()] = mat.channels();
-        std::cout << "FromMat:shape[" << mat.size.dims() << "]=" << shape[mat.size.dims()] << std::endl;
+
         return shape;
     }
 
@@ -173,7 +171,6 @@ namespace NapiExtra {
     template <class numericType>
     Napi::ArrayBuffer NdArray<numericType>::ToArrayBuffer(Napi::Env& env) {
         size_t byteLength = sizeof(numericType) * this->n_elements;
-        std::cout<<"bytelen:"<<byteLength<<std::endl;
         return this->ToArrayBuffer(env, byteLength);
     }
 
@@ -201,7 +198,6 @@ namespace NapiExtra {
 
     template <class numericType>
     size_t NdArray<numericType>::ElementCount() {
-        std::cout<<"elementLen:"<<this->n_elements<<std::endl;
         return this->n_elements;
     }
 }

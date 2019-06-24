@@ -20,6 +20,7 @@
 #include "../extras/napiextra.h"
 
 namespace Nodoface {
+
 class FaceDetectorMTCNN : public Napi::ObjectWrap<Nodoface::FaceDetectorMTCNN> {
         public:
 

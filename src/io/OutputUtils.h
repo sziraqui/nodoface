@@ -8,6 +8,7 @@
 #include <opencv2/opencv.hpp>
 
 #include <napi.h>
+
 #include "../cvtypes/Mat.h"
 
 namespace Nodoface {

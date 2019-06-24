@@ -9,9 +9,9 @@ Napi::FunctionReference Nodoface::GazeAnalyser::constructor;
 Napi::Object Nodoface::GazeAnalyser::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     auto func = DefineClass(env, "GazeAnalyser", {
-        InstanceMethod("EstimateGaze", &Nodoface::GazeAnalyser::EstimateGaze),
-        InstanceMethod("GetGazeAngle", &Nodoface::GazeAnalyser::GetGazeAngle),
-        InstanceMethod("GetPupilPosition", &Nodoface::GazeAnalyser::GetPupilPosition)
+        InstanceMethod("estimateGaze", &Nodoface::GazeAnalyser::EstimateGaze),
+        InstanceMethod("getGazeAngle", &Nodoface::GazeAnalyser::GetGazeAngle),
+        InstanceMethod("getPupilPosition", &Nodoface::GazeAnalyser::GetPupilPosition)
     });
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
@@ -41,8 +41,8 @@ Napi::Value Nodoface::GazeAnalyser::EstimateGaze(const Napi::CallbackInfo &info)
     }
 
     LandmarkDetector::CLNF clnfModel;
-    float fx, fy, cx, cy;
-    bool leftEye;
+    float fx = 0, fy = 0, cx = 0, cy = 0;
+    bool leftEye = false;
     int i = 0;
     if(info[i].IsObject()) {
         Nodoface::CLNF* clnf = Nodoface::CLNF::Unwrap(info[i].As<Napi::Object>());

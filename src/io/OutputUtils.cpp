@@ -33,18 +33,8 @@ Napi::Value Nodoface::readImage(const Napi::CallbackInfo &info) {
     // TODO: input validation
     std::string path = info[0].As<Napi::String>().Utf8Value();
     cv::Mat mat = cv::imread(path, cv::IMREAD_UNCHANGED);
-#ifdef DEBUG_MATWRAPPER
-    cv::namedWindow("readImageOg", cv::WINDOW_AUTOSIZE);
-    cv::imshow("readImageOg", mat);
-    cv::waitKey(100);
-#endif
+
     auto imgObj = Nodoface::Image::NewObject(info.Env(), mat).As<Napi::Object>();
-#ifdef DEBUG_MATWRAPPER
-    Nodoface::Image* image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
-    cv::namedWindow("readImageUnwrap", cv::WINDOW_AUTOSIZE);
-    cv::imshow("readImageUnwrap", image->GetMat());
-    cv::waitKey(0);
-#endif
     return scope.Escape(imgObj);
 }
 

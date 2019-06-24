@@ -3,11 +3,11 @@
 #include "io/SequenceCapture.h"
 #include "io/OutputUtils.h"
 #include "cvtypes/Mat.h"
+#include "cvtypes/MatFloat.h"
+#include "cvtypes/MatInt.h"
 #include "facedetection/FaceDetectorMTCNN.h"
 #include "draw/cvdraw.h"
 #include "landmarkdetection/FaceModelParameters.h"
-#include "cvtypes/MatFloat.h"
-#include "cvtypes/MatInt.h"
 #include "landmarkdetection/CLNF.h"
 #include "eyegaze/GazeAnalyser.h"
 

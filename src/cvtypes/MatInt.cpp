@@ -41,12 +41,7 @@ Napi::Value Nodoface::IntImage::NewObject(Napi::Env env, cv::Mat_<int>& mat) {
     Napi::Number type = Napi::Number::New(env, mat.type());  // arg4
     // Call constructor
     Napi::Object imageObj = IntImage::constructor.New({ arr, rows, cols, type });
-#ifdef DEBUG_MATWRAPPER
-    IntImage* image = Napi::ObjectWrap<IntImage>::Unwrap(imageObj);
-    cv::namedWindow("NewObject", cv::WINDOW_AUTOSIZE);
-    cv::imshow("NewObject", image->GetMat());
-    cv::waitKey(0);
-#endif
+
     return scope.Escape(imageObj);
 }
 // cpp only
@@ -61,11 +56,7 @@ cv::Mat_<int>* Nodoface::IntImage::NewMat(Napi::TypedArrayOf<int> &arr, Napi::Nu
     int matType = type.Int32Value();
     // Create mat
     cv::Mat_<int>* mat = new cv::Mat_<int>(matRows, matCols, data);
-#ifdef DEBUG_MATWRAPPER
-    cv::namedWindow("NewMat", cv::WINDOW_AUTOSIZE);
-    cv::imshow("NewMat", mat);
-    cv::waitKey(0);
-#endif
+
     return mat;
 }
 
@@ -93,11 +84,6 @@ Nodoface::IntImage::IntImage(const Napi::CallbackInfo& info) : ObjectWrap<Nodofa
         auto type = info[3].As<Napi::Number>();
         this->mat = IntImage::NewMat(arr, rows, cols, type);
 
-#ifdef DEBUG_MATWRAPPER
-        cv::namedWindow("IntImage()", cv::WINDOW_AUTOSIZE);
-        cv::imshow("IntImage()", this->mat);
-        cv::waitKey(0);
-#endif
     } else  {
         JSErrors::TooManyArguments(env, 4, len);
     }

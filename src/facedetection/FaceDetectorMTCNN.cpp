@@ -74,7 +74,7 @@ Napi::Value Nodoface::FaceDetectorMTCNN::DetectFaces(const Napi::CallbackInfo &i
     } else if (argLen >= 1 && !info[0].IsObject()) {
         JSErrors::IncorrectDatatype(env, JSErrors::OBJECT + "(Image)", 0);
     } else if (argLen <= 5){
-        for(int i = 1; i < argLen; ++i) {
+        for(uint i = 1; i < argLen; ++i) {
             if(!info[i].IsNumber()) {
                 JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, i);
             }
@@ -90,7 +90,7 @@ Napi::Value Nodoface::FaceDetectorMTCNN::DetectFaces(const Napi::CallbackInfo &i
     Nodoface::Image* img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
     const cv::Mat mat = img->GetMat();
 
-    int i = 1;
+    uint i = 1;
     int min_face = argLen > i? info[i].As<Napi::Number>().Int32Value() : 60; i++;
     float t1 = argLen > i? info[i].As<Napi::Number>().FloatValue(): 0.6; i++;
     float t2 = argLen > i? info[i].As<Napi::Number>().FloatValue(): 0.7; i++;
@@ -114,5 +114,5 @@ Napi::Value Nodoface::FaceDetectorMTCNN::Empty(const Napi::CallbackInfo &info) {
         JSErrors::TooManyArguments(env, 0, argLen);
     }
     bool result = this->model->empty();
-    return Napi::Boolean::New(env, result);
+    return NapiExtra::toNapi(env, result);
 }

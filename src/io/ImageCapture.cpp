@@ -58,7 +58,7 @@ Napi::Value Nodoface::ImageCapture::Open(const Napi::CallbackInfo &info) {
         vecList[i] = s;
     }
     bool result = this->imageCapture->Open(vecList);
-    return Napi::Boolean::New(env, result);
+    return NapiExtra::toNapi(env, result);
 }
 
 Napi::Value Nodoface::ImageCapture::OpenDirectory(const Napi::CallbackInfo &info) {
@@ -148,7 +148,8 @@ Napi::Value Nodoface::ImageCapture::GetProgress(const Napi::CallbackInfo &info) 
 // GetSet for public variables
 // int image_width;
 Napi::Value Nodoface::ImageCapture::GetImageWidth(const Napi::CallbackInfo& info) {
-    return Napi::Number::New(info.Env(), this->imageCapture->image_width);
+    Napi::Env env = info.Env();
+    return NapiExtra::toNapi(env, this->imageCapture->image_width);
 }
 
 Napi::Value Nodoface::ImageCapture::SetImageWidth(const Napi::CallbackInfo& info) {

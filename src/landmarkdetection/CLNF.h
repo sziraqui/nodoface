@@ -14,10 +14,10 @@
 
 #include <napi.h>
 
+#include "FaceModelParameters.h"
 #include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
 #include "../cvtypes/Mat.h"
-#include "FaceModelParameters.h"
 #include "../cvtypes/MatFloat.h"
 #include "../cvtypes/MatInt.h"
 
