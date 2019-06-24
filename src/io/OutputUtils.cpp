@@ -14,7 +14,7 @@ Napi::Object Nodoface::Init(Napi::Env env, Napi::Object exports) {
 }
 
 // js-args: Nodoface.Image instance
-Napi::Value Nodoface::showImage(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::showImage(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     // TODO: input validation
     // Unwrap Image and get mat
@@ -22,7 +22,7 @@ Napi::Value Nodoface::showImage(const Napi::CallbackInfo& info) {
     Nodoface::Image *image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(parent);
     cv::Mat mat = image->GetMat();
     // Get optional arguments
-    std::string title = info.Length() >= 2? info[1].As<Napi::String>().Utf8Value() : "output";
+    std::string title = info.Length() >= 2 ? info[1].As<Napi::String>().Utf8Value() : "output";
     cv::namedWindow(title, cv::WINDOW_AUTOSIZE);
     cv::imshow(title, mat);
     return env.Undefined();
@@ -57,11 +57,11 @@ Napi::Value Nodoface::waitKey(const Napi::CallbackInfo &info) {
     return Napi::Number::New(info.Env(), key);
 }
 
-Napi::Value Nodoface::saveImage(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::saveImage(const Napi::CallbackInfo &info) {
     // TODO: input validation
     auto absPath = info[0].As<Napi::String>().Utf8Value();
     auto imageObj = info[1].As<Napi::Object>();
-    Nodoface::Image* img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imageObj);
+    Nodoface::Image *img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imageObj);
     cv::imwrite(absPath, img->GetMat());
     return info.Env().Undefined();
 }

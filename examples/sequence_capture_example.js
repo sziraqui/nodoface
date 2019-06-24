@@ -31,9 +31,9 @@ console.log('New properties',
     '\nCy', sequenceCapture.getCy(),
 );
 img = sequenceCapture.getNextFrame();
-for(let i = 2; i < 60; i++) {
+for (let i = 2; i < 60; i++) {
     nodoface.showImage(img, 'output');
-    nodoface.waitKey(1000/25);
+    nodoface.waitKey(1000 / 25);
     img = sequenceCapture.getNextFrame();
     console.log(`Frame[${i}]: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 }

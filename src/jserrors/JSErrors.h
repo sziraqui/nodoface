@@ -20,8 +20,11 @@ namespace JSErrors {
     const std::string OBJECT = "Object";
 
     void SetterError(Napi::Env env, std::string jsTypeName);
+
     void InsufficientArguments(Napi::Env, uint expectedArgLen, uint receivedArgLen);
+
     void TooManyArguments(Napi::Env env, uint expectedArgLen, uint receivedArgLen);
+
     void IncorrectDatatype(Napi::Env env, std::string expectedType, int argNum = 0);
 }
 #endif //NODOFACE_JSERRORS_H

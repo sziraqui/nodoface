@@ -9,11 +9,11 @@ Napi::FunctionReference Nodoface::LandmarkModelConfig::constructor;
 Napi::Object Nodoface::LandmarkModelConfig::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function ctor = DefineClass(env, "FaceModelParameters", {
-        InstanceMethod("getModelLocation", &Nodoface::LandmarkModelConfig::GetModelLocation),
-        InstanceMethod("getMtcnnLocation", &Nodoface::LandmarkModelConfig::GetMtcnnLocation),
-        InstanceMethod("getHaarLocation", &Nodoface::LandmarkModelConfig::GetHaarLocation),
-        InstanceMethod("getCurrentFdId", &Nodoface::LandmarkModelConfig::GetCurrentFdId),
-        InstanceMethod("getCurrentLdId", &Nodoface::LandmarkModelConfig::GetCurrentLdId)
+            InstanceMethod("getModelLocation", &Nodoface::LandmarkModelConfig::GetModelLocation),
+            InstanceMethod("getMtcnnLocation", &Nodoface::LandmarkModelConfig::GetMtcnnLocation),
+            InstanceMethod("getHaarLocation", &Nodoface::LandmarkModelConfig::GetHaarLocation),
+            InstanceMethod("getCurrentFdId", &Nodoface::LandmarkModelConfig::GetCurrentFdId),
+            InstanceMethod("getCurrentLdId", &Nodoface::LandmarkModelConfig::GetCurrentLdId)
     });
 
     constructor = Napi::Persistent(ctor);
@@ -24,14 +24,15 @@ Napi::Object Nodoface::LandmarkModelConfig::Init(Napi::Env env, Napi::Object exp
 
 Napi::Value Nodoface::LandmarkModelConfig::NewObject(Napi::Env env, std::vector<std::string> &arguments) {
     Napi::Array args = NapiExtra::toNapiArray<std::string>(env, arguments);
-    return constructor.New({ args });
+    return constructor.New({args});
 }
 
-Nodoface::LandmarkModelConfig::LandmarkModelConfig(const Napi::CallbackInfo &info) : ObjectWrap<Nodoface::LandmarkModelConfig>(info) {
+Nodoface::LandmarkModelConfig::LandmarkModelConfig(const Napi::CallbackInfo &info)
+        : ObjectWrap<Nodoface::LandmarkModelConfig>(info) {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
 
-    if(info.Length() != 1) {
+    if (info.Length() != 1) {
         JSErrors::InsufficientArguments(env, 1, info.Length());
     }
 
@@ -73,5 +74,3 @@ LandmarkDetector::FaceModelParameters Nodoface::LandmarkModelConfig::GetInternal
 Nodoface::LandmarkModelConfig::~LandmarkModelConfig() {
     delete this->instance;
 }
-
-

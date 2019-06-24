@@ -17,26 +17,27 @@
 #include "../cvtypes/MatFloat.h"
 
 namespace Nodoface {
-class GazeAnalyser : public Napi::ObjectWrap<Nodoface::GazeAnalyser> {
+    class GazeAnalyser : public Napi::ObjectWrap<Nodoface::GazeAnalyser> {
     public:
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
         static Napi::Object NewObject();
 
-        GazeAnalyser(const Napi::CallbackInfo& info);
+        GazeAnalyser(const Napi::CallbackInfo &info);
 
     private:
         static Napi::FunctionReference constructor;
 
 //        void EstimateGaze(const LandmarkDetector::CLNF& clnf_model, cv::Point3f& gaze_absolute, float fx, float fy, float cx, float cy, bool left_eye);
-        Napi::Value EstimateGaze(const Napi::CallbackInfo& info);
+        Napi::Value EstimateGaze(const Napi::CallbackInfo &info);
 
         // Getting the gaze angle in radians with respect to the world coordinates (camera plane), when looking ahead straight at camera plane the gaze angle will be (0,0)
 //        cv::Vec2f GetGazeAngle(cv::Point3f& gaze_vector_1, cv::Point3f& gaze_vector_2);
-        Napi::Value GetGazeAngle(const Napi::CallbackInfo& info);
+        Napi::Value GetGazeAngle(const Napi::CallbackInfo &info);
+
         // Some utilities
 //        cv::Point3f GetPupilPosition(cv::Mat_<float> eyeLdmks3d);
-        Napi::Value GetPupilPosition(const Napi::CallbackInfo& info);
+        Napi::Value GetPupilPosition(const Napi::CallbackInfo &info);
     };
 }
 

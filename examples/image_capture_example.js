@@ -43,6 +43,6 @@ nodoface.destroyAllWindows();
 
 let bboxes = imageCapture.getBoundingBoxes();
 console.log(`bboxes is Array: ${Array.isArray(bboxes)}| size: ${bboxes.length}`);
-for(let rect of bboxes) {
+for (let rect of bboxes) {
     console.log(`x:${rect.x}, y:${rect.y}, w:${rect.width}, h:${rect.height}`);
 }

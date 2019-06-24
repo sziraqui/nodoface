@@ -9,12 +9,15 @@ void JSErrors::SetterError(Napi::Env env, std::string jsTypeName) {
 }
 
 void JSErrors::TooManyArguments(Napi::Env env, uint expectedArgLen, uint receivedArgLen) {
-    std::string msg = "TooManyArguments: Expected " + std::to_string(expectedArgLen) + " args(s) but got " + std::to_string(receivedArgLen) + " args(s)";
+    std::string msg = "TooManyArguments: Expected " + std::to_string(expectedArgLen) + " args(s) but got " +
+                      std::to_string(receivedArgLen) + " args(s)";
     Napi::Error::New(env, msg).ThrowAsJavaScriptException();
 }
 
 void JSErrors::InsufficientArguments(Napi::Env env, uint expectedArgLen, uint receivedArgLen) {
-    std::string msg = "InsufficientArguments: Expected atleast" + std::to_string(expectedArgLen) + " args(s) but got only" + std::to_string(receivedArgLen) + " args(s)";
+    std::string msg =
+            "InsufficientArguments: Expected atleast" + std::to_string(expectedArgLen) + " args(s) but got only" +
+            std::to_string(receivedArgLen) + " args(s)";
     Napi::Error::New(env, msg).ThrowAsJavaScriptException();
 }
 

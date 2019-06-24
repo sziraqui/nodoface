@@ -8,25 +8,25 @@ Napi::FunctionReference Nodoface::ImageCapture::constructor;
 Napi::Object Nodoface::ImageCapture::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "ImageCapture", {
-        InstanceMethod("open", &Nodoface::ImageCapture::Open),
-        InstanceMethod("openDirectory", &Nodoface::ImageCapture::OpenDirectory),
-        InstanceMethod("openImageFiles", &Nodoface::ImageCapture::OpenImageFiles),
-        InstanceMethod("getNextImage", &Nodoface::ImageCapture::GetNextImage),
-        InstanceMethod("getGrayFrame", &Nodoface::ImageCapture::GetGrayFrame),
-        InstanceMethod("getProgress", &Nodoface::ImageCapture::GetProgress),
-        InstanceMethod("getBoundingBoxes", &Nodoface::ImageCapture::GetBoundingBoxes),
-        InstanceMethod("getImageHeight", &Nodoface::ImageCapture::GetImageHeight),
-        InstanceMethod("setImageHeight", &Nodoface::ImageCapture::SetImageHeight),
-        InstanceMethod("getImageWidth", &Nodoface::ImageCapture::GetImageWidth),
-        InstanceMethod("setImageWidth", &Nodoface::ImageCapture::SetImageWidth),
-        InstanceMethod("getFx", &Nodoface::ImageCapture::GetFx),
-        InstanceMethod("setFx", &Nodoface::ImageCapture::SetFx),
-        InstanceMethod("getFy", &Nodoface::ImageCapture::GetFy),
-        InstanceMethod("setFy", &Nodoface::ImageCapture::SetFy),
-        InstanceMethod("getCx", &Nodoface::ImageCapture::GetCx),
-        InstanceMethod("setCx", &Nodoface::ImageCapture::SetCx),
-        InstanceMethod("getCy", &Nodoface::ImageCapture::GetCy),
-        InstanceMethod("setCy", &Nodoface::ImageCapture::SetCy)
+            InstanceMethod("open", &Nodoface::ImageCapture::Open),
+            InstanceMethod("openDirectory", &Nodoface::ImageCapture::OpenDirectory),
+            InstanceMethod("openImageFiles", &Nodoface::ImageCapture::OpenImageFiles),
+            InstanceMethod("getNextImage", &Nodoface::ImageCapture::GetNextImage),
+            InstanceMethod("getGrayFrame", &Nodoface::ImageCapture::GetGrayFrame),
+            InstanceMethod("getProgress", &Nodoface::ImageCapture::GetProgress),
+            InstanceMethod("getBoundingBoxes", &Nodoface::ImageCapture::GetBoundingBoxes),
+            InstanceMethod("getImageHeight", &Nodoface::ImageCapture::GetImageHeight),
+            InstanceMethod("setImageHeight", &Nodoface::ImageCapture::SetImageHeight),
+            InstanceMethod("getImageWidth", &Nodoface::ImageCapture::GetImageWidth),
+            InstanceMethod("setImageWidth", &Nodoface::ImageCapture::SetImageWidth),
+            InstanceMethod("getFx", &Nodoface::ImageCapture::GetFx),
+            InstanceMethod("setFx", &Nodoface::ImageCapture::SetFx),
+            InstanceMethod("getFy", &Nodoface::ImageCapture::GetFy),
+            InstanceMethod("setFy", &Nodoface::ImageCapture::SetFy),
+            InstanceMethod("getCx", &Nodoface::ImageCapture::GetCx),
+            InstanceMethod("setCx", &Nodoface::ImageCapture::SetCx),
+            InstanceMethod("getCy", &Nodoface::ImageCapture::GetCy),
+            InstanceMethod("setCy", &Nodoface::ImageCapture::SetCy)
     });
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
@@ -35,7 +35,7 @@ Napi::Object Nodoface::ImageCapture::Init(Napi::Env env, Napi::Object exports) {
 }
 
 Nodoface::ImageCapture::ImageCapture(const Napi::CallbackInfo &info) : Napi::ObjectWrap<Nodoface::ImageCapture>(info) {
-    if(info.Length() != 0) {
+    if (info.Length() != 0) {
         JSErrors::TooManyArguments(info.Env(), 0, info.Length());
     }
     this->imageCapture = new Utilities::ImageCapture();
@@ -52,7 +52,7 @@ Napi::Value Nodoface::ImageCapture::Open(const Napi::CallbackInfo &info) {
 
     const Napi::Array arguments = info[0].As<Napi::Array>();
     std::vector<std::string> vecList(arguments.Length());
-    for(uint i = 0; i < arguments.Length(); ++i) {
+    for (uint i = 0; i < arguments.Length(); ++i) {
 
         std::string s = arguments[i].As<Napi::String>().Utf8Value();
         vecList[i] = s;
@@ -69,19 +69,22 @@ Napi::Value Nodoface::ImageCapture::OpenDirectory(const Napi::CallbackInfo &info
     std::string bboxDir = "";
     if (argLen < 1u) {
         JSErrors::InsufficientArguments(env, 2u, argLen);
-    } else if(!info[0].IsString()) {
+    } else if (!info[0].IsString()) {
         JSErrors::IncorrectDatatype(env, JSErrors::STRING, 0);
-    } else if(argLen < 2u || !info[1].IsString()) {
+    } else if (argLen < 2u || !info[1].IsString()) {
         JSErrors::IncorrectDatatype(env, JSErrors::STRING, 1);
     } else {
         bboxDir = info[1].As<Napi::String>().Utf8Value();
     }
     imgDir = info[0].As<Napi::String>().Utf8Value();
     uint8_t i = 2;
-    float fx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
-    float fy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
-    float cx = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1; i++;
-    float cy = argLen > i && info[i].IsNumber()? info[i].As<Napi::Number>().FloatValue() : -1;
+    float fx = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
+    i++;
+    float fy = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
+    i++;
+    float cx = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
+    i++;
+    float cy = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
 
     bool result = this->imageCapture->OpenDirectory(imgDir, bboxDir, fx, fy, cx, cy);
     return NapiExtra::toNapi(env, result);
@@ -106,7 +109,7 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
 
     const Napi::Array arguments = info[0].As<Napi::Array>();
     std::vector<std::string> vecList(arguments.Length());
-    for(uint i = 0; i < arguments.Length(); ++i) {
+    for (uint i = 0; i < arguments.Length(); ++i) {
 
         std::string s = arguments[i].As<Napi::String>().Utf8Value();
         vecList[i] = s;
@@ -147,14 +150,14 @@ Napi::Value Nodoface::ImageCapture::GetProgress(const Napi::CallbackInfo &info) 
 
 // GetSet for public variables
 // int image_width;
-Napi::Value Nodoface::ImageCapture::GetImageWidth(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::GetImageWidth(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     return NapiExtra::toNapi(env, this->imageCapture->image_width);
 }
 
-Napi::Value Nodoface::ImageCapture::SetImageWidth(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::SetImageWidth(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    if(info.Length() != 1 || !info[0].IsNumber()) {
+    if (info.Length() != 1 || !info[0].IsNumber()) {
         JSErrors::SetterError(env, JSErrors::NUMBER);
     }
     Napi::Number num = info[0].As<Napi::Number>();
@@ -163,14 +166,14 @@ Napi::Value Nodoface::ImageCapture::SetImageWidth(const Napi::CallbackInfo& info
 }
 
 // int image_height
-Napi::Value Nodoface::ImageCapture::GetImageHeight(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::GetImageHeight(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     return NapiExtra::toNapi(env, this->imageCapture->image_height);
 }
 
-Napi::Value Nodoface::ImageCapture::SetImageHeight(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::SetImageHeight(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    if(info.Length() != 1 || !info[0].IsNumber()) {
+    if (info.Length() != 1 || !info[0].IsNumber()) {
         JSErrors::SetterError(env, JSErrors::NUMBER);
     }
     Napi::Number num = info[0].As<Napi::Number>();
@@ -179,29 +182,29 @@ Napi::Value Nodoface::ImageCapture::SetImageHeight(const Napi::CallbackInfo& inf
 }
 
 // float fx, fy, cx, cy;
-Napi::Value Nodoface::ImageCapture::GetFx(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::GetFx(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     return NapiExtra::toNapi(env, this->imageCapture->fx);
 }
 
-Napi::Value Nodoface::ImageCapture::GetFy(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::GetFy(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     return NapiExtra::toNapi(env, this->imageCapture->fy);
 }
 
-Napi::Value Nodoface::ImageCapture::GetCx(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::GetCx(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     return NapiExtra::toNapi(env, this->imageCapture->cx);
 }
 
-Napi::Value Nodoface::ImageCapture::GetCy(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::GetCy(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     return NapiExtra::toNapi(env, this->imageCapture->cy);
 }
 
-Napi::Value Nodoface::ImageCapture::SetFx(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::SetFx(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    if(info.Length() != 1 || !info[0].IsNumber()) {
+    if (info.Length() != 1 || !info[0].IsNumber()) {
         JSErrors::SetterError(env, JSErrors::NUMBER);
     }
     Napi::Number num = info[0].As<Napi::Number>();
@@ -209,9 +212,9 @@ Napi::Value Nodoface::ImageCapture::SetFx(const Napi::CallbackInfo& info) {
     return NapiExtra::toNapi(env, true);
 }
 
-Napi::Value Nodoface::ImageCapture::SetFy(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::SetFy(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    if(info.Length() != 1 || !info[0].IsNumber()) {
+    if (info.Length() != 1 || !info[0].IsNumber()) {
         JSErrors::SetterError(env, JSErrors::NUMBER);
     }
     Napi::Number num = info[0].As<Napi::Number>();
@@ -219,9 +222,9 @@ Napi::Value Nodoface::ImageCapture::SetFy(const Napi::CallbackInfo& info) {
     return NapiExtra::toNapi(env, true);
 }
 
-Napi::Value Nodoface::ImageCapture::SetCx(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::SetCx(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    if(info.Length() != 1 || !info[0].IsNumber()) {
+    if (info.Length() != 1 || !info[0].IsNumber()) {
         JSErrors::SetterError(env, JSErrors::NUMBER);
     }
     Napi::Number num = info[0].As<Napi::Number>();
@@ -229,9 +232,9 @@ Napi::Value Nodoface::ImageCapture::SetCx(const Napi::CallbackInfo& info) {
     return NapiExtra::toNapi(env, true);
 }
 
-Napi::Value Nodoface::ImageCapture::SetCy(const Napi::CallbackInfo& info) {
+Napi::Value Nodoface::ImageCapture::SetCy(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
-    if(info.Length() != 1 || !info[0].IsNumber()) {
+    if (info.Length() != 1 || !info[0].IsNumber()) {
         JSErrors::SetterError(env, JSErrors::NUMBER);
     }
     Napi::Number num = info[0].As<Napi::Number>();
