@@ -5,8 +5,22 @@
 #ifndef NODOFACE_IMAGECAPTURE_H
 #define NODOFACE_IMAGECAPTURE_H
 
+// System includes
+#include <vector>
+#include <string>
 
+// OpenCV includes
+#include<opencv2/opencv.hpp>
+
+// OpenFace includes
 #include <OpenFace/ImageCapture.h>
+
+// local includes
+#include "../extras/ndarray.h"
+#include "../extras/napiextra.h"
+#include "../jserrors/JSErrors.h"
+#include "../cvtypes/Mat.h"
+
 #include <napi.h>
 
 namespace Nodoface {
@@ -69,6 +83,5 @@ private:
 
 };
 }
-
 
 #endif //NODOFACE_IMAGECAPTURE_H

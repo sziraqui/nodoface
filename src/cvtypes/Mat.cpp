@@ -3,8 +3,6 @@
 //
 
 #include "Mat.h"
-#include "../extras/napiextra.h"
-#include "../jserrors/JSErrors.h"
 
 Napi::FunctionReference Nodoface::Image::constructor;
 

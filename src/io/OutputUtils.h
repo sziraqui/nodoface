@@ -27,4 +27,5 @@ namespace Nodoface {
     Napi::Value saveImage(const Napi::CallbackInfo& info);
 
 }
+
 #endif //NODOFACE_OUTPUTUTILS_H

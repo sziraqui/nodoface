@@ -4,10 +4,24 @@
 
 #ifndef NODOFACE_SEQUENCECAPTURE_H
 #define NODOFACE_SEQUENCECAPTURE_H
+// system includes
+#include <vector>
+#include <string>
 
+// opencv includes
+#include <opencv/cv.h>
 
-#include <napi.h>
+// OpenFace includes
 #include <OpenFace/SequenceCapture.h>
+
+// napi
+#include <napi.h>
+
+// locals
+#include "../extras/ndarray.h"
+#include "../extras/napiextra.h"
+#include "../jserrors/JSErrors.h"
+#include "../cvtypes/Mat.h"
 
 namespace Nodoface {
 

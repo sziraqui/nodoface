@@ -7,10 +7,12 @@
 // system includes
 #include <vector>
 #include <string>
-// napi
-#include <napi.h>
 // opencv includes
 #include <opencv2/core/types.hpp>
+
+// napi
+#include <napi.h>
+
 // local includes
 #include "ndarray.h"
 

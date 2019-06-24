@@ -1,16 +1,8 @@
 //
 // Created by sziraqui on 7/6/19.
 //
-#include <iostream>
-#include <opencv/cv.h>
-#include <vector>
-#include <string>
 
 #include "SequenceCapture.h"
-#include "../extras/ndarray.h"
-#include "../extras/napiextra.h"
-#include "../jserrors/JSErrors.h"
-#include "../cvtypes/Mat.h"
 
 Napi::FunctionReference Nodoface::SequenceCapture::constructor;
 

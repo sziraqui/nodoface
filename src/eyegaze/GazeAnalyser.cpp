@@ -3,7 +3,6 @@
 //
 
 #include "GazeAnalyser.h"
-#include "../cvtypes/MatFloat.h"
 
 Napi::FunctionReference Nodoface::GazeAnalyser::constructor;
 

@@ -8,9 +8,9 @@
 #include <vector>
 #include <string>
 
-#include <napi.h>
-
 #include <OpenFace/LandmarkDetectorParameters.h>
+
+#include <napi.h>
 
 #include "../jserrors/JSErrors.h"
 #include "../extras/napiextra.h"

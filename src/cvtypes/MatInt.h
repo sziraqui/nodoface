@@ -9,10 +9,10 @@
 
 #include <opencv2/core/mat.hpp>
 #ifdef DEBUG_MATWRAPPER
-#include "opencv2/core/utility.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
+#include <opencv2/core/utility.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 #endif
 
 #include <napi.h>

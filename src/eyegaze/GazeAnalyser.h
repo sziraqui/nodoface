@@ -14,6 +14,7 @@
 #include "../jserrors/JSErrors.h"
 #include "../landmarkdetection/CLNF.h"
 #include "../extras/napiextra.h"
+#include "../cvtypes/MatFloat.h"
 
 namespace Nodoface {
 class GazeAnalyser : public Napi::ObjectWrap<Nodoface::GazeAnalyser> {

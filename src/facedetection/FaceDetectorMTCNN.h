@@ -8,8 +8,11 @@
 #include <vector>
 #include <string>
 #include <map>
-#include <OpenFace/FaceDetectorMTCNN.h>
+
 #include <opencv2/opencv.hpp>
+
+#include <OpenFace/FaceDetectorMTCNN.h>
+
 #include <napi.h>
 
 #include "../jserrors/JSErrors.h"

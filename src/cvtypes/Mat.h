@@ -7,14 +7,18 @@
 
 #include <vector>
 
-#include <napi.h>
 #include <opencv2/core/mat.hpp>
 #ifdef DEBUG_MATWRAPPER
-#include "opencv2/core/utility.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/imgcodecs.hpp"
-#include "opencv2/highgui.hpp"
+#include <opencv2/core/utility.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 #endif
+
+#include <napi.h>
+
+#include "../extras/napiextra.h"
+#include "../jserrors/JSErrors.h"
 
 namespace Nodoface {
     // Wraps OpenCV Mat partially for sending and receiving Mat objects to/from node

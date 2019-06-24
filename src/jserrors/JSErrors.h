@@ -4,6 +4,7 @@
 
 #ifndef NODOFACE_JSERRORS_H
 #define NODOFACE_JSERRORS_H
+
 #include <napi.h>
 #include <string>
 

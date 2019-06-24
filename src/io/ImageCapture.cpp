@@ -1,17 +1,7 @@
 //
 // Created by sziraqui on 3/6/19.
 //
-// System includes
-#include <vector>
-#include <string>
-// OpenCV includes
-#include<opencv2/opencv.hpp>
-// local includes
 #include "ImageCapture.h"
-#include "../extras/ndarray.h"
-#include "../extras/napiextra.h"
-#include "../jserrors/JSErrors.h"
-#include "../cvtypes/Mat.h"
 
 Napi::FunctionReference Nodoface::ImageCapture::constructor;
 
