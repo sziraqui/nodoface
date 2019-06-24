@@ -26,7 +26,7 @@ export interface SequenceCapture {
 
     isOpened(): boolean;
 
-    close();
+    close(): undefined;
 
     getBoundingBoxes(): Rect[];
 
@@ -36,9 +36,9 @@ export interface SequenceCapture {
 
     getFrameHeight(): number;
 
-    setFrameWidth(): number;
+    setFrameWidth(width: number): undefined;
 
-    setFrameHeight(): number;
+    setFrameHeight(height: number): undefined;
 
     getFx(): number;
 
@@ -48,25 +48,25 @@ export interface SequenceCapture {
 
     getCy(): number;
 
-    setFx(fx: number);
+    setFx(fx: number): undefined;
 
-    setFy(fy: number);
+    setFy(fy: number): undefined;
 
-    setCx(cx: number);
+    setCx(cx: number): undefined;
 
-    setCy(cy: number);
+    setCy(cy: number): undefined;
 
-    getName(name: string);
+    getName(): number;
 
-    setName(name: string);
+    setName(name: string): undefined;
 
     getNoInputSpecified(): boolean;
 
-    setNoInputSpecified(): boolean;
+    setNoInputSpecified(flag: boolean): undefined;
 
     getCaptureCapacity(): number;
 
     getFPS(): number;
 
-    setFPS(fps: number);
+    setFPS(fps: number): undefined;
 }

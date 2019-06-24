@@ -8,7 +8,7 @@ export class CLNF {
     constructor();
     constructor(modelFile: string);
 
-    read(modelFile: string);
+    read(modelFile: string): undefined;
 
     detectLandmarks(image: Image, parameters: FaceModelParameters): boolean;
 
@@ -18,6 +18,6 @@ export class CLNF {
 
     getVisibilities(): IntImage;
 
-    reset();
-    reset(x: number, y: number);
+    reset(): undefined;
+    reset(x: number, y: number): undefined;
 }

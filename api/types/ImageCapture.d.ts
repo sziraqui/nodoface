@@ -28,9 +28,9 @@ export interface ImageCapture {
 
     getImageHeight(): number;
 
-    setImageWidth(): number;
+    setImageWidth(width: number): undefined;
 
-    setImageHeight(): number;
+    setImageHeight(height: number): undefined;
 
     getFx(): number;
 
@@ -40,11 +40,11 @@ export interface ImageCapture {
 
     getCy(): number;
 
-    setFx(fx: number);
+    setFx(fx: number): undefined;
 
-    setFy(fy: number);
+    setFy(fy: number): undefined;
 
-    setCx(cx: number);
+    setCx(cx: number): undefined;
 
-    setCy(cy: number);
+    setCy(cy: number): undefined;
 }
