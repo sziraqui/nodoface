@@ -2,7 +2,8 @@
   "name": "nodoface",
   "version": "0.0.1",
   "description": "C++ Addon for fast and efficient face analytics",
-  "main": "api/nodoface.js",
+  "main": "./api/nodoface.js",
+  "typings": "./api/index.d.ts",
   "gypfile": true,
   "scripts": {
     "build": "node-gyp rebuild"
