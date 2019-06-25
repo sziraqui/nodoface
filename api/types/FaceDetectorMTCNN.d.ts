@@ -1,10 +1,10 @@
 import {Image} from "./Image";
 import {DetectionResult} from "./DetectionResult";
 
-export class FaceDetectionMTCNN {
+export class FaceDetectorMTCNN {
     constructor();
     constructor(modelFile: string);
-    constructor(instance: FaceDetectionMTCNN);
+    constructor(instance: FaceDetectorMTCNN);
 
     detectFaces(image: Image): DetectionResult;
     detectFaces(image: Image, minFace: number): DetectionResult;

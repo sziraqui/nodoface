@@ -10,7 +10,7 @@ Napi::Object Nodoface::SequenceCapture::Init(Napi::Env env, Napi::Object exports
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "SequenceCapture", {
             InstanceMethod("open", &Nodoface::SequenceCapture::Open),
-            InstanceMethod("openWebCam", &Nodoface::SequenceCapture::OpenWebcam),
+            InstanceMethod("openWebcam", &Nodoface::SequenceCapture::OpenWebcam),
             InstanceMethod("openVideoFile", &Nodoface::SequenceCapture::OpenVideoFile),
             InstanceMethod("isWebcam", &Nodoface::SequenceCapture::IsWebcam),
             InstanceMethod("isOpened", &Nodoface::SequenceCapture::IsOpened),

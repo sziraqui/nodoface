@@ -1,7 +1,7 @@
 import {Image} from "./Image";
 import {Rect} from "./Rect";
 
-export interface SequenceCapture {
+export class SequenceCapture {
     constructor();
 
     open(arguments: string[]): boolean;
@@ -10,11 +10,11 @@ export interface SequenceCapture {
 
     openVideoFile(videoFile: string, fx: number, fy: number, cx: number, cy: number): boolean;
 
-    openWebCam(deviceId: number): boolean;
+    openWebcam(deviceId: number): boolean;
 
-    openWebCam(deviceId: number, width: number, height: number): boolean;
+    openWebcam(deviceId: number, width: number, height: number): boolean;
 
-    openWebCam(deviceId: number, width: number, height: number, fx: number, fy: number, cx: number, cy: number): boolean;
+    openWebcam(deviceId: number, width: number, height: number, fx: number, fy: number, cx: number, cy: number): boolean;
 
     isWebcam(): boolean;
 
