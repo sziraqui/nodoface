@@ -1,6 +1,6 @@
 {
   "name": "nodoface",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "C++ Addon for fast and efficient face analytics",
   "main": "./api/nodoface.js",
   "typings": "./api/index.d.ts",
@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/sziraqui/nodoface#readme",
   "dependencies": {
-    "node-addon-api": "^1.6.3"
+    "node-addon-api": "^1.6.3",
+    "node-gyp": "^5.0.1"
   }
 }
