@@ -1,6 +1,6 @@
 export * from './types/CLNF';
 export * from './types/draw';
-export * from './types/FaceDetectionMTCNN';
+export * from './types/FaceDetectorMTCNN';
 export * from './types/FaceModelParameters';
 export * from './types/FloatImage';
 export * from './types/GazeAnalyser';
