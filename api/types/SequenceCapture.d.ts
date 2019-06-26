@@ -32,41 +32,23 @@ export interface SequenceCapture {
 
     getProgress(): number;
 
-    getFrameWidth(): number;
+    width: number;
 
-    getFrameHeight(): number;
+    height: number;
 
-    setFrameWidth(): number;
+    fx: number;
 
-    setFrameHeight(): number;
+    fy: number;
 
-    getFx(): number;
+    cx: number;
 
-    getFy(): number;
+    cy: number;
 
-    getCx(): number;
+    name: string;
 
-    getCy(): number;
-
-    setFx(fx: number);
-
-    setFy(fy: number);
-
-    setCx(cx: number);
-
-    setCy(cy: number);
-
-    getName(name: string);
-
-    setName(name: string);
-
-    getNoInputSpecified(): boolean;
-
-    setNoInputSpecified(): boolean;
+    noInputSpecified: boolean;
 
     getCaptureCapacity(): number;
 
-    getFPS(): number;
-
-    setFPS(fps: number);
+    fps: number;
 }

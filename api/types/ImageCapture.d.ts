@@ -24,27 +24,15 @@ export interface ImageCapture {
 
     getProgress(): number;
 
-    getImageWidth(): number;
+    width: number;
 
-    getImageHeight(): number;
+    height: number;
 
-    setImageWidth(): number;
+    fx: number;
 
-    setImageHeight(): number;
+    fy: number;
 
-    getFx(): number;
+    cx: number;
 
-    getFy(): number;
-
-    getCx(): number;
-
-    getCy(): number;
-
-    setFx(fx: number);
-
-    setFy(fy: number);
-
-    setCx(cx: number);
-
-    setCy(cy: number);
+    cy: number;
 }
