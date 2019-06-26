@@ -7,12 +7,12 @@ sequenceCapture.openVideoFile(argv[0])
 
 console.log('Actual properties',
     '\nprogress', sequenceCapture.getProgress(),
-    '\nframe Ht', sequenceCapture.getFrameHeight(),
-    '\nframe Wd', sequenceCapture.getFrameWidth(),
-    '\nFx', sequenceCapture.getFx(),
-    '\nFy', sequenceCapture.getFy(),
-    '\nCx', sequenceCapture.getCx(),
-    '\nCy', sequenceCapture.getCy(),
+    '\nframe Ht', sequenceCapture.height,
+    '\nframe Wd', sequenceCapture.width,
+    '\nFx', sequenceCapture.fx,
+    '\nFy', sequenceCapture.fy,
+    '\nCx', sequenceCapture.cx,
+    '\nCy', sequenceCapture.cy,
 );
 let img = sequenceCapture.getNextFrame();
 console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
@@ -22,19 +22,18 @@ console.log(`Image: rows:${grayImg.height()}, cols:${img.width()}, channels:${gr
 
 console.log('New properties',
     '\nprogress', sequenceCapture.getProgress(),
-    '\nSequence Ht', sequenceCapture.getFrameHeight(),
-    '\nSequence Wd', sequenceCapture.getFrameWidth(),
+    '\nSequence Ht', sequenceCapture.height,
+    '\nSequence Wd', sequenceCapture.width,
     '\nFrame number', sequenceCapture.getFrameNumber(),
-    '\nFx', sequenceCapture.getFx(),
-    '\nFy', sequenceCapture.getFy(),
-    '\nCx', sequenceCapture.getCx(),
-    '\nCy', sequenceCapture.getCy(),
+    '\nFx', sequenceCapture.fx,
+    '\nFy', sequenceCapture.fy,
+    '\nCx', sequenceCapture.cx,
+    '\nCy', sequenceCapture.cy,
 );
-img = sequenceCapture.getNextFrame();
-for (let i = 2; i < 60; i++) {
-    nodoface.showImage(img, 'output');
-    nodoface.waitKey(1000 / 25);
+for (let i = 2; sequenceCapture.getProgress() < 1; i++) {
     img = sequenceCapture.getNextFrame();
+    nodoface.showImage(img, 'output');
+    nodoface.waitKey(1000 / sequenceCapture.fps);
     console.log(`Frame[${i}]: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 }
 nodoface.destroyAllWindows();

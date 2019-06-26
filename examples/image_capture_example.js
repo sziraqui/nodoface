@@ -7,12 +7,12 @@ imageCapture.open(argv);
 
 console.log('Actual properties',
     '\nprogress', imageCapture.getProgress(),
-    '\nImage Ht', imageCapture.getImageHeight(),
-    '\nImage Wd', imageCapture.getImageWidth(),
-    '\nFx', imageCapture.getFx(),
-    '\nFy', imageCapture.getFy(),
-    '\nCx', imageCapture.getCx(),
-    '\nCy', imageCapture.getCy(),
+    '\nImage Ht', imageCapture.height,
+    '\nImage Wd', imageCapture.width,
+    '\nFx', imageCapture.fx,
+    '\nFy', imageCapture.fy,
+    '\nCx', imageCapture.cx,
+    '\nCy', imageCapture.cy,
 );
 let img = imageCapture.getNextImage();
 console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
@@ -28,12 +28,12 @@ nodoface.destroyWindow('gray');
 
 console.log('New properties',
     '\nprogress', imageCapture.getProgress(),
-    '\nImage Ht', imageCapture.getImageHeight(),
-    '\nImage Wd', imageCapture.getImageWidth(),
-    '\nFx', imageCapture.getFx(),
-    '\nFy', imageCapture.getFy(),
-    '\nCx', imageCapture.getCx(),
-    '\nCy', imageCapture.getCy(),
+    '\nImage Ht', imageCapture.height,
+    '\nImage Wd', imageCapture.width,
+    '\nFx', imageCapture.fx,
+    '\nFy', imageCapture.fy,
+    '\nCx', imageCapture.cx,
+    '\nCy', imageCapture.cy,
 );
 img = imageCapture.getNextImage();
 console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
