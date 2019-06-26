@@ -5,7 +5,7 @@ let mtcnn = new nodoface.FaceDetectorMTCNN();
 const argv = process.argv.slice(2);
 
 sequenceCapture.openVideoFile(argv[0]);
-mtcnn.read(argv[1]);
+mtcnn.load(argv[1]);
 
 img = sequenceCapture.getNextFrame();
 console.log(`Frame: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
@@ -25,7 +25,7 @@ for (let i = 0; sequenceCapture.isOpened() && sequenceCapture.getProgress() < 1;
         nodoface.drawRect(img, bboxes[j], [0, 255, 0]);
     }
     nodoface.showImage(img, 'output');
-    nodoface.waitKey(1000 / sequenceCapture.getFPS());
+    nodoface.waitKey(1000 / sequenceCapture.fps);
     img = sequenceCapture.getNextFrame();
     res = mtcnn.detectFaces(img);
 }
