@@ -79,13 +79,13 @@ namespace NapiExtra {
         }
         return array;
     }
-
-    static cv::Rect Napi2Rect(Napi::Object rectObj) {
-        int x = rectObj.Get("x").As<Napi::Number>().Int32Value();
-        int y = rectObj.Get("y").As<Napi::Number>().Int32Value();
-        int w = rectObj.Get("width").As<Napi::Number>().Int32Value();
-        int h = rectObj.Get("height").As<Napi::Number>().Int32Value();
-        return cv::Rect(x, y, w, h);
+    template <class numericType = int>
+    static cv::Rect_<numericType> Napi2Rect(Napi::Object rectObj) {
+        numericType x = (numericType)rectObj.Get("x").As<Napi::Number>().DoubleValue();
+        numericType y = (numericType)rectObj.Get("y").As<Napi::Number>().DoubleValue();
+        numericType w = (numericType)rectObj.Get("width").As<Napi::Number>().DoubleValue();
+        numericType h = (numericType)rectObj.Get("height").As<Napi::Number>().DoubleValue();
+        return cv::Rect_<numericType>(x, y, w, h);
     }
 
     static std::vector<cv::Rect> Napi2RectVector(Napi::Array arr) {

@@ -25,3 +25,8 @@ void JSErrors::IncorrectDatatype(Napi::Env env, std::string expectedType, int ar
     std::string msg = "IncorrectDatatype: Expected type" + expectedType + " at argument " + std::to_string(argNum);
     Napi::Error::New(env, msg).ThrowAsJavaScriptException();
 }
+
+void JSErrors::IncorrectImageType(Napi::Env env, std::string expectedImageType) {
+    std::string msg = "IncorrectImageType: Expected " + expectedImageType + " image";
+    Napi::TypeError::New(env, msg).ThrowAsJavaScriptException();
+}

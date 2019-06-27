@@ -19,6 +19,7 @@
             'src/cvtypes/MatFloat.cpp',
             'src/cvtypes/MatInt.cpp',
             'src/facedetection/FaceDetectorMTCNN.cpp',
+            'src/facedetection/FaceDetectorHaar.cpp',
             'src/landmarkdetection/FaceModelParameters.cpp',
             'src/landmarkdetection/CLNF.cpp',
             'src/eyegaze/GazeAnalyser.cpp',

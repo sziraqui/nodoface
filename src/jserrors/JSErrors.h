@@ -26,5 +26,7 @@ namespace JSErrors {
     void TooManyArguments(Napi::Env env, uint expectedArgLen, uint receivedArgLen);
 
     void IncorrectDatatype(Napi::Env env, std::string expectedType, int argNum = 0);
+
+    void IncorrectImageType(Napi::Env env, std::string expectedImageType);
 }
 #endif //NODOFACE_JSERRORS_H
