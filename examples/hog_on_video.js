@@ -1,15 +1,15 @@
 const nodoface = require("../api/nodoface");
 let sequenceCapture = new nodoface.SequenceCapture();
-let haar = new nodoface.FaceDetectorHaar();
+let hog = new nodoface.FaceDetectorHOG();
 
 const argv = process.argv.slice(2);
 
 sequenceCapture.openVideoFile(argv[0]);
-haar.load(argv[1]);
+hog.load();
 
 img = sequenceCapture.getNextFrame();
 console.log(`Frame: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
-let res = haar.detectFaces(sequenceCapture.getGrayFrame());
+let res = hog.detectFaces(sequenceCapture.getGrayFrame(), img.width()*0.01);
 
 for (let i = 0; sequenceCapture.isOpened() && sequenceCapture.getProgress() < 1; i++) {
     console.log(`Frame ${i} detections [Progress ${(100 * sequenceCapture.getProgress()).toFixed(2)}%]:`);
@@ -27,6 +27,6 @@ for (let i = 0; sequenceCapture.isOpened() && sequenceCapture.getProgress() < 1;
     nodoface.showImage(img, 'output');
     nodoface.waitKey(1000 / sequenceCapture.fps);
     img = sequenceCapture.getNextFrame();
-    res = haar.detectFaces(sequenceCapture.getGrayFrame());
+    res = hog.detectFaces(sequenceCapture.getGrayFrame(), img.width()*0.01);
 }
 nodoface.destroyAllWindows();
