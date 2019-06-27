@@ -73,11 +73,11 @@ Napi::Value Nodoface::FaceDetectorHaar::DetectFaces(const Napi::CallbackInfo &in
     cv::Rect_<float> roi = argLen > 2? NapiExtra::Napi2Rect<float>(info[2].As<Napi::Object>()): cv::Rect_<float>(0.0, 0.0, 1.0, 1.0); // default roi in OpenFace
     // pre-allocated vectors
     std::vector<cv::Rect_<float>> out_bboxes;
-    std::vector<float> out_confidences;
-    LandmarkDetector::DetectFaces(out_bboxes, mat, *this->model, minWid);
 
-    Napi::Object bboxes = NapiExtra::cv2NapiArray<cv::Rect_<float>>(env, out_bboxes);
-    return bboxes;
+    LandmarkDetector::DetectFaces(out_bboxes, mat, *this->model, minWid);
+    std::vector<float> out_confidences(out_bboxes.size(), -1);
+    Napi::Object detectionResult = NapiExtra::detectionResult2Napi(env, out_bboxes, out_confidences);
+    return detectionResult;
 }
 
 Napi::Value Nodoface::FaceDetectorHaar::Read(const Napi::CallbackInfo &info) {
