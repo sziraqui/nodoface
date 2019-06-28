@@ -3,21 +3,21 @@ import { expect } from 'chai';
 import { SequenceCapture } from '../';
 
 describe('SequenceCapture', () => {
-    let dir = path.join(__dirname, 'samples', 'frames');
+    let dir = path.join(__dirname, 'samples');
     let sc: SequenceCapture;
     it('Constructor', () => {
         sc = new SequenceCapture();
         expect(sc).to.instanceof(SequenceCapture);
     });
-    it('Single image', () => {
-        let args = [__filename, '-f', path.join(dir, 'single_face_01.jpg')];
+    it('.open()', () => {
+        let args = [__filename, '-f', path.join(dir, 'single_face.mp4')];
         sc = new SequenceCapture();
         let success = sc.open(args);
         expect(success).to.equal(true);
     });
     it('.openVideoFile()', () => {
         sc = new SequenceCapture();
-        let file = path.join(__dirname, 'samples', 'single_face.mp4')
+        let file = path.join(dir, 'single_face.mp4');
         let success = sc.openVideoFile(file);
         expect(success).to.equal(true);
     });
