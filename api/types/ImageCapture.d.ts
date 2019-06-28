@@ -6,7 +6,7 @@ export class ImageCapture {
 
     open(arguments: string[]): boolean;
 
-    openVideoFile(imageDir: string): boolean;
+    openDirectory(imageDir: string): boolean;
 
     openDirectory(imageDir: string, bboxDir: string): boolean;
 
