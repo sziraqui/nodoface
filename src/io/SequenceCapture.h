@@ -9,7 +9,7 @@
 #include <string>
 
 // opencv includes
-#include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 
 // OpenFace includes
 #include <OpenFace/SequenceCapture.h>

@@ -118,6 +118,7 @@ Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info)
     Napi::Env env = info.Env();
     Napi::EscapableHandleScope scope(env);
     cv::Mat mat = this->imageCapture->GetNextImage();
+    cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
     Napi::Object imgObj = Nodoface::Image::NewObject(env, mat).As<Napi::Object>();
     return scope.Escape(imgObj);
 }

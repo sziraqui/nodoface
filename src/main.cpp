@@ -19,7 +19,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::Image::Init(env, exports);
     Nodoface::FloatImage::Init(env, exports);
     Nodoface::IntImage::Init(env, exports);
-    Nodoface::Init(env, exports);
+    Nodoface::OutputUtils::Init(env, exports);
     Nodoface::FaceDetectorMTCNN::Init(env, exports);
     Nodoface::FaceDetectorHaar::Init(env, exports);
     Nodoface::FaceDetectorHOG::Init(env, exports);
