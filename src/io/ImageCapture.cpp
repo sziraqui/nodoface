@@ -63,16 +63,18 @@ Napi::Value Nodoface::ImageCapture::OpenDirectory(const Napi::CallbackInfo &info
     std::string imgDir;
     std::string bboxDir = "";
     if (argLen < 1u) {
-        JSErrors::InsufficientArguments(env, 2u, argLen);
+        JSErrors::InsufficientArguments(env, 1, argLen);
     } else if (!info[0].IsString()) {
         JSErrors::IncorrectDatatype(env, JSErrors::STRING, 0);
-    } else if (argLen < 2u || !info[1].IsString()) {
+    } else if (argLen >= 2u && !info[1].IsString()) {
         JSErrors::IncorrectDatatype(env, JSErrors::STRING, 1);
-    } else {
-        bboxDir = info[1].As<Napi::String>().Utf8Value();
+    } else if(argLen > 6u) {
+        JSErrors::TooManyArguments(env, 6, argLen);
     }
     imgDir = info[0].As<Napi::String>().Utf8Value();
-    uint8_t i = 2;
+    uint8_t i = 1;
+    bboxDir = argLen > i && info[i].IsString()? info[1].As<Napi::String>().Utf8Value() : "";
+    i++; 
     float fx = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
     i++;
     float fy = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
@@ -95,12 +97,14 @@ Napi::Value Nodoface::ImageCapture::OpenImageFiles(const Napi::CallbackInfo &inf
     } else if (argLen >= 1 && !info[0].IsArray()) {
         JSErrors::IncorrectDatatype(env, JSErrors::ARRAY, 0);
     }
-    // Converting js values to c++ types
-    float fx, fy, cx, cy;
-    fx = info[1].As<Napi::Number>().FloatValue();
-    fy = info[2].As<Napi::Number>().FloatValue();
-    cx = info[3].As<Napi::Number>().FloatValue();
-    cy = info[4].As<Napi::Number>().FloatValue();
+    uint8_t i = 1;
+    float fx = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
+    i++;
+    float fy = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
+    i++;
+    float cx = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
+    i++;
+    float cy = argLen > i && info[i].IsNumber() ? info[i].As<Napi::Number>().FloatValue() : -1;
 
     const Napi::Array arguments = info[0].As<Napi::Array>();
     std::vector<std::string> vecList(arguments.Length());
