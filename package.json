@@ -6,7 +6,8 @@
   "typings": "./api/index.d.ts",
   "gypfile": true,
   "scripts": {
-    "build": "node-gyp rebuild"
+    "build": "node-gyp rebuild",
+    "test": "mocha --require ts-node/register tests/*.test.ts"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,11 @@
     "node-addon-api": "^1.6.3"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
     "@types/node": ">8.0.0",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.2"
   }
