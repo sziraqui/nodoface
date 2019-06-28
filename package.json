@@ -7,7 +7,7 @@
   "gypfile": true,
   "scripts": {
     "build": "node-gyp rebuild",
-    "test": "mocha --require ts-node/register tests/*.test.ts"
+    "test": "mocha --slow 5 --require ts-node/register tests/*.test.ts"
   },
   "repository": {
     "type": "git",
