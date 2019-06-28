@@ -7,6 +7,8 @@ export function showImage(image: Image);
 export function showImage(image: Image, windowName: string);
 export function showImage(image: Image, windowName: string, asGray: boolean);
 
+export function saveImage(saveAs: string, image: Image);
+
 export function destroyWindow(windowName: string);
 
 export function destroyAllWindows();

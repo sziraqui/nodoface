@@ -77,6 +77,13 @@ Napi::Value Nodoface::OutputUtils::saveImage(const Napi::CallbackInfo &info) {
     auto absPath = info[0].As<Napi::String>().Utf8Value();
     auto imageObj = info[1].As<Napi::Object>();
     Nodoface::Image *img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imageObj);
+    
+    cv::Mat mat;
+    if(img->GetMat().channels() == 1) {
+        cv::cvtColor(img->GetMat(), mat, cv::COLOR_GRAY2BGR);
+    } else {
+        cv::cvtColor(img->GetMat(), mat, cv::COLOR_BGR2RGB);
+    }
     cv::imwrite(absPath, img->GetMat());
     return info.Env().Undefined();
 }
