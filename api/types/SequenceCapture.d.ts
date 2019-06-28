@@ -1,7 +1,7 @@
 import {Image} from "./Image";
 import {Rect} from "./Rect";
 
-export interface SequenceCapture {
+export class SequenceCapture {
     constructor();
 
     open(arguments: string[]): boolean;

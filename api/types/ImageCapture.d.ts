@@ -1,7 +1,7 @@
 import {Image} from "./Image";
 import {Rect} from "./Rect";
 
-export interface ImageCapture {
+export class ImageCapture {
     constructor();
 
     open(arguments: string[]): boolean;

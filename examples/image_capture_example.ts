@@ -1,5 +1,8 @@
-const nodoface = require("../api/nodoface");
-let imageCapture = new nodoface.ImageCapture();
+#!/usr/bin/env ts-node
+import * as nodoface from '../';
+import { ImageCapture } from '../';
+
+let imageCapture = new ImageCapture();
 
 const argv = process.argv.slice(1);
 
@@ -22,7 +25,7 @@ nodoface.destroyWindow('color');
 
 let grayImg = imageCapture.getGrayFrame();
 console.log(`Image: rows:${grayImg.height()}, cols:${grayImg.width()}, channels:${grayImg.channels()}`);
-nodoface.showImage(grayImg, 'gray');
+nodoface.showImage(grayImg, 'gray', true);
 nodoface.waitKey(0);
 nodoface.destroyWindow('gray');
 
