@@ -1,5 +1,6 @@
 #!/usr/bin/env ts-node
 import * as nodoface from '../';
+import * as path from 'path';
 import { SequenceCapture, FaceDetectorMTCNN } from '../';
 
 let sequenceCapture = new SequenceCapture();
@@ -12,7 +13,7 @@ mtcnn.load(argv[1]);
 let progress = 0;
 for (let i = 0; progress < 1; i++) {
     let img = sequenceCapture.getNextFrame();
-    let res = mtcnn.detectFaces(sequenceCapture.getGrayFrame());
+    let res = mtcnn.detectFaces(img);
     let bboxes = res.detections;
     progress = sequenceCapture.getProgress();
     console.log(`Frame ${i} detections [Progress ${(100 * progress).toFixed(2)}%]:`);
