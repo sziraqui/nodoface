@@ -26,8 +26,6 @@ export class SequenceCapture {
 
     isOpened(): boolean;
 
-    close();
-
     getBoundingBoxes(): Rect[];
 
     getProgress(): number;

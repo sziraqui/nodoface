@@ -14,7 +14,6 @@ Napi::Object Nodoface::SequenceCapture::Init(Napi::Env env, Napi::Object exports
             InstanceMethod("openVideoFile", &Nodoface::SequenceCapture::OpenVideoFile),
             InstanceMethod("isWebcam", &Nodoface::SequenceCapture::IsWebcam),
             InstanceMethod("isOpened", &Nodoface::SequenceCapture::IsOpened),
-            InstanceMethod("close", &Nodoface::SequenceCapture::Close),
             InstanceMethod("getFrameNumber", &Nodoface::SequenceCapture::GetFrameNumber),
             InstanceMethod("getNextFrame", &Nodoface::SequenceCapture::GetNextFrame),
             InstanceMethod("getGrayFrame", &Nodoface::SequenceCapture::GetGrayFrame),
@@ -310,8 +309,6 @@ Napi::Value Nodoface::SequenceCapture::GetCaptureCapacity(const Napi::CallbackIn
     return NapiExtra::toNapi(info.Env(), Utilities::SequenceCapture::CAPTURE_CAPACITY);
 }
 
-Napi::Value Nodoface::SequenceCapture::Close(const Napi::CallbackInfo &info) {
+Nodoface::SequenceCapture::~SequenceCapture() {
     this->sequenceCapture->Close();
-    return info.Env().Null();
 }
-

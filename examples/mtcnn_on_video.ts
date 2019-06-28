@@ -31,4 +31,4 @@ for (let i = 0; progress < 1; i++) {
     nodoface.waitKey(1000 / sequenceCapture.fps);
 }
 nodoface.destroyAllWindows();
-sequenceCapture.close();
+

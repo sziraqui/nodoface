@@ -42,6 +42,5 @@ img = sequenceCapture.getNextFrame();
 console.log(`Image: rows:${img.height()}, cols:${img.width()}, channels:${img.channels()}`);
 nodoface.showImage(img);
 nodoface.waitKey(0);
+// sequenceCapture.close();
 nodoface.destroyAllWindows();
-
-sequenceCapture.close();

@@ -30,6 +30,8 @@ namespace Nodoface {
     public:
         SequenceCapture(const Napi::CallbackInfo &info);
 
+        ~SequenceCapture();
+
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
     private:
@@ -73,9 +75,6 @@ namespace Nodoface {
 
         // bool IsOpened();
         Napi::Value IsOpened(const Napi::CallbackInfo &info);
-
-        // void Close();
-        Napi::Value Close(const Napi::CallbackInfo &info);
 
         // GetSet for public variables
         // int image_width;
