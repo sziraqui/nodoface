@@ -26,47 +26,27 @@ export class SequenceCapture {
 
     isOpened(): boolean;
 
-    close(): undefined;
-
     getBoundingBoxes(): Rect[];
 
     getProgress(): number;
 
-    getFrameWidth(): number;
+    width: number;
 
-    getFrameHeight(): number;
+    height: number;
 
-    setFrameWidth(width: number): undefined;
+    fx: number;
 
-    setFrameHeight(height: number): undefined;
+    fy: number;
 
-    getFx(): number;
+    cx: number;
 
-    getFy(): number;
+    cy: number;
 
-    getCx(): number;
+    name: string;
 
-    getCy(): number;
-
-    setFx(fx: number): undefined;
-
-    setFy(fy: number): undefined;
-
-    setCx(cx: number): undefined;
-
-    setCy(cy: number): undefined;
-
-    getName(): number;
-
-    setName(name: string): undefined;
-
-    getNoInputSpecified(): boolean;
-
-    setNoInputSpecified(flag: boolean): undefined;
+    noInputSpecified: boolean;
 
     getCaptureCapacity(): number;
 
-    getFPS(): number;
-
-    setFPS(fps: number): undefined;
+    fps: number;
 }

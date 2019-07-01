@@ -9,7 +9,7 @@
 #include <string>
 
 // opencv includes
-#include <opencv/cv.h>
+#include <opencv2/opencv.hpp>
 
 // OpenFace includes
 #include <OpenFace/SequenceCapture.h>
@@ -29,6 +29,8 @@ namespace Nodoface {
 
     public:
         SequenceCapture(const Napi::CallbackInfo &info);
+
+        ~SequenceCapture();
 
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
@@ -74,36 +76,33 @@ namespace Nodoface {
         // bool IsOpened();
         Napi::Value IsOpened(const Napi::CallbackInfo &info);
 
-        // void Close();
-        Napi::Value Close(const Napi::CallbackInfo &info);
-
         // GetSet for public variables
         // int image_width;
         Napi::Value GetFrameWidth(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFrameWidth(const Napi::CallbackInfo &info);
+        void SetFrameWidth(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // int image_height
         Napi::Value GetFrameHeight(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFrameHeight(const Napi::CallbackInfo &info);
+        void SetFrameHeight(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // float fx, fy, cx, cy;
         Napi::Value GetFx(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFx(const Napi::CallbackInfo &info);
+        void SetFx(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         Napi::Value GetFy(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFy(const Napi::CallbackInfo &info);
+        void SetFy(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         Napi::Value GetCx(const Napi::CallbackInfo &info);
 
-        Napi::Value SetCx(const Napi::CallbackInfo &info);
+        void SetCx(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         Napi::Value GetCy(const Napi::CallbackInfo &info);
 
-        Napi::Value SetCy(const Napi::CallbackInfo &info);
+        void SetCy(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // Reference to actual class
         Utilities::SequenceCapture *sequenceCapture;
@@ -111,24 +110,24 @@ namespace Nodoface {
         // double fps;
         Napi::Value GetFPS(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFPS(const Napi::CallbackInfo &info);
+        void SetFPS(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // double time_stamp;
         Napi::Value GetTimeStamp(const Napi::CallbackInfo &info);
 
-        Napi::Value SetTimeStamp(const Napi::CallbackInfo &info);
+        void SetTimeStamp(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // Name of the video file, image directory, or the webcam
         // std::string name;
         Napi::Value GetName(const Napi::CallbackInfo &info);
 
-        Napi::Value SetName(const Napi::CallbackInfo &info);
+        void SetName(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // Allows to differentiate if failed because no input specified or if failed to open a specified input
         // bool no_input_specified;
         Napi::Value GetNoInputSpecified(const Napi::CallbackInfo &info);
 
-        Napi::Value SetNoInputSpecified(const Napi::CallbackInfo &info);
+        void SetNoInputSpecified(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // Storing the captured data queue
         // static const int CAPTURE_CAPACITY = 200; // 200 MB

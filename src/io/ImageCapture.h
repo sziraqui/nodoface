@@ -66,29 +66,29 @@ namespace Nodoface {
         // int image_width;
         Napi::Value GetImageWidth(const Napi::CallbackInfo &info);
 
-        Napi::Value SetImageWidth(const Napi::CallbackInfo &info);
+        void SetImageWidth(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // int image_height
         Napi::Value GetImageHeight(const Napi::CallbackInfo &info);
 
-        Napi::Value SetImageHeight(const Napi::CallbackInfo &info);
+        void SetImageHeight(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // float fx, fy, cx, cy;
         Napi::Value GetFx(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFx(const Napi::CallbackInfo &info);
+        void SetFx(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         Napi::Value GetFy(const Napi::CallbackInfo &info);
 
-        Napi::Value SetFy(const Napi::CallbackInfo &info);
+        void SetFy(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         Napi::Value GetCx(const Napi::CallbackInfo &info);
 
-        Napi::Value SetCx(const Napi::CallbackInfo &info);
+        void SetCx(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         Napi::Value GetCy(const Napi::CallbackInfo &info);
 
-        Napi::Value SetCy(const Napi::CallbackInfo &info);
+        void SetCy(const Napi::CallbackInfo &info, const Napi::Value &value);
 
         // Reference to actual class
         Utilities::ImageCapture *imageCapture;

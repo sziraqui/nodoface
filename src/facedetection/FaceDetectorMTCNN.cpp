@@ -9,7 +9,7 @@ Napi::FunctionReference Nodoface::FaceDetectorMTCNN::constructor;
 Napi::Object Nodoface::FaceDetectorMTCNN::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     auto func = DefineClass(env, "FaceDetectorMTCNN", {
-            InstanceMethod("read", &Nodoface::FaceDetectorMTCNN::Read),
+            InstanceMethod("load", &Nodoface::FaceDetectorMTCNN::Read),
             InstanceMethod("detectFaces", &Nodoface::FaceDetectorMTCNN::DetectFaces),
             InstanceMethod("empty", &Nodoface::FaceDetectorMTCNN::Empty)
     });
@@ -103,11 +103,7 @@ Napi::Value Nodoface::FaceDetectorMTCNN::DetectFaces(const Napi::CallbackInfo &i
 //     actual detection
     this->model->DetectFaces(out_bboxes, mat, out_confidences, min_face, t1, t2, t3);
 //     Convert c++ to js
-    Napi::Array bboxes = NapiExtra::cv2NapiArray<cv::Rect_<float>>(env, out_bboxes);
-    Napi::Array confidences = NapiExtra::toNapiArray<float>(env, out_confidences);
-    Napi::Object output = Napi::Object::New(env);
-    output["detections"] = bboxes;
-    output["confidences"] = confidences;
+    Napi::Object output = NapiExtra::detectionResult2Napi(env, out_bboxes, out_confidences);
     return output;
 }
 

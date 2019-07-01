@@ -57,7 +57,7 @@ namespace NapiExtra {
         auto obj = Napi::Object::New(env);
         obj["x"] = Napi::Number::New(env, point.x);
         obj["y"] = Napi::Number::New(env, point.y);
-        obj["y"] = Napi::Number::New(env, point.z);
+        obj["z"] = Napi::Number::New(env, point.z);
         return obj;
     }
 
@@ -79,13 +79,13 @@ namespace NapiExtra {
         }
         return array;
     }
-
-    static cv::Rect Napi2Rect(Napi::Object rectObj) {
-        int x = rectObj.Get("x").As<Napi::Number>().Int32Value();
-        int y = rectObj.Get("y").As<Napi::Number>().Int32Value();
-        int w = rectObj.Get("width").As<Napi::Number>().Int32Value();
-        int h = rectObj.Get("height").As<Napi::Number>().Int32Value();
-        return cv::Rect(x, y, w, h);
+    template <class numericType = int>
+    static cv::Rect_<numericType> Napi2Rect(Napi::Object rectObj) {
+        numericType x = (numericType)rectObj.Get("x").As<Napi::Number>().DoubleValue();
+        numericType y = (numericType)rectObj.Get("y").As<Napi::Number>().DoubleValue();
+        numericType w = (numericType)rectObj.Get("width").As<Napi::Number>().DoubleValue();
+        numericType h = (numericType)rectObj.Get("height").As<Napi::Number>().DoubleValue();
+        return cv::Rect_<numericType>(x, y, w, h);
     }
 
     static std::vector<cv::Rect> Napi2RectVector(Napi::Array arr) {
@@ -125,6 +125,15 @@ namespace NapiExtra {
         numericType y = (numericType) obj.Get("y").As<Napi::Number>().DoubleValue();
         numericType z = (numericType) obj.Get("z").As<Napi::Number>().DoubleValue();
         return cv::Point3_<numericType>(x, y, z);
+    }
+
+    static Napi::Object detectionResult2Napi(Napi::Env env, std::vector<cv::Rect_<float>> & out_bboxes, std::vector<float> &out_confidences) {
+        Napi::Array bboxes = NapiExtra::cv2NapiArray<cv::Rect_<float>>(env, out_bboxes);
+        Napi::Array confidences = NapiExtra::toNapiArray<float>(env, out_confidences);
+        Napi::Object output = Napi::Object::New(env);
+        output["detections"] = bboxes;
+        output["confidences"] = confidences;
+        return output;
     }
 
 }

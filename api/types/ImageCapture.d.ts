@@ -6,7 +6,7 @@ export class ImageCapture {
 
     open(arguments: string[]): boolean;
 
-    openVideoFile(imageDir: string): boolean;
+    openDirectory(imageDir: string): boolean;
 
     openDirectory(imageDir: string, bboxDir: string): boolean;
 
@@ -24,27 +24,15 @@ export class ImageCapture {
 
     getProgress(): number;
 
-    getImageWidth(): number;
+    width: number;
 
-    getImageHeight(): number;
+    height: number;
 
-    setImageWidth(width: number): undefined;
+    fx: number;
 
-    setImageHeight(height: number): undefined;
+    fy: number;
 
-    getFx(): number;
+    cx: number;
 
-    getFy(): number;
-
-    getCx(): number;
-
-    getCy(): number;
-
-    setFx(fx: number): undefined;
-
-    setFy(fy: number): undefined;
-
-    setCx(cx: number): undefined;
-
-    setCy(cy: number): undefined;
+    cy: number;
 }

@@ -2,6 +2,8 @@ export * from './types/CLNF';
 export * from './types/DetectionResult';
 export * from './types/draw';
 export * from './types/FaceDetectorMTCNN';
+export * from './types/FaceDetectorHaar';
+export * from './types/FaceDetectorHOG';
 export * from './types/FaceModelParameters';
 export * from './types/FloatImage';
 export * from './types/GazeAnalyser';

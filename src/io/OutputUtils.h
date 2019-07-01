@@ -12,20 +12,22 @@
 #include "../cvtypes/Mat.h"
 
 namespace Nodoface {
+    namespace OutputUtils {
+        Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-    Napi::Object Init(Napi::Env env, Napi::Object exports);
+        Napi::Value showImage(const Napi::CallbackInfo &info);
 
-    Napi::Value showImage(const Napi::CallbackInfo &info);
+        Napi::Value readImage(const Napi::CallbackInfo &info);
 
-    Napi::Value readImage(const Napi::CallbackInfo &info);
+        Napi::Value destroyWindow(const Napi::CallbackInfo &info);
 
-    Napi::Value destroyWindow(const Napi::CallbackInfo &info);
+        Napi::Value destroyAllWindows(const Napi::CallbackInfo &info);
 
-    Napi::Value destroyAllWindows(const Napi::CallbackInfo &info);
+        Napi::Value waitKey(const Napi::CallbackInfo &info);
 
-    Napi::Value waitKey(const Napi::CallbackInfo &info);
-
-    Napi::Value saveImage(const Napi::CallbackInfo &info);
+        Napi::Value saveImage(const Napi::CallbackInfo &info);
+    }
+    
 
 }
 
