@@ -51,7 +51,7 @@ Napi::Value Nodoface::CLNF::DetectLandmarks(const Napi::CallbackInfo &info) {
     } else if (!info[0].IsObject() || !info[1].IsObject()) {
         JSErrors::IncorrectDatatype(env, JSErrors::OBJECT + "(Image, FaceModelParameters)");
     }
-    Nodoface::Image *image = Nodoface::Image::Unwrap(info[0].As<Napi::Object>());
+    Nodoface::Image *image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(info[0].As<Napi::Object>());
     cv::Mat_<uchar> mat = image->GetMat();
 
     Nodoface::LandmarkModelConfig *params = Nodoface::LandmarkModelConfig::Unwrap(info[1].As<Napi::Object>());
