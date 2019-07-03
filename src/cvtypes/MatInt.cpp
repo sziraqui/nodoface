@@ -12,7 +12,8 @@ Napi::Object Nodoface::IntImage::Init(Napi::Env env, Napi::Object exports) {
             InstanceMethod("type", &Nodoface::IntImage::Type),
             InstanceMethod("height", &Nodoface::IntImage::Rows),
             InstanceMethod("width", &Nodoface::IntImage::Columns),
-            InstanceMethod("channels", &Nodoface::IntImage::Channels)
+            InstanceMethod("channels", &Nodoface::IntImage::Channels),
+            InstanceMethod("toInt32Array", &Nodoface::IntImage::ToTypedArray)
     });
 
     constructor = Napi::Persistent(func);

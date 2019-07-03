@@ -8,4 +8,6 @@ export class IntImage {
     channels(): number;
 
     type(): number;
+
+    toInt32Array(): Int32Array;
 }

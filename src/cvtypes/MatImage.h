@@ -46,7 +46,7 @@ namespace Nodoface {
 
         Napi::Value Channels(const Napi::CallbackInfo& info);
 
-        Napi::TypedArrayOf<numericType> ToTypedArray(const Napi::CallbackInfo& info);
+        Napi::Value ToTypedArray(const Napi::CallbackInfo& info);
     };
 }
 
@@ -172,8 +172,10 @@ cv::Mat Nodoface::MatImage<numericType>::GetMat() {
 }
 
 template <class numericType>
-Napi::TypedArrayOf<numericType> Nodoface::MatImage<numericType>::ToTypedArray(const Napi::CallbackInfo &info) {
-
+Napi::Value Nodoface::MatImage<numericType>::ToTypedArray(const Napi::CallbackInfo &info) {
+    cv::Mat mat = this->GetMat();
+    Napi::TypedArrayOf<numericType> arr = NapiExtra::cvMat2TypedArray<numericType>(info.Env(), mat);
+    return arr;
 }
 
 template <class numericType>

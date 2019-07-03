@@ -8,4 +8,6 @@ export class FloatImage {
     channels(): number;
 
     type(): number;
+
+    toFloat32Array(): Float32Array;
 }
