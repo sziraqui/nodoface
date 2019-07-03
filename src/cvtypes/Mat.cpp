@@ -4,9 +4,8 @@
 
 #include "Mat.h"
 
-Napi::FunctionReference Nodoface::Image::constructor;
-
 // static methods
+template <>
 Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "Image", {
@@ -16,8 +15,8 @@ Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
         InstanceMethod("channels", &Nodoface::Image::Channels)
     });
 
-    constructor = Napi::Persistent(func);
-    constructor.SuppressDestruct();
+    Image::constructor = Napi::Persistent(func);
+    Image::constructor.SuppressDestruct();
     exports.Set("Image", func);
     return exports;
 }

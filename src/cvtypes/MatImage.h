@@ -15,10 +15,12 @@
 
 namespace Nodoface {
     // Wraps OpenCV Mat partially for sending and receiving Mat objects to/from node
-    template <class numerictType = uchar>
+    template <class numerictType>
     class MatImage : public Napi::ObjectWrap<MatImage<numerictType>> {
 
     public:
+
+        static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
         static Napi::Value NewObject(Napi::Env env, cv::Mat& mat);
 
@@ -43,6 +45,9 @@ namespace Nodoface {
         Napi::Value Channels(const Napi::CallbackInfo& info);
     };
 }
+
+template <class numericType>
+Napi::FunctionReference Nodoface::MatImage<numericType>::constructor;
 
 template <class numericType>
 Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& mat) {

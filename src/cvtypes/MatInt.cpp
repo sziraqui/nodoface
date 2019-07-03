@@ -4,9 +4,8 @@
 
 #include "MatInt.h"
 
-Napi::FunctionReference Nodoface::IntImage::constructor;
-
 // static methods
+template <>
 Napi::Object Nodoface::IntImage::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function func = DefineClass(env, "IntImage", {
