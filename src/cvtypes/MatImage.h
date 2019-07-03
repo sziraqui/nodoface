@@ -15,8 +15,8 @@
 
 namespace Nodoface {
     // Wraps OpenCV Mat partially for sending and receiving Mat objects to/from node
-    template <class numerictType>
-    class MatImage : public Napi::ObjectWrap<MatImage<numerictType>> {
+    template <class numericType = uchar>
+    class MatImage : public Napi::ObjectWrap<MatImage<numericType>> {
 
     public:
 
@@ -24,7 +24,9 @@ namespace Nodoface {
 
         static Napi::Value NewObject(Napi::Env env, cv::Mat& mat);
 
-        static cv::Mat* NewMat(Napi::TypedArrayOf<numerictType>& arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type);
+        static Napi::Value NewObject(Napi::Env env, cv::Mat_<numericType>& mat);
+
+        static cv::Mat* NewMat(Napi::TypedArrayOf<numericType>& arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type);
 
         MatImage(const Napi::CallbackInfo& info);
 
@@ -43,6 +45,8 @@ namespace Nodoface {
         Napi::Value Columns(const Napi::CallbackInfo& info);
 
         Napi::Value Channels(const Napi::CallbackInfo& info);
+
+        Napi::TypedArrayOf<numericType> ToTypedArray(const Napi::CallbackInfo& info);
     };
 }
 
@@ -56,12 +60,11 @@ Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& m
 
     size_t length = mat.total() * mat.channels();
     if(mat.isContinuous()) {
-        mat =  cv::Mat(mat); // ensures mat is continuous and also prevents segfault
+        mat =  mat.clone(); // ensures mat is continuous and also prevents segfault
     }
 
     // Create ArrayBuffer from data
-    Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, mat.data, sizeof(numericType)*length);
-    Napi::TypedArrayOf<numericType> arr = Napi::TypedArrayOf<numericType>::New(env, length, ab, 0); // arg1
+    Napi::TypedArrayOf<numericType> arr = NapiExtra::cvMat2TypedArray<numericType>(env, mat);
     // Mat dimensions
     Napi::Number rows = Napi::Number::New(env, mat.rows); // arg2
     Napi::Number cols = Napi::Number::New(env, mat.cols); // arg3
@@ -72,6 +75,30 @@ Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& m
 
     return scope.Escape(imageObj);
 }
+
+template <class numericType>
+Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat_<numericType>& mat) {
+    Napi::EscapableHandleScope scope(env);
+    // Get continuous mat data
+
+    size_t length = mat.total() * mat.channels();
+    if(mat.isContinuous()) {
+        mat =  mat.clone(); // ensures mat is continuous and also prevents segfault
+    }
+
+    // Create ArrayBuffer from data
+    Napi::TypedArrayOf<numericType> arr = NapiExtra::cvMat2TypedArray<numericType>(env, mat);
+    // Mat dimensions
+    Napi::Number rows = Napi::Number::New(env, mat.rows); // arg2
+    Napi::Number cols = Napi::Number::New(env, mat.cols); // arg3
+    // Create mat type Number
+    Napi::Number type = Napi::Number::New(env, mat.type());  // arg4
+    // Call constructor
+    Napi::Object imageObj = MatImage<numericType>::constructor.New({ arr, rows, cols, type });
+
+    return scope.Escape(imageObj);
+}
+
 // cpp only
 template <class numericType>
 cv::Mat* Nodoface::MatImage<numericType>::NewMat(Napi::TypedArrayOf<numericType> &arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type) {
@@ -145,7 +172,12 @@ cv::Mat Nodoface::MatImage<numericType>::GetMat() {
 }
 
 template <class numericType>
-Nodoface::MatImage<numericType>::~MatImage<numericType>() {
+Napi::TypedArrayOf<numericType> Nodoface::MatImage<numericType>::ToTypedArray(const Napi::CallbackInfo &info) {
+
+}
+
+template <class numericType>
+Nodoface::MatImage<numericType>::~MatImage() {
     delete[] this->mat->data;
     delete this->mat;
 }
