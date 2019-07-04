@@ -133,6 +133,11 @@ namespace Nodoface {
         // static const int CAPTURE_CAPACITY = 200; // 200 MB
         static Napi::Value GetCaptureCapacity(const Napi::CallbackInfo &info);
 
+        Napi::Value Close(const Napi::CallbackInfo& info) {
+            this->sequenceCapture->Close();
+            return info.Env().Undefined();
+        }
+
     };
 }
 

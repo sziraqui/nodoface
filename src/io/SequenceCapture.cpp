@@ -28,7 +28,8 @@ Napi::Object Nodoface::SequenceCapture::Init(Napi::Env env, Napi::Object exports
             InstanceAccessor("fy", &Nodoface::SequenceCapture::GetFy, &Nodoface::SequenceCapture::SetFy),
             InstanceAccessor("cx", &Nodoface::SequenceCapture::GetCx, &Nodoface::SequenceCapture::SetCx),
             InstanceAccessor("cy", &Nodoface::SequenceCapture::GetCy, &Nodoface::SequenceCapture::SetCy),
-            StaticMethod("getCaptureCapacity", &Nodoface::SequenceCapture::GetCaptureCapacity)
+            StaticMethod("getCaptureCapacity", &Nodoface::SequenceCapture::GetCaptureCapacity),
+            InstanceMethod("close", &Nodoface::SequenceCapture::Close)
     });
     constructor = Napi::Persistent(func);
     constructor.SuppressDestruct();
@@ -310,5 +311,8 @@ Napi::Value Nodoface::SequenceCapture::GetCaptureCapacity(const Napi::CallbackIn
 }
 
 Nodoface::SequenceCapture::~SequenceCapture() {
-    this->sequenceCapture->Close();
+    if(this->sequenceCapture->IsOpened()) {
+        this->sequenceCapture->Close();
+    }
+    delete this->sequenceCapture;
 }

@@ -30,6 +30,8 @@ export class SequenceCapture {
 
     getProgress(): number;
 
+    close(): undefined;
+
     width: number;
 
     height: number;
