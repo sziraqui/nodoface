@@ -136,6 +136,22 @@ namespace NapiExtra {
         return output;
     }
 
+    template <class numericType>
+    static Napi::TypedArrayOf<numericType> cvMat2TypedArray(Napi::Env env, cv::Mat_<numericType>& mat) {
+        size_t length = mat.total()*mat.channels();
+        Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, mat.data, sizeof(numericType)*length);
+        Napi::TypedArrayOf<numericType> arr = Napi::TypedArrayOf<numericType>::New(env, length, ab, 0);
+        return arr;
+    }
+
+    template <class numericType>
+    static Napi::TypedArrayOf<numericType> cvMat2TypedArray(Napi::Env env, cv::Mat& mat) {
+        size_t length = mat.total()*mat.channels();
+        Napi::ArrayBuffer ab = Napi::ArrayBuffer::New(env, mat.data, sizeof(numericType)*length);
+        Napi::TypedArrayOf<numericType> arr = Napi::TypedArrayOf<numericType>::New(env, length, ab, 0);
+        return arr;
+    }
+
 }
 
 #endif //NODOFACE_NAPIEXTRA_H

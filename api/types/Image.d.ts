@@ -8,4 +8,6 @@ export class Image {
     channels(): number;
 
     type(): number;
+
+    toUint8Array(): Uint8Array;
 }

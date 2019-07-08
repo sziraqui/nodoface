@@ -118,7 +118,7 @@ Napi::Value Nodoface::GazeAnalyser::GetPupilPosition(const Napi::CallbackInfo &i
     } else if (!info[0].IsObject()) {
         JSErrors::IncorrectDatatype(env, JSErrors::OBJECT, 0);
     }
-    Nodoface::FloatImage *floatImage = Nodoface::FloatImage::Unwrap(info[0].As<Napi::Object>());
+    Nodoface::FloatImage *floatImage = Napi::ObjectWrap<Nodoface::FloatImage>::Unwrap(info[0].As<Napi::Object>());
     cv::Mat_<float> eyeLandmarks = floatImage->GetMat();
 
     cv::Point3_<float> result = GazeAnalysis::GetPupilPosition(eyeLandmarks);
