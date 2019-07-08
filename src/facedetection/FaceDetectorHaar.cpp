@@ -3,8 +3,6 @@
 //
 
 #include "FaceDetectorHaar.h"
-#include "../jserrors/JSErrors.h"
-#include "../cvtypes/Mat.h"
 
 Napi::FunctionReference Nodoface::FaceDetectorHaar::constructor;
 
@@ -74,7 +72,7 @@ Napi::Value Nodoface::FaceDetectorHaar::DetectFaces(const Napi::CallbackInfo &in
     // pre-allocated vectors
     std::vector<cv::Rect_<float>> out_bboxes;
 
-    LandmarkDetector::DetectFaces(out_bboxes, mat, *this->model, minWid);
+    LandmarkDetector::DetectFaces(out_bboxes, mat, *this->model, minWid, roi);
     std::vector<float> out_confidences(out_bboxes.size(), -1);
     Napi::Object detectionResult = NapiExtra::detectionResult2Napi(env, out_bboxes, out_confidences);
     return detectionResult;

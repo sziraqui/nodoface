@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 {
     'variables': {
         'module_name': 'nodoface',
@@ -11,6 +10,7 @@
         'sources': [
             'src/main.cpp',
             'src/jserrors/JSErrors.cpp',
+            'src/extras/napiextra.cpp',
             'src/draw/cvdraw.cpp',
             'src/io/ImageCapture.cpp',
             'src/io/SequenceCapture.cpp',
@@ -61,7 +61,6 @@
                     'include_dirs+': [
                         '/usr/local/include',
                         '/usr/local/include/OpenFace',
-                        '/usr/local/include/opencv',
                     ],
                     'libraries+': [
                         '-L/usr/local/lib',

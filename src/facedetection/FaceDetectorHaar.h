@@ -10,6 +10,9 @@
 #include <OpenFace/LandmarkDetectorUtils.h>
 
 #include <napi.h>
+#include "../jserrors/JSErrors.h"
+#include "../cvtypes/Mat.h"
+#include "../extras/napiextra.h"
 
 namespace Nodoface {
 class FaceDetectorHaar : public Napi::ObjectWrap<Nodoface::FaceDetectorHaar> {

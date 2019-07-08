@@ -1,12 +1,12 @@
 {
   "name": "nodoface",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "C++ Addon for fast and efficient face analytics",
   "main": "./api/nodoface.js",
   "typings": "./api/index.d.ts",
   "gypfile": true,
   "scripts": {
-    "build": "node-gyp rebuild",
+    "build": "node-gyp -j max rebuild",
     "test": "mocha --slow 5 --require ts-node/register tests/*.test.ts"
   },
   "repository": {

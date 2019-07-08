@@ -9,6 +9,7 @@
 
 #include "../jserrors/JSErrors.h"
 #include "../cvtypes/Mat.h"
+#include "../extras/napiextra.h"
 
 namespace Nodoface {
 class FaceDetectorHOG : public Napi::ObjectWrap<Nodoface::FaceDetectorHOG>{

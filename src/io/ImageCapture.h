@@ -16,7 +16,6 @@
 #include <OpenFace/ImageCapture.h>
 
 // local includes
-#include "../extras/ndarray.h"
 #include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
 #include "../cvtypes/Mat.h"
