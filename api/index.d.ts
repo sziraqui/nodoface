@@ -15,3 +15,4 @@ export * from './types/Point';
 export * from './types/Point3';
 export * from './types/Rect';
 export * from './types/SequenceCapture';
+export * from './types/VideoCapture';
