@@ -20,11 +20,11 @@ describe('VideoCapture', () => {
         expect(image).to.instanceof(Image);
     });
     it('Loop all frames', () => {
-        let image: Image;
-        do {
-            image = cap.read();
+        let image = cap.read();
+        while (cap.isOpened() && image instanceof Image) {
+            expect(image.channels()).to.equal(3);
             expect(image.type()).to.equal(16);
-        } while (cap.isOpened());
-
+            image = cap.read();
+        }
     });
 });
