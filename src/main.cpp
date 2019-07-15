@@ -12,6 +12,7 @@
 #include "landmarkdetection/FaceModelParameters.h"
 #include "landmarkdetection/CLNF.h"
 #include "eyegaze/GazeAnalyser.h"
+#include "io/VideoCapture.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::ImageCapture::Init(env, exports);
@@ -27,6 +28,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
     Nodoface::LandmarkModelConfig::Init(env, exports);
     Nodoface::CLNF::Init(env, exports);
     Nodoface::GazeAnalyser::Init(env, exports);
+    Nodoface::VideoCapture::Init(env, exports);
     return exports;
 }
 
