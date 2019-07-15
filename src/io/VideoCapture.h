@@ -33,6 +33,7 @@ public:
             if(this->instance->isOpened()) {
                 this->instance->release();
             }
+            delete this->instance;
         }
 private:
     static Napi::FunctionReference constructor;

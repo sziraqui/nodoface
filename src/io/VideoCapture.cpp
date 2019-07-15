@@ -51,7 +51,7 @@ Napi::Value Nodoface::VideoCapture::Open(const Napi::CallbackInfo &info) {
     if(info[0].IsNumber()) {
         uint device = info[0].As<Napi::Number>().Uint32Value();
         this->instance->open(device);
-    } else if (info[1].IsString()) {
+    } else if (info[0].IsString()) {
         std::string file = info[0].As<Napi::String>().Utf8Value();
         this->instance->open(file);
     } else {
