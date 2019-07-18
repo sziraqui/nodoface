@@ -21,9 +21,11 @@ This Addon provides bindings to all OpenFace 2.0 features except the visualizati
 - ImageCapture
 - SequenceCapture
 - FaceDetectorMTCNN
+- FaceDetectorHaar
+- FaceDetectorHOG
 - CLNF (LandmarkDetectorModel in OpenFace)
 - LandmarkModelConfig (FaceModelParameters in OpenFace)
-- GazeAnalyser (GazeAnalysis in OpenFace)
+- GazeAnalyser (GazeAnalysis in OpenFace) [Does not work]
   
 CLNF also provides HOG-based and Haar Cascades face detector. GazeAnalysis is a namespace with static classes in OpenFace but GazeAnalyser is a class in Nodoface.
 
@@ -34,10 +36,12 @@ CLNF also provides HOG-based and Haar Cascades face detector. GazeAnalysis is a 
 - rectangle (`cv::rectangle()`)
 - showImage (`cv::imshow()`)
 - readImage (`cv::imread()`)
+- saveImage (`cv::imwrite`)
 - destroyWindow (`cv::destroyWindow()`)
 - destroyAllWindows (`cv::destroyAllWindows()`)
-- waitkey (`cv::waitKey()`)     
-
+- waitkey (`cv::waitKey()`)
+- VideoCapture (`cv::VideoCapture`)
+Note: All methods return RGB image instead of BGR unlike OpenCV
 OpenCV classes are partial bindings just sufficient for passing underlying Mat to/from nodejs and C++.
 
 # Installation
