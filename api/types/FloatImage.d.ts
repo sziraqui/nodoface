@@ -1,3 +1,5 @@
+import { Rect } from './Rect';
+
 export class FloatImage {
     constructor(data: Float32Array, rows: number, columns: number, type: number);
 
@@ -8,6 +10,8 @@ export class FloatImage {
     channels(): number;
 
     type(): number;
+
+    extract(roi: Rect): FloatImage;
 
     toFloat32Array(): Float32Array;
 }

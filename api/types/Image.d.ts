@@ -1,3 +1,5 @@
+import { Rect } from './Rect';
+
 export class Image {
     constructor(data: Uint8Array, rows: number, columns: number, type: number);
 
@@ -8,6 +10,8 @@ export class Image {
     channels(): number;
 
     type(): number;
+
+    extract(roi: Rect): Image;
 
     toUint8Array(): Uint8Array;
 }

@@ -7,7 +7,7 @@ describe('Image', () => {
     let type = 16; // CV_U8C3
     let rows = 4;
     let cols = 8;
-    let arr = new Uint8Array(rows*cols*3);
+    let arr = new Uint8Array(rows * cols * 3);
     let image: Image;
     it('Image from JS', () => {
         image = new Image(arr, rows, cols, type);
@@ -20,6 +20,16 @@ describe('Image', () => {
         image = readImage(file);
         expect(image).to.instanceof(Image);
     });
+    it('Image extract ROI', () => {
+        let file = path.join(__dirname, 'samples', 'frames', 'single_face_01.jpg');
+        cols = 640;
+        rows = 480;
+        image = readImage(file);
+        let roi = { x: 0, y: 0, width: cols, height: rows };
+        let region = image.extract(roi);
+        expect(region.height()).to.equal(roi.height);
+        expect(region.width()).to.equal(roi.width);
+    });
     it('Image.height()', () => {
         expect(image.height()).to.equal(rows);
     });
@@ -29,15 +39,16 @@ describe('Image', () => {
     it('Image.type()', () => {
         expect(image.type()).to.equal(type);
     });
+
     it('Image.toUint8Array', () => {
         rows = 2;
         cols = 4;
-        arr = new Uint8Array(rows*cols*3);
+        arr = new Uint8Array(rows * cols * 3);
         let offset = 0;
-        for(let i = 0; i < rows; i++) {
-            for(let j = 0; j < cols; j++) {
-                for(let k = 0; k < 3; k++) {
-                    arr[offset] = i + j+ k;
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                for (let k = 0; k < 3; k++) {
+                    arr[offset] = i + j + k;
                     offset++;
                 }
             }
