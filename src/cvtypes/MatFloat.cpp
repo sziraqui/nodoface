@@ -13,7 +13,8 @@ Napi::Object Nodoface::FloatImage::Init(Napi::Env env, Napi::Object exports) {
             InstanceMethod("height", &Nodoface::FloatImage::Rows),
             InstanceMethod("width", &Nodoface::FloatImage::Columns),
             InstanceMethod("channels", &Nodoface::FloatImage::Channels),
-            InstanceMethod("toFloat32Array", &Nodoface::FloatImage::ToTypedArray)
+            InstanceMethod("toFloat32Array", &Nodoface::FloatImage::ToTypedArray),
+            InstanceMethod("extract", &Nodoface::FloatImage::Extract)
     });
 
     constructor = Napi::Persistent(func);

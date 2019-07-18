@@ -47,6 +47,8 @@ namespace Nodoface {
         Napi::Value Channels(const Napi::CallbackInfo& info);
 
         Napi::Value ToTypedArray(const Napi::CallbackInfo& info);
+
+        Napi::Value Extract(const Napi::CallbackInfo& info);
     };
 }
 
@@ -176,6 +178,18 @@ Napi::Value Nodoface::MatImage<numericType>::ToTypedArray(const Napi::CallbackIn
     cv::Mat mat = this->GetMat();
     Napi::TypedArrayOf<numericType> arr = NapiExtra::cvMat2TypedArray<numericType>(info.Env(), mat);
     return arr;
+}
+
+template <class numericType>
+Napi::Value Nodoface::MatImage<numericType>::Extract(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    uint argLen = info.Length();
+    if(argLen != 1 && !info[0].IsObject()) {
+        JSErrors::IncorrectDatatype(env, "Rect", 0);
+    }
+    cv::Rect rect = NapiExtra::Napi2Rect<int>(info[0].As<Napi::Object>());
+    cv::Mat region = this->GetMat()(rect);
+    return NewObject(env, region);
 }
 
 template <class numericType>
