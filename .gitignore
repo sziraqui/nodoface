@@ -45,3 +45,6 @@ venv
 *.exe
 *.out
 *.app
+
+# test output
+tests/outputs/*.jpg

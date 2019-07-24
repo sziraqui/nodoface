@@ -1,7 +1,6 @@
 import * as path from 'path';
 import { expect } from 'chai';
-import { Image, readImage } from '../';
-import { flattenDiagnosticMessageText } from 'typescript';
+import { Image, readImage, saveImage } from '../';
 
 describe('Image', () => {
     let type = 16; // CV_U8C3
@@ -19,6 +18,7 @@ describe('Image', () => {
         rows = 480;
         image = readImage(file);
         expect(image).to.instanceof(Image);
+        saveImage(path.join(__dirname, 'outputs', 'Test_read_' + path.basename(file)), image);
     });
     it('Image extract ROI', () => {
         let file = path.join(__dirname, 'samples', 'frames', 'single_face_01.jpg');
