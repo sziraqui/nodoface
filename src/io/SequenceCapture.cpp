@@ -138,8 +138,8 @@ Napi::Value Nodoface::SequenceCapture::GetNextFrame(const Napi::CallbackInfo &in
     Napi::EscapableHandleScope scope(env);
     cv::Mat img = this->sequenceCapture->GetNextFrame();
     cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
-    Napi::Object imgObj = Nodoface::Image::NewObject(env, img).As<Napi::Object>();
-    return scope.Escape(imgObj);
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, img);
+    return scope.Escape(imgObj).As<Napi::Object>();
 }
 
 Napi::Value Nodoface::SequenceCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
@@ -147,7 +147,7 @@ Napi::Value Nodoface::SequenceCapture::GetGrayFrame(const Napi::CallbackInfo &in
     Napi::EscapableHandleScope scope(env);
     cv::Mat img = this->sequenceCapture->GetGrayFrame();
     Napi::Object imgObj = Nodoface::Image::NewObject(env, img).As<Napi::Object>();
-    return scope.Escape(imgObj);
+    return scope.Escape(imgObj).As<Napi::Object>();
 }
 
 

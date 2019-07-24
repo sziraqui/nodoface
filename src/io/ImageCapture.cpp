@@ -123,16 +123,16 @@ Napi::Value Nodoface::ImageCapture::GetNextImage(const Napi::CallbackInfo &info)
     Napi::EscapableHandleScope scope(env);
     cv::Mat mat = this->imageCapture->GetNextImage();
     cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
-    Napi::Object imgObj = Nodoface::Image::NewObject(env, mat).As<Napi::Object>();
-    return scope.Escape(imgObj);
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, mat);
+    return scope.Escape(imgObj).As<Napi::Object>();
 }
 
 Napi::Value Nodoface::ImageCapture::GetGrayFrame(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     Napi::EscapableHandleScope scope(env);
     cv::Mat frame = this->imageCapture->GetGrayFrame();
-    Napi::Object imgObj = Nodoface::Image::NewObject(env, frame).As<Napi::Object>();
-    return scope.Escape(imgObj);
+    Napi::Object imgObj = Nodoface::Image::NewObject(env, frame);
+    return scope.Escape(imgObj).As<Napi::Object>();
 }
 
 Napi::Value Nodoface::ImageCapture::GetBoundingBoxes(const Napi::CallbackInfo &info) {

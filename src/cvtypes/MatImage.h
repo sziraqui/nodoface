@@ -5,7 +5,7 @@
 #ifndef NODOFACE_MATIMAGE_H
 #define NODOFACE_MATIMAGE_H
 #include <vector>
-
+#include <iostream>
 #include <opencv2/core/mat.hpp>
 
 #include <napi.h>
@@ -22,9 +22,9 @@ namespace Nodoface {
 
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-        static Napi::Value NewObject(Napi::Env env, cv::Mat& mat);
+        static Napi::Object NewObject(Napi::Env env, cv::Mat& mat);
 
-        static Napi::Value NewObject(Napi::Env env, cv::Mat_<numericType>& mat);
+        static Napi::Object NewObject(Napi::Env env, cv::Mat_<numericType>& mat);
 
         static cv::Mat* NewMat(Napi::TypedArrayOf<numericType>& arr, Napi::Number& rows, Napi::Number& cols, Napi::Number& type);
 
@@ -56,12 +56,13 @@ template <class numericType>
 Napi::FunctionReference Nodoface::MatImage<numericType>::constructor;
 
 template <class numericType>
-Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& mat) {
+Napi::Object Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& mat) {
     Napi::EscapableHandleScope scope(env);
     // Get continuous mat data
 
     size_t length = mat.total() * mat.channels();
-    if(mat.isContinuous()) {
+    if(!mat.isContinuous()) {
+        std::cout<<"mat not continous"<<std::endl;
         mat =  mat.clone(); // ensures mat is continuous and also prevents segfault
     }
 
@@ -75,11 +76,11 @@ Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& m
     // Call constructor
     Napi::Object imageObj = MatImage<numericType>::constructor.New({ arr, rows, cols, type });
 
-    return scope.Escape(imageObj);
+    return scope.Escape(imageObj).As<Napi::Object>();
 }
 
 template <class numericType>
-Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat_<numericType>& mat) {
+Napi::Object Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat_<numericType>& mat) {
     Napi::EscapableHandleScope scope(env);
     // Get continuous mat data
 
@@ -98,7 +99,7 @@ Napi::Value Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat_<n
     // Call constructor
     Napi::Object imageObj = MatImage<numericType>::constructor.New({ arr, rows, cols, type });
 
-    return scope.Escape(imageObj);
+    return scope.Escape(imageObj).As<Napi::Object>();
 }
 
 // cpp only
@@ -194,7 +195,7 @@ Napi::Value Nodoface::MatImage<numericType>::Extract(const Napi::CallbackInfo& i
 
 template <class numericType>
 Nodoface::MatImage<numericType>::~MatImage() {
-    delete[] this->mat->data;
+    this->mat->release();
     delete this->mat;
 }
 #endif //NODOFACE_MATIMAGE_H

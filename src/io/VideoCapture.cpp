@@ -32,13 +32,13 @@ Napi::Value Nodoface::VideoCapture::Read(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     Napi::EscapableHandleScope scope(env);
     cv::Mat frame;
-    this->instance->read(frame);
-    if(frame.empty()) {
+    bool hasFrame = this->instance->read(frame);
+    if(!hasFrame) {
         return env.Undefined();
     }
     cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
-    Napi::Value image = Nodoface::Image::NewObject(env, frame);
-    return scope.Escape(image);
+    Napi::Object image = Nodoface::Image::NewObject(env, frame);
+    return scope.Escape(image).As<Napi::Object>();
 }
 
 Napi::Value Nodoface::VideoCapture::Open(const Napi::CallbackInfo &info) {

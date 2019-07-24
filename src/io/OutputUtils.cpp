@@ -20,7 +20,7 @@ Napi::Value Nodoface::OutputUtils::showImage(const Napi::CallbackInfo &info) {
     // Unwrap Image and get mat
     Napi::Object parent = info[0].As<Napi::Object>();
 
-    Nodoface::Image *image = Napi::ObjectWrap<Nodoface::Image>::Unwrap(parent);
+    Nodoface::Image *image = Nodoface::Image::Unwrap(parent);
     cv::Mat mat = image->GetMat();
     // Get optional arguments
     uint i = 1;
@@ -76,7 +76,7 @@ Napi::Value Nodoface::OutputUtils::saveImage(const Napi::CallbackInfo &info) {
     // TODO: input validation
     auto absPath = info[0].As<Napi::String>().Utf8Value();
     auto imageObj = info[1].As<Napi::Object>();
-    Nodoface::Image *img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imageObj);
+    Nodoface::Image *img = Nodoface::Image::Unwrap(imageObj);
     
     cv::Mat mat;
     if(img->GetMat().channels() == 1) {
