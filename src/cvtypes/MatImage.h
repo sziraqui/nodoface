@@ -195,6 +195,7 @@ Napi::Value Nodoface::MatImage<numericType>::Extract(const Napi::CallbackInfo& i
 
 template <class numericType>
 Nodoface::MatImage<numericType>::~MatImage() {
+    // std::cout<<"MatImage: Destructor called"<<std::endl;
     this->mat->release();
     delete this->mat;
 }

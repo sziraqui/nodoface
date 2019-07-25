@@ -29,12 +29,7 @@ public:
 
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
 
-        ~VideoCapture() {
-            if(this->instance->isOpened()) {
-                this->instance->release();
-            }
-            delete this->instance;
-        }
+        ~VideoCapture();
 private:
     static Napi::FunctionReference constructor;
     cv::VideoCapture * instance;

@@ -21,7 +21,7 @@ Napi::Value Nodoface::OutputUtils::showImage(const Napi::CallbackInfo &info) {
     Napi::Object parent = info[0].As<Napi::Object>();
 
     Nodoface::Image *image = Nodoface::Image::Unwrap(parent);
-    cv::Mat mat = image->GetMat();
+    cv::Mat mat = image->GetMat().clone();
     // Get optional arguments
     uint i = 1;
     std::string title = info.Length() > i ? info[i].As<Napi::String>().Utf8Value() : "output"; i++;
@@ -78,12 +78,12 @@ Napi::Value Nodoface::OutputUtils::saveImage(const Napi::CallbackInfo &info) {
     auto imageObj = info[1].As<Napi::Object>();
     Nodoface::Image *img = Nodoface::Image::Unwrap(imageObj);
     
-    cv::Mat mat;
+    cv::Mat mat = img->GetMat().clone();
     if(img->GetMat().channels() == 1) {
-        cv::cvtColor(img->GetMat(), mat, cv::COLOR_GRAY2BGR);
+        cv::cvtColor(mat, mat, cv::COLOR_GRAY2BGR);
     } else {
-        cv::cvtColor(img->GetMat(), mat, cv::COLOR_BGR2RGB);
+        cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
     }
-    cv::imwrite(absPath, img->GetMat());
+    cv::imwrite(absPath, mat);
     return info.Env().Undefined();
 }

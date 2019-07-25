@@ -71,3 +71,11 @@ Napi::Value Nodoface::VideoCapture::IsOpened(const Napi::CallbackInfo &info) {
 Napi::Value Nodoface::VideoCapture::NewObject(Napi::Env env) {
     return constructor.New({});
 }
+
+Nodoface::VideoCapture::~VideoCapture() {
+    // std::cout<<"VideoCapture: Destructor called"<<std::endl;
+    if(this->instance->isOpened()) {
+        this->instance->release();
+    }
+    delete this->instance;
+}

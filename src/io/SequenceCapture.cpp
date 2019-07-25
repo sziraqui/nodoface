@@ -137,7 +137,7 @@ Napi::Value Nodoface::SequenceCapture::GetNextFrame(const Napi::CallbackInfo &in
     Napi::Env env = info.Env();
     Napi::EscapableHandleScope scope(env);
     cv::Mat img = this->sequenceCapture->GetNextFrame();
-    cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
+    // cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
     Napi::Object imgObj = Nodoface::Image::NewObject(env, img);
     return scope.Escape(imgObj).As<Napi::Object>();
 }
@@ -311,6 +311,7 @@ Napi::Value Nodoface::SequenceCapture::GetCaptureCapacity(const Napi::CallbackIn
 }
 
 Nodoface::SequenceCapture::~SequenceCapture() {
+    // std::cout<<"SequenceCapture: Destructor called"<<std::endl;
     if(this->sequenceCapture->IsOpened()) {
         this->sequenceCapture->Close();
     }
