@@ -36,8 +36,9 @@ Napi::Value Nodoface::VideoCapture::Read(const Napi::CallbackInfo &info) {
     if(!hasFrame) {
         return env.Undefined();
     }
-    cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
-    Napi::Object image = Nodoface::Image::NewObject(env, frame);
+    cv::Mat* rgbFrame = new cv::Mat(frame);
+    cv::cvtColor(*rgbFrame, *rgbFrame, cv::COLOR_BGR2RGB);
+    Napi::Object image = Nodoface::Image::NewObject(env, *rgbFrame);
     return scope.Escape(image).As<Napi::Object>();
 }
 
