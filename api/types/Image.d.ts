@@ -13,5 +13,7 @@ export class Image {
 
     extract(roi: Rect): Image;
 
+    resize(height: number, width: number): undefined;
+
     toUint8Array(): Uint8Array;
 }

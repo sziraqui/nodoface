@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { expect } from 'chai';
-import { Image, readImage, saveImage } from '../';
+import { Image, readImage, saveImage, showImage, waitKey } from '../';
 
 describe('Image', () => {
     let type = 16; // CV_U8C3
@@ -70,5 +70,15 @@ describe('Image', () => {
         flatImg.forEach((val, i) => {
             expect(val).to.equal(arr[i]);
         });
+    });
+    it.only('Image.resize()', () => {
+        let file = path.join(__dirname, 'samples', 'frames', 'single_face_01.jpg');
+        cols = 640;
+        rows = 480;
+        image = readImage(file);
+        image.resize(320, 240);
+        saveImage(path.join(__dirname, 'outputs', 'single_face_01_resize.jpg'), image);
+        expect(image.height()).to.equal(240);
+        expect(image.width()).to.equal(320);
     });
 });

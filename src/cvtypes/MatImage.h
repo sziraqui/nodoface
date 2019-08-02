@@ -49,6 +49,8 @@ namespace Nodoface {
         Napi::Value ToTypedArray(const Napi::CallbackInfo& info);
 
         Napi::Value Extract(const Napi::CallbackInfo& info);
+
+        Napi::Value Resize(const Napi::CallbackInfo& info);
     };
 }
 
@@ -195,6 +197,27 @@ Napi::Value Nodoface::MatImage<numericType>::Extract(const Napi::CallbackInfo& i
     if(rect.y + rect.height > img.rows) rect.height = img.rows - rect.y;
     cv::Mat* region = new cv::Mat(img(rect));
     return NewObject(env, *region);
+}
+
+template <class numericType>
+Napi::Value Nodoface::MatImage<numericType>::Resize(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    uint argLen = info.Length();
+    if(argLen < 2) {
+        JSErrors::InsufficientArguments(env, 2, argLen);
+    } else if(argLen == 2 && !info[0].IsNumber()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, 0);
+    } else if(argLen == 2 && !info[1].IsNumber()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, 1);
+    }
+    uint width = info[0].As<Napi::Number>();
+    uint height = info[1].As<Napi::Number>();
+
+    cv::Mat dest;
+    cv::resize(this->GetMat(), dest, cv::Size(width, height));
+    this->mat = NULL;
+    this->mat = new cv::Mat(dest.clone());
+    return env.Undefined();
 }
 
 template <class numericType>
