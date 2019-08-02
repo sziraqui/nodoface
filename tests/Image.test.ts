@@ -30,6 +30,16 @@ describe('Image', () => {
         expect(region.height()).to.equal(roi.height);
         expect(region.width()).to.equal(roi.width);
     });
+    it('Image extract ROI - out of range rect', () => {
+        let file = path.join(__dirname, 'samples', 'frames', 'single_face_01.jpg');
+        cols = 640;
+        rows = 480;
+        image = readImage(file);
+        let roi = { x: -30, y: rows / 2, width: cols, height: rows };
+        let region = image.extract(roi);
+        expect(region.height()).to.equal(image.height() - roi.y);
+        expect(region.width()).to.equal(roi.width);
+    });
     it('Image.height()', () => {
         expect(image.height()).to.equal(rows);
     });

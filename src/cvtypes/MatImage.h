@@ -6,7 +6,7 @@
 #define NODOFACE_MATIMAGE_H
 #include <vector>
 #include <iostream>
-#include <opencv2/core/mat.hpp>
+#include <opencv2/opencv.hpp>
 
 #include <napi.h>
 
@@ -62,7 +62,6 @@ Napi::Object Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat& 
 
     size_t length = mat.total() * mat.channels();
     if(!mat.isContinuous()) {
-        std::cout<<"mat not continous"<<std::endl;
         mat =  mat.clone(); // ensures mat is continuous and also prevents segfault
     }
 
@@ -85,7 +84,7 @@ Napi::Object Nodoface::MatImage<numericType>::NewObject(Napi::Env env, cv::Mat_<
     // Get continuous mat data
 
     size_t length = mat.total() * mat.channels();
-    if(mat.isContinuous()) {
+    if(!mat.isContinuous()) {
         mat =  mat.clone(); // ensures mat is continuous and also prevents segfault
     }
 
@@ -189,8 +188,13 @@ Napi::Value Nodoface::MatImage<numericType>::Extract(const Napi::CallbackInfo& i
         JSErrors::IncorrectDatatype(env, "Rect", 0);
     }
     cv::Rect rect = NapiExtra::Napi2Rect<int>(info[0].As<Napi::Object>());
-    cv::Mat region = this->GetMat()(rect);
-    return NewObject(env, region);
+    cv::Mat img = this->GetMat();
+    if(rect.x < 0) rect.x = 0;
+    if(rect.y < 0) rect.y = 0;
+    if(rect.x + rect.width > img.cols) rect.width = img.cols - rect.x;
+    if(rect.y + rect.height > img.rows) rect.height = img.rows - rect.y;
+    cv::Mat* region = new cv::Mat(img(rect));
+    return NewObject(env, *region);
 }
 
 template <class numericType>
