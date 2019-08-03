@@ -6,7 +6,7 @@
 #define NODOFACE_CVDRAW_H
 
 #include <vector>
-#include <opencv2/imgproc.hpp>
+#include <opencv2/opencv.hpp>
 
 #include <napi.h>
 
@@ -23,7 +23,7 @@ namespace Nodoface {
 
 //        Napi::Value circle(const Napi::CallbackInfo& info);
 //
-//        Napi::Value putText(const Napi::CallbackInfo& info);
+        Napi::Value putText(const Napi::CallbackInfo& info);
 //
 //        Napi::Value line(const Napi::CallbackInfo& info);
 

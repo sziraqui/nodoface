@@ -7,6 +7,7 @@ using namespace Nodoface;
 
 Napi::Object Draw::Init(Napi::Env env, Napi::Object exports) {
     exports.Set("drawRect", Napi::Function::New(env, Nodoface::Draw::rectangle));
+    exports.Set("drawText", Napi::Function::New(env, Nodoface::Draw::putText));
     return exports;
 }
 
@@ -36,4 +37,33 @@ Napi::Value Draw::rectangle(const Napi::CallbackInfo &info) {
     cv::rectangle(mat, rect, bgrColor, thickness, lineType);
 
     return env.Undefined();
+}
+
+Napi::Value Draw::putText(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    Napi::HandleScope scope(env);
+
+    int argLen = info.Length();
+    if(argLen < 4) {
+        JSErrors::InsufficientArguments(env, 4, argLen);
+    } else if (argLen > 6) {
+        JSErrors::TooManyArguments(env, 6, argLen);
+    }
+    uint i = 0;
+    Napi::Object imgObj = info[i].As<Napi::Object>(); i++;
+    Nodoface::Image* img = Napi::ObjectWrap<Nodoface::Image>::Unwrap(imgObj);
+    cv::Mat mat = img->GetMat();
+
+    std::string text = info[i].As<Napi::String>().Utf8Value(); i++;
+
+    cv::Point pt = NapiExtra::Napi2Point<int>(info[i].As<Napi::Object>());
+
+    cv::Scalar bgrColor = NapiExtra::Napi2ScalarBgr(info[i].As<Napi::Object>()); i++;
+
+    int scale = argLen > i? info[i].As<Napi::Number>().Int32Value(): 1; i++;
+    int thickness = argLen > i? info[i].As<Napi::Number>().Int32Value(): 1; i++;
+
+    cv::putText(mat, text, pt, cv::FONT_HERSHEY_SIMPLEX, scale, bgrColor, thickness);
+
+    env.Undefined();
 }
