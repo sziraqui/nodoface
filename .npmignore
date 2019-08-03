@@ -11,6 +11,8 @@
 build
 cmake-build-*
 
+# test output
+tests
 # python env
 venv
 
