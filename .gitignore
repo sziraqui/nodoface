@@ -4,7 +4,6 @@
 .idea
 !.idea/misc.xml
 !.idea/vcs.xml
-**/package-lock.json
 
 # Build directories
 build

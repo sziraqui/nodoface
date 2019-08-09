@@ -1,6 +1,6 @@
 {
   "name": "nodoface",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "C++ Addon for fast and efficient face analytics",
   "main": "./api/nodoface.js",
   "typings": "./api/index.d.ts",

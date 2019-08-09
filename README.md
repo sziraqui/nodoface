@@ -30,7 +30,7 @@ This Addon provides bindings to all OpenFace 2.0 features except the visualizati
 CLNF also provides HOG-based and Haar Cascades face detector. GazeAnalysis is a namespace with static classes in OpenFace but GazeAnalyser is a class in Nodoface.
 
 ## Bindings to some OpenCV types
-- Image (`cv::Mat`)
+- Image (`cv::Mat`) (with support for reading base64 encoded image)
 - IntImage (`cv::Mat_<int>`)
 - FloatImage (`cv::Mat_<float>`)
 - drawRect (`cv::rectangle()`)
