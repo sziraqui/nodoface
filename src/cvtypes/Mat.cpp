@@ -15,7 +15,8 @@ Napi::Object Nodoface::Image::Init(Napi::Env env, Napi::Object exports) {
         InstanceMethod("channels", &Nodoface::Image::Channels),
         InstanceMethod("toUint8Array", &Nodoface::Image::ToTypedArray),
         InstanceMethod("extract", &Nodoface::Image::Extract),
-        InstanceMethod("resize", &Nodoface::Image::Resize)
+        InstanceMethod("resize", &Nodoface::Image::Resize),
+        StaticMethod("fromBase64", &Nodoface::Image::FromBase64)
     });
 
     Image::constructor = Napi::Persistent(func);

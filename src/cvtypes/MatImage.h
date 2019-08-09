@@ -13,6 +13,8 @@
 #include "../extras/napiextra.h"
 #include "../jserrors/JSErrors.h"
 
+#include "../utils/base64.h"
+
 namespace Nodoface {
     // Wraps OpenCV Mat partially for sending and receiving Mat objects to/from node
     template <class numericType = uchar>
@@ -51,6 +53,8 @@ namespace Nodoface {
         Napi::Value Extract(const Napi::CallbackInfo& info);
 
         Napi::Value Resize(const Napi::CallbackInfo& info);
+
+        static Napi::Value FromBase64(const Napi::CallbackInfo& info);
     };
 }
 
@@ -218,6 +222,25 @@ Napi::Value Nodoface::MatImage<numericType>::Resize(const Napi::CallbackInfo& in
     this->mat = NULL;
     this->mat = new cv::Mat(dest.clone());
     return env.Undefined();
+}
+
+template <class numericType>
+Napi::Value Nodoface::MatImage<numericType>::FromBase64(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    uint argLen = info.Length();
+    if(argLen == 0) {
+        JSErrors::InsufficientArguments(env, 1, argLen);
+    } else if(argLen == 1 && !info[0].IsString()) {
+        JSErrors::IncorrectDatatype(env, JSErrors::STRING, 0);
+    } else if(argLen > 1) {
+        JSErrors::IncorrectDatatype(env, JSErrors::NUMBER, 1);
+    }
+    const std::string encoded = info[0].As<Napi::String>().Utf8Value();
+    std::vector<uchar> decoded = base64_decode(encoded);
+    cv::Mat mat = cv::imdecode(decoded, cv::IMREAD_UNCHANGED);
+    cv::Mat* img = new cv::Mat(mat);
+
+    return NewObject(env, *img);
 }
 
 template <class numericType>

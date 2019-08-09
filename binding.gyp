@@ -25,6 +25,7 @@
             'src/landmarkdetection/FaceModelParameters.cpp',
             'src/landmarkdetection/CLNF.cpp',
             'src/eyegaze/GazeAnalyser.cpp',
+            'src/utils/base64.cpp',
         ],
         'clfags!': [
             '-fno-exceptions',

@@ -1,6 +1,8 @@
 import { Rect } from './Rect';
 
 export class Image {
+
+    static fromBase64(base64Image: string): Image;
     constructor(data: Uint8Array, rows: number, columns: number, type: number);
 
     width(): number;
