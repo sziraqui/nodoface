@@ -29,21 +29,25 @@ This Addon provides bindings to all OpenFace 2.0 features except the visualizati
   
 CLNF also provides HOG-based and Haar Cascades face detector. GazeAnalysis is a namespace with static classes in OpenFace but GazeAnalyser is a class in Nodoface.
 
-## Bindings to some OpenCV types
-- Image (`cv::Mat`) (with support for reading base64 encoded image)
+## Bindings to some OpenCV types and functions
+- Image (`cv::Mat`)
 - IntImage (`cv::Mat_<int>`)
 - FloatImage (`cv::Mat_<float>`)
-- drawRect (`cv::rectangle()`)
-- drawText (`cv::putText()`)
-- showImage (`cv::imshow()`)
-- readImage (`cv::imread()`)
-- saveImage (`cv::imwrite`)
-- destroyWindow (`cv::destroyWindow()`)
-- destroyAllWindows (`cv::destroyAllWindows()`)
-- waitkey (`cv::waitKey()`)
+- drawRect() (`cv::rectangle()`)
+- drawText() (`cv::putText()`) (not working)
+- showImage() (`cv::imshow()`)
+- readImage() (`cv::imread()`)
+- saveImage() (`cv::imwrite`)
+- destroyWindow() (`cv::destroyWindow()`)
+- destroyAllWindows() (`cv::destroyAllWindows()`)
+- waitkey() (`cv::waitKey()`)
 - VideoCapture (`cv::VideoCapture`)
 Note: All methods return RGB image instead of BGR unlike OpenCV
 OpenCV classes are partial bindings just sufficient for passing underlying Mat to/from nodejs and C++.
+
+## Utility functions
+- Image.fromBase64() (decodes base64 string into cv::Mat)
+- drawDetections() (Draws bounding boxes and texts on image)
 
 # Installation
 ### Dependencies
