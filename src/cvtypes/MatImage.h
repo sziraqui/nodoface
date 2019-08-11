@@ -241,7 +241,6 @@ Napi::Value Nodoface::MatImage<numericType>::FromBase64(const Napi::CallbackInfo
 
     cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
     cv::Mat* img = new cv::Mat(mat);
-    cv::Mat* img = new cv::Mat(mat);
     
     return NewObject(env, *img);
 }

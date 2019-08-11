@@ -7,3 +7,6 @@ export function drawRect(image: Image, rect: Rect, color: number[], thickness: n
 export function drawRect(image: Image, rect: Rect, color: number[], thickness: number, lineType: number);
 export function drawText(image: Image, text: string, point: Point, color: [number, number, number]);
 export function drawText(image: Image, text: string, point: Point, color: [number, number, number], fontScale: number, thickness: number);
+export function drawDetections(image: Image, rectArr: Rect[], texts: string[], colors: number[][]);
+export function drawDetections(image: Image, rectArr: Rect[], texts: string[], colors: number[][], fontScale: number);
+export function drawDetections(image: Image, rectArr: Rect[], texts: string[], colors: number[][], fontScale: number, thickness: number);

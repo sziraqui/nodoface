@@ -15,6 +15,7 @@
 #include "../cvtypes/Mat.h"
 
 namespace Nodoface {
+        
     namespace Draw {
 
         Napi::Object Init(Napi::Env env, Napi::Object exports);
@@ -26,7 +27,8 @@ namespace Nodoface {
         Napi::Value putText(const Napi::CallbackInfo& info);
 //
 //        Napi::Value line(const Napi::CallbackInfo& info);
-
+        
+        Napi::Value drawDetections(const Napi::CallbackInfo& info);
     }
 }
 
