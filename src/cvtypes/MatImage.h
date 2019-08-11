@@ -238,8 +238,11 @@ Napi::Value Nodoface::MatImage<numericType>::FromBase64(const Napi::CallbackInfo
     const std::string encoded = info[0].As<Napi::String>().Utf8Value();
     std::vector<uchar> decoded = base64_decode(encoded);
     cv::Mat mat = cv::imdecode(decoded, cv::IMREAD_UNCHANGED);
-    cv::Mat* img = new cv::Mat(mat);
 
+    cv::cvtColor(mat, mat, cv::COLOR_BGR2RGB);
+    cv::Mat* img = new cv::Mat(mat);
+    cv::Mat* img = new cv::Mat(mat);
+    
     return NewObject(env, *img);
 }
 
