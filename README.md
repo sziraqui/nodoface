@@ -42,6 +42,7 @@ CLNF also provides HOG-based and Haar Cascades face detector. GazeAnalysis is a 
 - destroyAllWindows() (`cv::destroyAllWindows()`)
 - waitkey() (`cv::waitKey()`)
 - VideoCapture (`cv::VideoCapture`)
+- VideoWriter (`cv::VideoWriter`)
 Note: All methods return RGB image instead of BGR unlike OpenCV
 OpenCV classes are partial bindings just sufficient for passing underlying Mat to/from nodejs and C++.
 
