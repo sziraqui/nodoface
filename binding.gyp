@@ -16,6 +16,7 @@
             'src/io/SequenceCapture.cpp',
             'src/io/OutputUtils.cpp',
             'src/io/VideoCapture.cpp',
+            'src/io/VideoWriter.cpp',
             'src/cvtypes/Mat.cpp',
             'src/cvtypes/MatFloat.cpp',
             'src/cvtypes/MatInt.cpp',
