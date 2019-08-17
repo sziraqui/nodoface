@@ -10,6 +10,7 @@ Napi::Object Nodoface::VideoWriter::Init(Napi::Env env, Napi::Object exports) {
     Napi::HandleScope scope(env);
     Napi::Function ctr = DefineClass(env, "VideoWriter", {
             InstanceMethod("write", &VideoWriter::Write),
+            InstanceMethod("release", &VideoWriter::Release),
     });
     constructor = Napi::Persistent(ctr);
     constructor.SuppressDestruct();
@@ -32,9 +33,15 @@ Nodoface::VideoWriter::VideoWriter(const Napi::CallbackInfo &info) : ObjectWrap(
 Napi::Value Nodoface::VideoWriter::Write(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
     Nodoface::Image * img = Nodoface::Image::Unwrap(info[0].As<Napi::Object>());
-    cv::Mat* frame = new cv::Mat(img->GetMat());
-    cv::cvtColor(*frame, *frame, cv::COLOR_RGB2BGR);
-    this->instance->write(*frame);
+    cv::Mat frame = cv::Mat(img->GetMat().clone());
+    cv::cvtColor(frame, frame, cv::COLOR_RGB2BGR);
+    this->instance->write(frame);
+    return env.Undefined();
+}
+
+Napi::Value Nodoface::VideoWriter::Release(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    this->instance->release();
     return env.Undefined();
 }
 
@@ -42,14 +49,16 @@ Napi::Value Nodoface::VideoWriter::NewObject(Napi::Env env, std::string file, in
     
     return Nodoface::VideoWriter::constructor.New({
        Napi::String::New(env, file),
-       NapiExtra::toNapi(env, width),
-       NapiExtra::toNapi(env, height),
-       NapiExtra::toNapi(env, fps),
+       Napi::Number::New(env, width),
+       Napi::Number::New(env, height),
+       Napi::Number::New(env, fps),
        Napi::String::New(env, fourcc)
     });
 }
 
 Nodoface::VideoWriter::~VideoWriter() {
-    this->instance->release();
+    if(this->instance->isOpened()) {
+        this->instance->release();
+    }
     delete this->instance;
 }

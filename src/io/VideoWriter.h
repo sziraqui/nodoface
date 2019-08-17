@@ -21,6 +21,8 @@ public:
 
         Napi::Value Write(const Napi::CallbackInfo& info);
 
+        Napi::Value Release(const Napi::CallbackInfo& info);
+
         Napi::Value NewObject(Napi::Env env, std::string file, int width, int height, double fps, std::string fourcc);
 
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
